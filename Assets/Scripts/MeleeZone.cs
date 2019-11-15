@@ -17,7 +17,6 @@ public class MeleeZone : MonoBehaviour
 		if(other.gameObject.tag == "Enemy")
 		{
 			targets.Add(other.GetComponent<Hostile>());
-			Debug.Log("Targets entered: " + targets);
 		}
 	}
 

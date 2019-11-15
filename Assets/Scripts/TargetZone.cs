@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetZone : MonoBehaviour
+public class targetZone : MonoBehaviour
 {
-	public Collider2D targetZone;
+	public Collider2D meleeZone;
 	public GameObject parent;
 
 	void OnTriggerEnter2D(Collider2D other)

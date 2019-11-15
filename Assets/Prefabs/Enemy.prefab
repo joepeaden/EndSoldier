@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1460239787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2510748016523908713}
@@ -318,13 +318,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
   moveSpeed: 2
-  vertMoveSpeed: 2
   projectile: {fileID: 0}
   fireRate: 0.5
   upperBody: {fileID: 0}
   ammo: 0
   reserveAmmo: 0
   targetSocket: {fileID: 0}
+  aimAngle: {x: 0, y: 0, z: 0, w: 0}
+  targetZone: {fileID: 1460239788}
 --- !u!212 &2510748016523908712
 SpriteRenderer:
   m_ObjectHideFlags: 0

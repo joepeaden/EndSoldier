@@ -12,6 +12,7 @@ public class Hostile : Actor
 	bool gotHit;
 	float gotHitTimer;
 	public Quaternion aimAngle;
+	public Transform targetZone;
 
 	// might be a good place for an Observer pattern, e.g. notify observers of socket being taken
 	// subject: player, observer: hostile
@@ -59,6 +60,8 @@ public class Hostile : Actor
 		else
 			target = player;
 
+		UpdateAim();
+
 		if(gotHit)
 		{
 			gotHitTimer -= Time.deltaTime;
@@ -71,8 +74,8 @@ public class Hostile : Actor
 		else
 		{
 			fireRateTimer -= Time.deltaTime;
-			//if(targetInRange)
-			if(inTargetZone)
+			if(targetInRange)
+			// if(inTargetZone)
 			{
 				anim.SetBool("running", false);
 				
@@ -114,7 +117,8 @@ public class Hostile : Actor
 
 	private void Attack()
 	{
-		if(inTargetZone)
+		if(targetInRange)
+		// if(inTargetZone)
 		{
 			player.GetComponent<Player>().GetHit();
 		}
@@ -128,9 +132,10 @@ public class Hostile : Actor
 	protected override void UpdateAim()
 	{
 		// for some reason, playervector needs to be negative for shooting to work
-		Vector2 targetPos = -(GetPlayerVector());
-		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
-		aimAngle = Quaternion.AngleAxis(angle, Vector3.forward);
+		Vector3 targetPos = -(GetPlayerVector());
+		targetPos.Normalize();
+		targetPos *= 0.25f; 
+		targetZone.position = targetPos + transform.position;
 	}
 
 	// gets unit vector from this object to player

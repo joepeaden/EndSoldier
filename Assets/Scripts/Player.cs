@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : Actor
 {
@@ -11,6 +12,7 @@ public class Player : Actor
 	public Text hptext;
 	public Text ammotext;
 	public bool reloading;
+	public GameObject resetButton;
 
 	// joysticks
 	public FixedJoystick shootJoystick;
@@ -121,7 +123,7 @@ public class Player : Actor
 			}
 			else 
 			{
-				if(Input.GetButton("Fire1"))
+				if(Input.GetButton("Fire1") && shootJoystick.Direction != Vector2.zero)
 				{
 					FireProjectile();
 					fireRateTimer = fireRate;
@@ -179,8 +181,13 @@ public class Player : Actor
 
 	protected override void Die()
 	{
-		Debug.Log("Ded");
-		Destroy(gameObject);
+		resetButton.SetActive(true);
+	}
+
+	public void ResetGame()
+	{
+		resetButton.SetActive(false);
+		SceneManager.LoadSceneAsync(0);
 	}
 
 	public GameObject[] GetSockets()
