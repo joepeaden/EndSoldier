@@ -55,7 +55,7 @@ public class Shoota : Actor
 
 	public void ShootAtPlayer()
 	{
-		UpdateUpperBodyAngle();
+		UpdateAim();
 		FireProjectile();
 	}
 
@@ -68,7 +68,7 @@ public class Shoota : Actor
 	}
 
 	// upperbody angle is used for aiming missile fire
-	protected override void UpdateUpperBodyAngle()
+	protected override void UpdateAim()
 	{
 		// for some reason, playervector needs to be negative for shooting to work
 		Vector2 targetPos = -(GetPlayerVector());

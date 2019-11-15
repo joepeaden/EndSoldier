@@ -12,15 +12,26 @@ public class Player : Actor
 	public Text ammotext;
 	public bool reloading;
 
+	// joysticks
+	public FixedJoystick shootJoystick;
+	public FixedJoystick moveJoystick;
+
 	new void Start()
 	{
 		base.Start();
 		hitPoints = 3;
 		pts = 0;
 		ammo = 30;
-		reserveAmmo = 90;
+		reserveAmmo = 900;
 		UpdateUI();
 		reloading = false;
+
+		// setting joystick to values of strictly 1, 0, or -1
+		moveJoystick.SnapX = true;
+		moveJoystick.SnapY = true;
+
+		// shootJoystick.SnapX = true;
+		// shootJoystick.SnapY = true;
 	}
 
 	public void UpdateUI()
@@ -35,33 +46,33 @@ public class Player : Actor
 		UpdateUI();
 
 		// make upper body follow mouse
-		UpdateUpperBodyAngle();
+		UpdateAim();
 
 		bool firing = false;
 		bool running = false;
 
 		// vertical movement
-		if(Input.GetKey(KeyCode.W))// && transform.position.y <= vertMoveLimits[0])
+		if(Input.GetKey(KeyCode.W) || moveJoystick.Vertical > 0)
 		{
 			// move up
-			transform.Translate(new Vector3(0, vertMoveSpeed * Time.deltaTime, 0));
+			transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
 			running = true;
 		}
-		else if(Input.GetKey(KeyCode.S))// && transform.position.y > vertMoveLimits[1])
+		else if(Input.GetKey(KeyCode.S) || moveJoystick.Vertical < 0)
 		{
 			// move down
-			transform.Translate(new Vector3(0, -vertMoveSpeed * Time.deltaTime, 0));
+			transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
 			running = true;
 		} 
 		
 		// horizontal movement
-		if(Input.GetKey(KeyCode.D))
+		if(Input.GetKey(KeyCode.D) || moveJoystick.Horizontal > 0)
 		{
 			// move right
 			transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
 			running = true;
 		}
-		else if(Input.GetKey(KeyCode.A))
+		else if(Input.GetKey(KeyCode.A) || moveJoystick.Horizontal < 0)
 		{
 			// move left
 			transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
@@ -145,10 +156,14 @@ public class Player : Actor
 		}
 	}
 
-	protected override void UpdateUpperBodyAngle()
+	protected override void UpdateAim()
 	{
-		// don't really understand this math
-		Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		// for computer
+		// Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		
+		// for mobile
+		Vector2 targetPos = shootJoystick.Direction;
+
 		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 		upperBody.transform.rotation = rotation;

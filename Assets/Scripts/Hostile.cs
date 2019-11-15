@@ -11,6 +11,7 @@ public class Hostile : Actor
 	bool inTargetZone;
 	bool gotHit;
 	float gotHitTimer;
+	public Quaternion aimAngle;
 
 	// might be a good place for an Observer pattern, e.g. notify observers of socket being taken
 	// subject: player, observer: hostile
@@ -52,13 +53,6 @@ public class Hostile : Actor
 
     void Update()
 	{
-		// if(gotHit)
-		// {
-
-		// 	gotHit = false;
-		// }
-		// else
-		// {
 		GameObject target;
 		if(targetSocket != null)
 			target = targetSocket;
@@ -91,6 +85,7 @@ public class Hostile : Actor
 			}
 			else
 			{
+				// left and right movement
 				if(target.transform.position.x < transform.position.x)
 				{
 					transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
@@ -102,19 +97,19 @@ public class Hostile : Actor
 					anim.SetBool("running", true);
 				}
 
+				// Up and down movement
 				if(target.transform.position.y < transform.position.y)
 				{
-					transform.Translate(new Vector3(0, -vertMoveSpeed * Time.deltaTime, 0));
+					transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
 					anim.SetBool("running", true);
 				}
 				else if(target.transform.position.y > transform.position.y)
 				{
-					transform.Translate(new Vector3(0, vertMoveSpeed * Time.deltaTime, 0));
+					transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
 					anim.SetBool("running", true);
 				}
 			}
 		}
-		// }
 	}
 
 	private void Attack()
@@ -130,13 +125,20 @@ public class Hostile : Actor
 		targetInRange = inRange; 
 	}
 
-	protected override void UpdateUpperBodyAngle()
+	protected override void UpdateAim()
 	{
-		// don't really understand this math
-		// Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-		// float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
-		// Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-			// upperBody.transform.rotation = rotation;
+		// for some reason, playervector needs to be negative for shooting to work
+		Vector2 targetPos = -(GetPlayerVector());
+		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
+		aimAngle = Quaternion.AngleAxis(angle, Vector3.forward);
+	}
+
+	// gets unit vector from this object to player
+	public Vector3 GetPlayerVector()
+	{
+		Vector3 playerVector = transform.position - player.transform.position;
+		playerVector = Vector3.Normalize(playerVector);
+		return playerVector;
 	}
 
 	public override void GetHit()
