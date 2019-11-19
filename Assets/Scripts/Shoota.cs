@@ -96,6 +96,8 @@ public class Shoota : Actor
 	{
 		Player.pts++;
 
+		EnemySpawner.survivingEnemies--;
+
 		Destroy(gameObject);
 	}
 

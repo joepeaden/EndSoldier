@@ -13,7 +13,6 @@ public class Player : Actor
 	public Text ammotext;
 	public bool reloading;
 	public GameObject resetButton;
-
 	// joysticks
 	public FixedJoystick shootJoystick;
 	public FixedJoystick moveJoystick;
@@ -123,7 +122,8 @@ public class Player : Actor
 			}
 			else 
 			{
-				if(Input.GetButton("Fire1") && shootJoystick.Direction != Vector2.zero)
+				// if pressing joystick to edge of range
+				if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
 				{
 					FireProjectile();
 					fireRateTimer = fireRate;

@@ -166,6 +166,9 @@ public class Hostile : Actor
 
 		Player.pts++;
 
+		EnemySpawner.survivingEnemies--;
+
+
 		Destroy(gameObject);
 	}
 }
