@@ -60,7 +60,7 @@ public class Hostile : Actor
 		else
 			target = player;
 
-		UpdateAim();
+		UpdateAim(Vector2.zero);
 
 		if(gotHit)
 		{
@@ -129,13 +129,13 @@ public class Hostile : Actor
 		targetInRange = inRange; 
 	}
 
-	protected override void UpdateAim()
+	protected override void UpdateAim(Vector2 targetPos)
 	{
 		// for some reason, playervector needs to be negative for shooting to work
-		Vector3 targetPos = -(GetPlayerVector());
+		targetPos = -(GetPlayerVector());
 		targetPos.Normalize();
 		targetPos *= 0.25f; 
-		targetZone.position = targetPos + transform.position;
+		targetZone.position = targetPos + (Vector2)transform.position;
 	}
 
 	// gets unit vector from this object to player

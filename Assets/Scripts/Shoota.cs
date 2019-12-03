@@ -55,7 +55,7 @@ public class Shoota : Actor
 
 	public void ShootAtPlayer()
 	{
-		UpdateAim();
+		UpdateAim(Vector2.zero);
 		FireProjectile();
 	}
 
@@ -68,10 +68,10 @@ public class Shoota : Actor
 	}
 
 	// upperbody angle is used for aiming missile fire
-	protected override void UpdateAim()
+	protected override void UpdateAim(Vector2 targetPos)
 	{
 		// for some reason, playervector needs to be negative for shooting to work
-		Vector2 targetPos = -(GetPlayerVector());
+		targetPos = -(GetPlayerVector());
 		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
 		aimAngle = Quaternion.AngleAxis(angle, Vector3.forward);
 	}

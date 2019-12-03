@@ -37,7 +37,7 @@ public abstract class Actor : MonoBehaviour
 		ammo--;
 	}
 
-	protected abstract void UpdateAim();
+	protected abstract void UpdateAim(Vector2 targetPos);
 
 	public abstract void GetHit();
 

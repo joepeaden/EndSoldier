@@ -16,6 +16,7 @@ public class Player : Actor
 	// joysticks
 	public FixedJoystick shootJoystick;
 	public FixedJoystick moveJoystick;
+	bool shooting;
 
 	new void Start()
 	{
@@ -28,8 +29,8 @@ public class Player : Actor
 		reloading = false;
 
 		// setting joystick to values of strictly 1, 0, or -1
-		moveJoystick.SnapX = true;
-		moveJoystick.SnapY = true;
+		// moveJoystick.SnapX = true;
+		// moveJoystick.SnapY = true;
 
 		// shootJoystick.SnapX = true;
 		// shootJoystick.SnapY = true;
@@ -42,52 +43,71 @@ public class Player : Actor
 		ammotext.text = "Ammo: " + ammo + " / " + reserveAmmo;
 	}
 
+	// clamps value to -1, 0, and 1
+	// float ClampN101(float f)
+	// {
+	// 	if(f > 0)
+	// 		return 1;
+	// 	else if(f < 0)
+	// 		return -1;
+	// 	else
+	// 		return 0;
+	// }
+
     void Update()
 	{
 		UpdateUI();
 
 		// make upper body follow mouse
-		UpdateAim();
+		// UpdateAim();
 
 		bool firing = false;
 		bool running = false;
 
-		// vertical movement
-		if(Input.GetKey(KeyCode.W) || moveJoystick.Vertical > 0)
+		// float vert = ClampN101(moveJoystick.Vertical);
+		// float horiz = ClampN101(moveJoystick.Horizontal);
+
+		if(moveJoystick.Vertical != 0 || moveJoystick.Horizontal != 0) //vert != 0 || horiz != 0)
 		{
-			// move up
-			transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
-			running = true;
+			Vector2 moveVector = moveJoystick.Direction;//Vector3.Normalize(moveJoystick.Direction);
+			transform.Translate(moveVector * moveSpeed);
+			UpdateAim(moveVector);
 		}
-		else if(Input.GetKey(KeyCode.S) || moveJoystick.Vertical < 0)
-		{
-			// move down
-			transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
-			running = true;
-		} 
+
+		// // vertical movement
+		// if(Input.GetKey(KeyCode.W) || vert > 0)
+		// {
+		// 	// move up
+		// 	transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
+		// 	running = true;
+		// }
+		// else if(Input.GetKey(KeyCode.S) || vert < 0)
+		// {
+		// 	// move down
+		// 	transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
+		// 	running = true;
+		// } 
 		
-		// horizontal movement
-		if(Input.GetKey(KeyCode.D) || moveJoystick.Horizontal > 0)
-		{
-			// move right
-			transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
-			running = true;
-		}
-		else if(Input.GetKey(KeyCode.A) || moveJoystick.Horizontal < 0)
-		{
-			// move left
-			transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
-			running = true;
-		}
-		else
-		{
-			anim.SetBool("running", false);			
-			Debug.Log("Stopping");
-		}
+		// // horizontal movement
+		// if(Input.GetKey(KeyCode.D) || horiz > 0)
+		// {
+		// 	// move right
+		// 	transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
+		// 	running = true;
+		// }
+		// else if(Input.GetKey(KeyCode.A) || horiz < 0)
+		// {
+		// 	// move left
+		// 	transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
+		// 	running = true;
+		// }
+		// else
+		// {
+		// 	anim.SetBool("running", false);			
+		// }
 
 		if(Input.GetButtonDown("Fire2"))
 		{
-			Debug.Log(MeleeZone.targets.Count);
 			foreach(Actor a in MeleeZone.targets)
 				a.GetHit();
 		}
@@ -109,25 +129,26 @@ public class Player : Actor
 			{
 				if(reserveAmmo <= 0)
 				{
-					Debug.Log("Out Of Ammo");
 
 				}
 				 else
 				{
 					anim.Play("vort_reloading");
-					Debug.Log("Reload");
 					fireRateTimer = 2f;
 					reloading = true;
 				}
 			}
 			else 
 			{
+				//if(Input.GetButton("Fire1"))// && TapNotInMovementJoystick())
 				// if pressing joystick to edge of range
-				if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
+				// if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
+				if(shooting)
 				{
 					FireProjectile();
 					fireRateTimer = fireRate;
 					firing = true;
+					shooting = false;
 				}
 			}
 		}
@@ -147,6 +168,18 @@ public class Player : Actor
 		}
 	}
 
+	public void Shoot()
+	{
+		shooting = true;
+	}
+
+	bool TapNotInMovementJoystick()
+	{
+		// Vector2 point = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position
+		// if()
+		return moveJoystick.Direction == Vector2.zero ? true : false;
+	}
+
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if(other.gameObject.tag == "Stockpile")
@@ -158,13 +191,16 @@ public class Player : Actor
 		}
 	}
 
-	protected override void UpdateAim()
+	protected override void UpdateAim(Vector2 targetPos)
 	{
 		// for computer
 		// Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-		
+
+		// Vector2 targetPos = moveJoystick.Direction;
+
 		// for mobile
-		Vector2 targetPos = shootJoystick.Direction;
+		// Vector2 targetPos = shootJoystick.Direction;
+		// Vector2 targetPos = 
 
 		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
@@ -173,7 +209,6 @@ public class Player : Actor
 
 	public override void GetHit()
 	{
-		Debug.Log("Got hit");
 		hitPoints--;
 		if(hitPoints <= 0)
 			Die();
