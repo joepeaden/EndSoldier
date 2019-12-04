@@ -58,8 +58,9 @@ public class Player : Actor
 	{
 		UpdateUI();
 
-		// make upper body follow mouse
-		// UpdateAim();
+		if(shootJoystick.Direction != Vector2.zero)
+			// make upper body follow mouse
+			UpdateAim(Vector2.zero);
 
 		bool firing = false;
 		bool running = false;
@@ -71,8 +72,15 @@ public class Player : Actor
 		{
 			Vector2 moveVector = moveJoystick.Direction;//Vector3.Normalize(moveJoystick.Direction);
 			transform.Translate(moveVector * moveSpeed);
-			UpdateAim(moveVector);
+			running = true;
+			// UpdateAim(moveVector);
+		} 
+		else
+		{
+			anim.SetBool("running", false);			
 		}
+
+		// if()
 
 		// // vertical movement
 		// if(Input.GetKey(KeyCode.W) || vert > 0)
@@ -142,8 +150,8 @@ public class Player : Actor
 			{
 				//if(Input.GetButton("Fire1"))// && TapNotInMovementJoystick())
 				// if pressing joystick to edge of range
-				// if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
-				if(shooting)
+				if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
+				// if(shooting)
 				{
 					FireProjectile();
 					fireRateTimer = fireRate;
@@ -199,7 +207,7 @@ public class Player : Actor
 		// Vector2 targetPos = moveJoystick.Direction;
 
 		// for mobile
-		// Vector2 targetPos = shootJoystick.Direction;
+		targetPos = shootJoystick.Direction;
 		// Vector2 targetPos = 
 
 		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
