@@ -7,7 +7,6 @@ public abstract class Actor : MonoBehaviour
 	public Animator anim;
 
 	public float moveSpeed;
-	// public float vertMoveSpeed;
 
 	public GameObject projectile;
 	public float fireRate;
@@ -17,16 +16,11 @@ public abstract class Actor : MonoBehaviour
 
 	protected int hitPoints;
 
-	// protected float[] vertMoveLimits; 
-
 	public int ammo;
 	public int reserveAmmo;
 
 	protected void Start()
 	{
-		// vertMoveLimits = new float[2];	
-		// vertMoveLimits[0] = -2f; 
-		// vertMoveLimits[1] = -4.5f;
 		//anim = GetComponent<Animator>();
 		fireRateTimer = fireRate;
 	}
