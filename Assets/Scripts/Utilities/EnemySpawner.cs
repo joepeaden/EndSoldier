@@ -27,7 +27,7 @@ public class EnemySpawner : MonoBehaviour
 	public static float totalEnemiesSpawned = 0; 
 	public float waveBreakSpawnDelay;
 	Wave[] waves;
-	int currentWave;
+	static int currentWave;
 
 	void Start()
 	{
@@ -39,10 +39,12 @@ public class EnemySpawner : MonoBehaviour
 
 	void InitializeWaves()
 	{
-		waves = new Wave[3];
+		waves = new Wave[5];
 		waves[0] = new Wave (5, enemy, 1.0f);
 		waves[1] = new Wave(15, enemy, 1.5f);
 		waves[2] = new Wave(15, enemy, 2f);
+		waves[3] = new Wave(30, enemy, 2.5f);
+		waves[4] = new Wave(100, enemy, 3f);
 		currentWave = 0;
 	}
 
@@ -76,10 +78,10 @@ public class EnemySpawner : MonoBehaviour
 
 	private void NextWave()
 	{
-		// for now, only 3 waves
-		if (currentWave == 2)
+		// for now, only 5 waves
+		if (currentWave == 4)
 		{
-			return;
+			FlowManager.instance.GameOver();
 		}
 
 		currentWave++;

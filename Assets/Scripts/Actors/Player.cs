@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class Player : Actor
 {
 	public GameObject[] sockets;
-	public static int pts;
+	// public static int pts;
 	public Text ptstext;
 	public Text hptext;
 	public Text ammotext;
 	public bool reloading;
-	public GameObject resetButton;
 	// joysticks
 	public FixedJoystick shootJoystick;
 	public FixedJoystick moveJoystick;
@@ -22,37 +20,19 @@ public class Player : Actor
 	{
 		base.Start();
 		hitPoints = 3;
-		pts = 0;
+		// pts = 0;
 		ammo = 30;
 		reserveAmmo = 900;
 		UpdateUI();
 		reloading = false;
-
-		// setting joystick to values of strictly 1, 0, or -1
-		// moveJoystick.SnapX = true;
-		// moveJoystick.SnapY = true;
-
-		// shootJoystick.SnapX = true;
-		// shootJoystick.SnapY = true;
 	}
 
 	public void UpdateUI()
 	{
-		ptstext.text = "Points: " + pts;
+		// ptstext.text = "Points: " + pts;
 		hptext.text = "HP: " + hitPoints;
 		ammotext.text = "Ammo: " + ammo + " / " + reserveAmmo;
 	}
-
-	// clamps value to -1, 0, and 1
-	// float ClampN101(float f)
-	// {
-	// 	if(f > 0)
-	// 		return 1;
-	// 	else if(f < 0)
-	// 		return -1;
-	// 	else
-	// 		return 0;
-	// }
 
     void Update()
 	{
@@ -65,9 +45,7 @@ public class Player : Actor
 		bool firing = false;
 		bool running = false;
 
-		// float vert = ClampN101(moveJoystick.Vertical);
-		// float horiz = ClampN101(moveJoystick.Horizontal);
-
+	
 		if(moveJoystick.Vertical != 0 || moveJoystick.Horizontal != 0) //vert != 0 || horiz != 0)
 		{
 			Vector2 moveVector = moveJoystick.Direction;//Vector3.Normalize(moveJoystick.Direction);
@@ -79,40 +57,6 @@ public class Player : Actor
 		{
 			anim.SetBool("running", false);			
 		}
-
-		// if()
-
-		// // vertical movement
-		// if(Input.GetKey(KeyCode.W) || vert > 0)
-		// {
-		// 	// move up
-		// 	transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
-		// 	running = true;
-		// }
-		// else if(Input.GetKey(KeyCode.S) || vert < 0)
-		// {
-		// 	// move down
-		// 	transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
-		// 	running = true;
-		// } 
-		
-		// // horizontal movement
-		// if(Input.GetKey(KeyCode.D) || horiz > 0)
-		// {
-		// 	// move right
-		// 	transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
-		// 	running = true;
-		// }
-		// else if(Input.GetKey(KeyCode.A) || horiz < 0)
-		// {
-		// 	// move left
-		// 	transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
-		// 	running = true;
-		// }
-		// else
-		// {
-		// 	anim.SetBool("running", false);			
-		// }
 
 		if(Input.GetButtonDown("Fire2"))
 		{
@@ -148,10 +92,8 @@ public class Player : Actor
 			}
 			else 
 			{
-				//if(Input.GetButton("Fire1"))// && TapNotInMovementJoystick())
 				// if pressing joystick to edge of range
 				if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
-				// if(shooting)
 				{
 					FireProjectile();
 					fireRateTimer = fireRate;
@@ -181,13 +123,6 @@ public class Player : Actor
 		shooting = true;
 	}
 
-	bool TapNotInMovementJoystick()
-	{
-		// Vector2 point = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position
-		// if()
-		return moveJoystick.Direction == Vector2.zero ? true : false;
-	}
-
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if(other.gameObject.tag == "Stockpile")
@@ -201,15 +136,7 @@ public class Player : Actor
 
 	protected override void UpdateAim(Vector2 targetPos)
 	{
-		// for computer
-		// Vector2 targetPos = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-
-		// Vector2 targetPos = moveJoystick.Direction;
-
-		// for mobile
 		targetPos = shootJoystick.Direction;
-		// Vector2 targetPos = 
-
 		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 		upperBody.transform.rotation = rotation;
@@ -224,13 +151,7 @@ public class Player : Actor
 
 	protected override void Die()
 	{
-		resetButton.SetActive(true);
-	}
-
-	public void ResetGame()
-	{
-		resetButton.SetActive(false);
-		SceneManager.LoadSceneAsync(0);
+		FlowManager.instance.GameOver();//BeginResetSequence();
 	}
 
 	public GameObject[] GetSockets()

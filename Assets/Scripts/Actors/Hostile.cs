@@ -164,7 +164,7 @@ public class Hostile : Actor
 			targetSocket = null;
 		}
 
-		Player.pts++;
+		Scoreboard.instance.AddPoints(1);
 
 		EnemySpawner.survivingEnemies--;
 

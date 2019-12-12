@@ -94,7 +94,7 @@ public class Shoota : Actor
 
 	protected override void Die()
 	{
-		Player.pts++;
+		Scoreboard.instance.AddPoints(1);
 
 		EnemySpawner.survivingEnemies--;
 
