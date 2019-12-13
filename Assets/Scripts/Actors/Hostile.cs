@@ -49,7 +49,7 @@ public class Hostile : Actor
 
 		ChooseSocket();
 
-		gotHitTimer = 0.5f;
+		gotHitTimer = 1f;
 	}
 
     void Update()
@@ -65,6 +65,7 @@ public class Hostile : Actor
 		if(gotHit)
 		{
 			gotHitTimer -= Time.deltaTime;
+
 			if(gotHitTimer <= 0f)
 			{
 				gotHitTimer = 0.5f;
@@ -73,10 +74,10 @@ public class Hostile : Actor
 		}
 		else
 		{
-			fireRateTimer -= Time.deltaTime;
 			if(targetInRange)
-			// if(inTargetZone)
 			{
+				fireRateTimer -= Time.deltaTime;
+				
 				anim.SetBool("running", false);
 				
 				if(fireRateTimer <= 0f)
@@ -153,6 +154,30 @@ public class Hostile : Actor
 		//GetComponent<Rigidbody2D>().AddForce()
 		if(hitPoints <= 0)
 			Die();
+
+		// apply feedback
+		StartCoroutine("GotHitFeedback");
+	}
+
+	IEnumerator GotHitFeedback()
+    {
+		SpriteRenderer renderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+	    Color originalColor = renderer.color;
+
+		renderer.color = Color.red;
+
+		// yield return null;
+		yield return new WaitForSeconds(0.2f);
+		renderer.color = originalColor;
+		yield return new WaitForSeconds(0.2f);
+		renderer.color = Color.red;
+		yield return new WaitForSeconds(0.2f);
+		renderer.color = originalColor;
+		yield return new WaitForSeconds(0.2f);
+		renderer.color = Color.red;
+		yield return new WaitForSeconds(0.2f);
+		renderer.color = originalColor;
+		
 	}
 
 	protected override void Die()
@@ -167,7 +192,6 @@ public class Hostile : Actor
 		Scoreboard.instance.AddPoints(1);
 
 		EnemySpawner.survivingEnemies--;
-
 
 		Destroy(gameObject);
 	}

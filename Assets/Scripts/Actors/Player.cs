@@ -123,8 +123,8 @@ public class Player : Actor
 	{
 		if(other.gameObject.tag == "Stockpile")
 		{
-			if(reserveAmmo < 120)
-				reserveAmmo += 30;
+			// if(reserveAmmo < 120)
+			// 	reserveAmmo += 30;
 
 			Destroy(other.gameObject);
 		}
@@ -147,7 +147,7 @@ public class Player : Actor
 
 	protected override void Die()
 	{
-		FlowManager.instance.GameOver();//BeginResetSequence();
+		FlowManager.instance.GameOver();
 	}
 
 	public GameObject[] GetSockets()

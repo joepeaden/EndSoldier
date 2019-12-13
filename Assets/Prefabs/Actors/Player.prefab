@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 5818711741958417352}
-  moveSpeed: 0.2
+  moveSpeed: 0.001
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90,
     type: 3}
   fireRate: 0.2

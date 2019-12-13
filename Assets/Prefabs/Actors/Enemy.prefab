@@ -145,7 +145,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2dbdd2eb05b0d73478fb5ce46f539c91, type: 3}
-  m_Color: {r: 0.082859516, g: 1, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.13331246, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -319,7 +319,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   moveSpeed: 2
   projectile: {fileID: 0}
-  fireRate: 0.5
+  fireRate: 1
   upperBody: {fileID: 0}
   ammo: 0
   reserveAmmo: 0
