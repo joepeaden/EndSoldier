@@ -30,13 +30,13 @@ public class FlowManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadSceneAsync(0);
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void ResetGame()
 	{
 		// resetButton.gameObject.SetActive(false);
-		SceneManager.LoadSceneAsync(0);
+		SceneManager.LoadSceneAsync(1);
         Scoreboard.instance.ResetPoints();
 	}
 

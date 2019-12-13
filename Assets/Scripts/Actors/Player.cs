@@ -21,7 +21,7 @@ public class Player : Actor
 		base.Start();
 		hitPoints = 3;
 		// pts = 0;
-		ammo = 30;
+		ammo = 900;
 		reserveAmmo = 900;
 		UpdateUI();
 		reloading = false;
