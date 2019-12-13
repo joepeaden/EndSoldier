@@ -19,19 +19,15 @@ public class Player : Actor
 	new void Start()
 	{
 		base.Start();
-		hitPoints = 3;
-		// pts = 0;
-		ammo = 900;
-		reserveAmmo = 900;
+		hitPoints = 3;		
 		UpdateUI();
-		reloading = false;
 	}
 
 	public void UpdateUI()
 	{
 		// ptstext.text = "Points: " + pts;
 		hptext.text = "HP: " + hitPoints;
-		ammotext.text = "Ammo: " + ammo + " / " + reserveAmmo;
+		// ammotext.text = "Ammo: " + ammo + " / " + reserveAmmo;
 	}
 
     void Update()
@@ -68,39 +64,39 @@ public class Player : Actor
 		// shooting
 		if(fireRateTimer <= 0f)
 		{	
-			if(reloading == true)
-			{
-				ammo = 15;
-				reserveAmmo -= 15;
-				reloading = false;
-				fireRateTimer = fireRate;
-				anim.SetBool("reloading", false);
+			// if(reloading == true)
+			// {
+			// 	ammo = 15;
+			// 	reserveAmmo -= 15;
+			// 	reloading = false;
+			// 	fireRateTimer = fireRate;
+			// 	anim.SetBool("reloading", false);
 
-			}
-			else if(ammo <= 0)
-			{
-				if(reserveAmmo <= 0)
-				{
+			// }
+			// else if(ammo <= 0)
+			// {
+			// 	if(reserveAmmo <= 0)
+			// 	{
 
-				}
-				 else
-				{
-					anim.Play("vort_reloading");
-					fireRateTimer = 2f;
-					reloading = true;
-				}
-			}
-			else 
-			{
+			// 	}
+			// 	 else
+			// 	{
+			// 		anim.Play("vort_reloading");
+			// 		fireRateTimer = 2f;
+			// 		reloading = true;
+			// 	}
+			// }
+			// else 
+			// {
 				// if pressing joystick to edge of range
-				if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
-				{
-					FireProjectile();
-					fireRateTimer = fireRate;
-					firing = true;
-					shooting = false;
-				}
+			if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
+			{
+				FireProjectile();
+				fireRateTimer = fireRate;
+				firing = true;
+				shooting = false;
 			}
+			// }
 		}
 
 		if(firing)
