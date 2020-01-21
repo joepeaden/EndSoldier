@@ -16,11 +16,14 @@ public class Player : Actor
 	public FixedJoystick moveJoystick;
 	bool shooting;
 
+	public Weapon playerWeapon;
+
 	new void Start()
 	{
 		base.Start();
 		hitPoints = 3;		
 		UpdateUI();
+		weapon = playerWeapon;
 	}
 
 	public void UpdateUI()
@@ -54,54 +57,35 @@ public class Player : Actor
 			anim.SetBool("running", false);			
 		}
 
-		if(Input.GetButtonDown("Fire2"))
+		// if(Input.GetButtonDown("Fire2"))
+		// {
+		// 	foreach(Actor a in MeleeZone.targets)
+		// 		a.GetHit();
+		// }
+
+		// fireRateTimer -= Time.deltaTime;
+		// // shooting
+		// if(fireRateTimer <= 0f)
+		// {	
+		// if pressing joystick to edge of range
+		if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
 		{
-			foreach(Actor a in MeleeZone.targets)
-				a.GetHit();
+			if(weapon != null)
+				weapon.PullTrigger();
 		}
+		// 		FireProjectile();
 
-		fireRateTimer -= Time.deltaTime;
-		// shooting
-		if(fireRateTimer <= 0f)
-		{	
-			// if(reloading == true)
-			// {
-			// 	ammo = 15;
-			// 	reserveAmmo -= 15;
-			// 	reloading = false;
-			// 	fireRateTimer = fireRate;
-			// 	anim.SetBool("reloading", false);
-
-			// }
-			// else if(ammo <= 0)
-			// {
-			// 	if(reserveAmmo <= 0)
-			// 	{
-
-			// 	}
-			// 	 else
-			// 	{
-			// 		anim.Play("vort_reloading");
-			// 		fireRateTimer = 2f;
-			// 		reloading = true;
-			// 	}
-			// }
-			// else 
-			// {
-				// if pressing joystick to edge of range
-			if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
-			{
-				FireProjectile();
-				fireRateTimer = fireRate;
-				firing = true;
-				shooting = false;
-			}
-			// }
-		}
+		// 		gunSound.Play();
+				
+		// 		fireRateTimer = fireRate;
+		// 		firing = true;
+		// 		shooting = false;
+		// 	}
+		// }
 
 		if(firing)
 		{
-			anim.Play("vort_firing");//SetBool("firing", true);			
+			anim.Play("vort_firing");
 		}
 		else if(running)
 		{
@@ -138,9 +122,9 @@ public class Player : Actor
 		upperBody.transform.rotation = rotation;
 	}
 
-	public override void GetHit()
+	public override void GetHit(int damage, float impact)
 	{
-		hitPoints--;
+		hitPoints -= damage;
 		if(hitPoints <= 0)
 			Die();
 	}

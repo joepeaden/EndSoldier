@@ -121,7 +121,7 @@ public class Hostile : Actor
 		if(targetInRange)
 		// if(inTargetZone)
 		{
-			player.GetComponent<Player>().GetHit();
+			// player.GetComponent<Player>().GetHit();
 		}
 	}
 
@@ -147,9 +147,9 @@ public class Hostile : Actor
 		return playerVector;
 	}
 
-	public override void GetHit()
+	public override void GetHit(int damage, float impact)
 	{
-		hitPoints--;
+		hitPoints -= damage;
 		gotHit = true;
 		//GetComponent<Rigidbody2D>().AddForce()
 		if(hitPoints <= 0)
