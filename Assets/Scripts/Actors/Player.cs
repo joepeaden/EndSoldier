@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class Player : Actor
 {
 	public GameObject[] sockets;
-	// public static int pts;
 	public Text ptstext;
 	public Text hptext;
 	public Text ammotext;
@@ -14,16 +13,15 @@ public class Player : Actor
 	// joysticks
 	public FixedJoystick shootJoystick;
 	public FixedJoystick moveJoystick;
-	bool shooting;
-
-	public Weapon playerWeapon;
+	
+	public Weapon heavyBolter;
+	public Weapon bolter;
 
 	new void Start()
 	{
-		base.Start();
+		// base.Start();
 		hitPoints = 3;		
 		UpdateUI();
-		weapon = playerWeapon;
 	}
 
 	public void UpdateUI()
@@ -63,25 +61,17 @@ public class Player : Actor
 		// 		a.GetHit();
 		// }
 
-		// fireRateTimer -= Time.deltaTime;
-		// // shooting
-		// if(fireRateTimer <= 0f)
-		// {	
-		// if pressing joystick to edge of range
 		if(shootJoystick.Direction.magnitude == shootJoystick.HandleRange)
 		{
 			if(weapon != null)
-				weapon.PullTrigger();
+			{
+				bool ammoInWeapon = weapon.PullTrigger();
+				// if out of ammo, ammoInWeapon will be false
+				if(!ammoInWeapon) {
+					weapon = bolter;
+				}
+			}
 		}
-		// 		FireProjectile();
-
-		// 		gunSound.Play();
-				
-		// 		fireRateTimer = fireRate;
-		// 		firing = true;
-		// 		shooting = false;
-		// 	}
-		// }
 
 		if(firing)
 		{
@@ -98,20 +88,24 @@ public class Player : Actor
 		}
 	}
 
-	public void Shoot()
-	{
-		shooting = true;
-	}
-
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.gameObject.tag == "Stockpile")
+		if(other.tag == "Pickup")
 		{
-			// if(reserveAmmo < 120)
-			// 	reserveAmmo += 30;
-
+			ReloadWeapon();
+			SwitchWeapons();
 			Destroy(other.gameObject);
 		}
+	}
+
+	private void ReloadWeapon()
+	{
+		heavyBolter.AddAmmo(50);
+	}
+
+	private void SwitchWeapons()
+	{
+		weapon = heavyBolter;
 	}
 
 	protected override void UpdateAim(Vector2 targetPos)

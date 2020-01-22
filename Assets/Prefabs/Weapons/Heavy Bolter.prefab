@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22a65a48c2f17041bfd1a25fcb8fe0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 5607425388531144713, guid: 10e53212ae4dd434ba9eea4767de7b90,
+  projectile: {fileID: 1799988338329022087, guid: a50395f0b43e1b848840f0799dc20fd0,
     type: 3}
   fireWeaponSound: {fileID: 3196035876129628755}
 --- !u!82 &3196035876129628755

@@ -6,6 +6,7 @@ public class HeavyBolter : Weapon
 {
     protected override void Initialize()
     {
+        ammo = 0;
         fireRate = 0.05f;
     }
 }

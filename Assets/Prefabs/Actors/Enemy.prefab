@@ -323,6 +323,7 @@ MonoBehaviour:
   upperBody: {fileID: 0}
   ammo: 0
   reserveAmmo: 0
+  weapon: {fileID: 0}
   targetSocket: {fileID: 0}
   aimAngle: {x: 0, y: 0, z: 0, w: 0}
   targetZone: {fileID: 1460239788}

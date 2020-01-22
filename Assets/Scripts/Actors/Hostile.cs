@@ -38,7 +38,7 @@ public class Hostile : Actor
 
 	new void Start()
 	{
-		base.Start();
+		// base.Start();
 		hitPoints = 3;
 
 		anim = transform.GetChild(0).GetComponent<Animator>();
@@ -119,9 +119,8 @@ public class Hostile : Actor
 	private void Attack()
 	{
 		if(targetInRange)
-		// if(inTargetZone)
 		{
-			// player.GetComponent<Player>().GetHit();
+			player.GetComponent<Player>().GetHit(1, 0);
 		}
 	}
 

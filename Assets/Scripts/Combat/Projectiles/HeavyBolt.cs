@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bolt : Projectile
+public class HeavyBolt : Projectile
 {
     protected override void Instantiate()
     {
-        damage = 1;
-        speed = 0.5f;
+        damage = 2;
+        speed = 0.4f;
         impact = 1f;
         // maybe this should be true... attention to detail!
         is_explosive = false;

@@ -19,19 +19,7 @@ public abstract class Actor : MonoBehaviour
 	public int ammo;
 	public int reserveAmmo;
 	
-	protected Weapon weapon;
-
-	protected void Start()
-	{
-		//anim = GetComponent<Animator>();
-		// fireRateTimer = fireRate;
-	}
-
-	// protected virtual void FireProjectile()
-	// {
-	// 	GameObject proj = Instantiate(projectile, upperBody.transform.position, upperBody.transform.rotation);
-	// 	ammo--;
-	// }
+	public Weapon weapon;
 
 	protected abstract void UpdateAim(Vector2 targetPos);
 

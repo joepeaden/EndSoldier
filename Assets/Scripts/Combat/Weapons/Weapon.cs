@@ -11,7 +11,9 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField]
     protected Projectile projectile;
     protected float fireRate;
-    protected int ammo;
+    // infinite ammo weapons need at least one shot
+    protected int ammo = 1;
+    protected bool infiniteAmmo;
 
     [SerializeField]
 	private AudioSource fireWeaponSound;
@@ -23,14 +25,24 @@ public abstract class Weapon : MonoBehaviour
         Initialize();
     }
 
-    public void PullTrigger()
+    public bool PullTrigger()
     {
+        // wait for gun to cycle (fire rate)
         if(bulletInChamber)
             Fire();
+
+        // returning false to indicate to player out of ammo
+        if(ammo == 0)
+           return false;
+
+        return true;
     }
 
     private void Fire()
     {
+        if(!infiniteAmmo)
+            ammo--;
+        
         bulletInChamber = false;
 
         // need to put bullet at end of gun barrel so it doesn't hit player
@@ -40,15 +52,22 @@ public abstract class Weapon : MonoBehaviour
         Instantiate(projectile, bulletSpawnPosition, transform.rotation);
         
         fireWeaponSound.Play();
-        StartCoroutine("LoadNewBullet");
+        
+        if(ammo > 0)
+            StartCoroutine("LoadNewBullet");
     }
 
-    // need to think of a better name
     // refers to the time in between shots
     private IEnumerator LoadNewBullet()
     {
         yield return new WaitForSeconds(fireRate);
         bulletInChamber = true;
+    }
+
+    public void AddAmmo(int ammo)
+    {
+        this.ammo += ammo;
+        StartCoroutine("LoadNewBullet");
     }
 
     protected abstract void Initialize();
