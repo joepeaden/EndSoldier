@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5898653181455473339}
   - component: {fileID: 2323711557427982635}
   - component: {fileID: 331730604881458570}
-  - component: {fileID: 5607425388531144713}
+  - component: {fileID: 9214282060241871255}
   m_Layer: 0
   m_Name: Bolt
   m_TagString: Untagged
@@ -130,7 +130,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5607425388531144713
+--- !u!114 &9214282060241871255
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,6 +139,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6425079759990356200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1433bea6dcae0154194055674b897b8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 197e2c23723fd1547ab522ad46c36825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.5
+  impact: 75
+  range: 0
+  damage: 1
+  is_explosive: 0

@@ -6,30 +6,32 @@ using UnityEngine;
 // Purpose: Represents all types of weapons, ranged or melee
 //          Player and AI should be able to use this
 
-public abstract class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     [SerializeField]
     protected Projectile projectile;
-    protected float fireRate;
-    // infinite ammo weapons need at least one shot
-    protected int ammo = 1;
-    protected bool infiniteAmmo;
-
     [SerializeField]
-	private AudioSource fireWeaponSound;
-    private bool bulletInChamber;
+    protected float attackRate;
+    // infinite ammo weapons need at least one shot
+    [SerializeField]
+    protected int ammo = 1;
+    [SerializeField]
+    protected bool infiniteAmmo;
+    [SerializeField]
+	private AudioSource attackSound;
+    private bool readyToAttack;
 
     public void Start()
     {
-        bulletInChamber = true;
-        Initialize();
+        readyToAttack = true;
+        // Initialize();
     }
 
-    public bool PullTrigger()
+    public bool InitiateAttack()
     {
         // wait for gun to cycle (fire rate)
-        if(bulletInChamber)
-            Fire();
+        if(readyToAttack)
+            LaunchAttack();
 
         // returning false to indicate to player out of ammo
         if(ammo == 0)
@@ -38,38 +40,38 @@ public abstract class Weapon : MonoBehaviour
         return true;
     }
 
-    private void Fire()
+    private void LaunchAttack()
     {
         if(!infiniteAmmo)
             ammo--;
         
-        bulletInChamber = false;
+        readyToAttack = false;
 
         // need to put bullet at end of gun barrel so it doesn't hit player
-        Vector3 bulletSpawnPosition = transform.position;
-        bulletSpawnPosition += transform.right * 1.5f;
+        Vector3 projectileSpawnPosition = transform.position;
+        projectileSpawnPosition += transform.right * 1.5f;
         
-        Instantiate(projectile, bulletSpawnPosition, transform.rotation);
+        Instantiate(projectile, projectileSpawnPosition, transform.rotation);
         
-        fireWeaponSound.Play();
+        attackSound.Play();
         
         if(ammo > 0)
-            StartCoroutine("LoadNewBullet");
+            StartCoroutine("PrepareToAttack");
     }
 
     // refers to the time in between shots
-    private IEnumerator LoadNewBullet()
+    private IEnumerator PrepareToAttack()
     {
-        yield return new WaitForSeconds(fireRate);
-        bulletInChamber = true;
+        yield return new WaitForSeconds(attackRate);
+        readyToAttack = true;
     }
 
     public void AddAmmo(int ammo)
     {
         this.ammo += ammo;
-        StartCoroutine("LoadNewBullet");
+        StartCoroutine("PrepareToAttack");
     }
 
-    protected abstract void Initialize();
+    // protected void Initialize();
 
 }

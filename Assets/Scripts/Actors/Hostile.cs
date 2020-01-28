@@ -120,7 +120,7 @@ public class Hostile : Actor
 	{
 		if(targetInRange)
 		{
-			player.GetComponent<Player>().GetHit(1, 0);
+			player.GetComponent<Player>().GetHit(1);
 		}
 	}
 
@@ -146,11 +146,10 @@ public class Hostile : Actor
 		return playerVector;
 	}
 
-	public override void GetHit(int damage, float impact)
+	public override void GetHit(int damage)
 	{
 		hitPoints -= damage;
 		gotHit = true;
-		//GetComponent<Rigidbody2D>().AddForce()
 		if(hitPoints <= 0)
 			Die();
 

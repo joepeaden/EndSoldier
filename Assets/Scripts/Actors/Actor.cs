@@ -15,15 +15,15 @@ public abstract class Actor : MonoBehaviour
 	public GameObject upperBody;
 
 	protected int hitPoints;
-
+	protected int maxHitPoints;
 	public int ammo;
 	public int reserveAmmo;
-	
 	public Weapon weapon;
+ 
 
 	protected abstract void UpdateAim(Vector2 targetPos);
 
-	public abstract void GetHit(int damage, float impact);
+	public abstract void GetHit(int damage);
 
 	protected abstract void Die();
 }

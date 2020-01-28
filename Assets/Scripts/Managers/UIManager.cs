@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public Text waveText;
+    public SimpleHealthBar healthBar;
 
     void Start()
     {
@@ -18,6 +19,8 @@ public class UIManager : MonoBehaviour
         FindButtons(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
+    // eventaully remove this method, check for null in each individual method
+    // like in healthbar
      private void FindButtons(Scene scene, LoadSceneMode mode)
     {
         switch(scene.name)
@@ -62,4 +65,14 @@ public class UIManager : MonoBehaviour
     {
         waveText.text = "Wave: " + wave; 
     } 
+
+    public void UpdateHealthBar(int currentHP, int maxHP)
+    {
+        if(healthBar == null)
+        {
+            healthBar = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<SimpleHealthBar>();
+        }
+
+        healthBar.UpdateBar(currentHP, maxHP); 
+    }
 }

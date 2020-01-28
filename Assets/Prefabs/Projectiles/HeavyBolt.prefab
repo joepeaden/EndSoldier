@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4458717542788931807}
   - component: {fileID: 5898653181455473339}
   - component: {fileID: 2323711557427982635}
-  - component: {fileID: 1799988338329022087}
   - component: {fileID: 331730604881458570}
+  - component: {fileID: -2763131945341080325}
   m_Layer: 0
   m_Name: HeavyBolt
   m_TagString: Untagged
@@ -109,18 +109,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1799988338329022087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6425079759990356200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ef85985fe1f66c4eae0086078b28f47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &331730604881458570
 Rigidbody2D:
   serializedVersion: 4
@@ -142,3 +130,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-2763131945341080325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6425079759990356200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197e2c23723fd1547ab522ad46c36825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.4
+  impact: 100
+  range: 0
+  damage: 2
+  is_explosive: 0

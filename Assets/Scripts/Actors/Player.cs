@@ -19,22 +19,12 @@ public class Player : Actor
 
 	new void Start()
 	{
-		// base.Start();
-		hitPoints = 3;		
-		UpdateUI();
-	}
-
-	public void UpdateUI()
-	{
-		// ptstext.text = "Points: " + pts;
-		hptext.text = "HP: " + hitPoints;
-		// ammotext.text = "Ammo: " + ammo + " / " + reserveAmmo;
+		maxHitPoints = 5;
+		hitPoints = 5;
 	}
 
     void Update()
 	{
-		UpdateUI();
-
 		if(shootJoystick.Direction != Vector2.zero)
 			// make upper body follow mouse
 			UpdateAim(Vector2.zero);
@@ -65,7 +55,7 @@ public class Player : Actor
 		{
 			if(weapon != null)
 			{
-				bool ammoInWeapon = weapon.PullTrigger();
+				bool ammoInWeapon = weapon.InitiateAttack();
 				// if out of ammo, ammoInWeapon will be false
 				if(!ammoInWeapon) {
 					weapon = bolter;
@@ -116,9 +106,12 @@ public class Player : Actor
 		upperBody.transform.rotation = rotation;
 	}
 
-	public override void GetHit(int damage, float impact)
+	public override void GetHit(int damage)
 	{
 		hitPoints -= damage;
+
+		UIManager.instance.UpdateHealthBar(hitPoints, maxHitPoints);
+
 		if(hitPoints <= 0)
 			Die();
 	}

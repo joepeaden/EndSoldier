@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
+    [SerializeField]
 	protected float speed;
-    protected float impact;
+    [SerializeField]
+    public float impact;
+    [SerializeField]
     protected float range;
+    [SerializeField]
     protected int damage;
+    [SerializeField]
     protected bool is_explosive;
  
     void Start()
     {
-        Instantiate();
+        // Instantiate();
     }
 
     void Update()
@@ -30,8 +35,9 @@ public abstract class Projectile : MonoBehaviour
     	Actor actor = other.GetComponent<Actor>();
     	if(actor != null)
 	    {
-            actor.GetHit(damage, impact);
-            
+            actor.GetComponent<Rigidbody2D>().AddForce(transform.right * impact);
+            actor.GetHit(damage);
+
             if(is_explosive)
             {
                 // implement method per projectile types
@@ -40,12 +46,12 @@ public abstract class Projectile : MonoBehaviour
 
             Destroy(gameObject);
 	    }
-    }
+    } 
 
-    void CreateExplosion()
+    protected void CreateExplosion()
     {
         Debug.Log("Boom");
     }
 
-    protected abstract void Instantiate();
+    // protected abstract void Instantiate();
 }
