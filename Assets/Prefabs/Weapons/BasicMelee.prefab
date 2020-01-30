@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7790390169505192515}
   - component: {fileID: 3196035876129628755}
   m_Layer: 0
-  m_Name: Heavy Bolter 1
+  m_Name: BasicMelee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d02c79f0aceb34a895e5fe96533e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: -2763131945341080325, guid: a50395f0b43e1b848840f0799dc20fd0,
+  projectile: {fileID: 9214282060241871255, guid: bf0ef7391f521ef419c8314996ab60ba,
     type: 3}
-  attackRate: 0.05
+  attackRate: 1
   ammo: 1
   infiniteAmmo: 1
   attackSound: {fileID: 3196035876129628755}
@@ -60,7 +60,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6356ef45281155d45b57df688e338dc4, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 69b64fc20ab6a734da249409649a1f44, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

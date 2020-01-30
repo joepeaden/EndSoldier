@@ -74,5 +74,17 @@ public class UIManager : MonoBehaviour
         }
 
         healthBar.UpdateBar(currentHP, maxHP); 
+        
+        float healthPercentage = (float)currentHP/(float)maxHP;
+
+        if (healthPercentage >= .66)
+            healthBar.UpdateColor(Color.green);
+        else if (healthPercentage >= .33)
+            healthBar.UpdateColor(Color.yellow);
+        else
+            healthBar.UpdateColor(Color.red);
+    
+
+
     }
 }

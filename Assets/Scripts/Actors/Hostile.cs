@@ -6,35 +6,12 @@ public class Hostile : Actor
 {
 	bool targetInRange;
 	GameObject player;
-	GameObject[] sockets;
-	public GameObject targetSocket = null;
+	// // public GameObject targetSocket = null;
 	bool inTargetZone;
 	bool gotHit;
 	float gotHitTimer;
 	public Quaternion aimAngle;
 	public Transform targetZone;
-
-	// might be a good place for an Observer pattern, e.g. notify observers of socket being taken
-	// subject: player, observer: hostile
-	void ChooseSocket()
-	{
-		sockets = player.GetComponent<Player>().GetSockets();
-		foreach(GameObject s in sockets)
-		{
-			Socket socket = s.GetComponent<Socket>();
-
-			if(!socket.IsOccupied())
-			{
-				targetSocket = socket.OccupiedBy(gameObject);
-				break;
-			}
-		}
-	}
-
-	public void ReachedTargetZone(bool b)
-	{
-		inTargetZone = b;
-	}
 
 	new void Start()
 	{
@@ -47,7 +24,7 @@ public class Hostile : Actor
 		
 		player = GameObject.FindGameObjectWithTag("Player");
 
-		ChooseSocket();
+		// ChooseSocket();
 
 		gotHitTimer = 1f;
 	}
@@ -55,10 +32,10 @@ public class Hostile : Actor
     void Update()
 	{
 		GameObject target;
-		if(targetSocket != null)
-			target = targetSocket;
-		else
-			target = player;
+		// if(targetSocket != null)
+		// 	target = targetSocket;
+		// else
+		target = player;
 
 		UpdateAim(Vector2.zero);
 
@@ -76,16 +53,16 @@ public class Hostile : Actor
 		{
 			if(targetInRange)
 			{
-				fireRateTimer -= Time.deltaTime;
-				
 				anim.SetBool("running", false);
-				
-				if(fireRateTimer <= 0f)
+				if(weapon != null)
 				{
 					anim.Play("vort_firing");
-					fireRateTimer = fireRate;
-					Attack();
-				}
+					bool ammoInWeapon = weapon.InitiateAttack();
+					// if out of ammo, ammoInWeapon will be false
+					if(!ammoInWeapon) {
+						;
+					}
+				}				
 			}
 			else
 			{
@@ -116,13 +93,26 @@ public class Hostile : Actor
 		}
 	}
 
-	private void Attack()
+	public void ReachedTargetZone(bool b)
 	{
-		if(targetInRange)
-		{
-			player.GetComponent<Player>().GetHit(1);
-		}
+		inTargetZone = b;
 	}
+
+	// private void Attack()
+	// {
+	// 	if(targetInRange)
+	// 	{
+	// 		if(weapon != null)
+	// 		{
+	// 			bool ammoInWeapon = weapon.InitiateAttack();
+	// 			// if out of ammo, ammoInWeapon will be false
+	// 			if(!ammoInWeapon) {
+	// 				;
+	// 			}
+	// 		}
+	// 		// player.GetComponent<Player>().GetHit(1);
+	// 	}
+	// }
 
 	public void TargetInRange(bool inRange)
 	{
@@ -131,8 +121,18 @@ public class Hostile : Actor
 
 	protected override void UpdateAim(Vector2 targetPos)
 	{
+		// code for aiming of weapon
 		// for some reason, playervector needs to be negative for shooting to work
 		targetPos = -(GetPlayerVector());
+		float angle = Mathf.Atan2(targetPos.y, targetPos.x) * Mathf.Rad2Deg;
+		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		upperBody.transform.rotation = rotation;
+
+		// code for melee range zone - should be updated when creating shooting enemies
+		// 1. perhaps a raycast to see if the ray hits player, and check magnitude of ray to see if 
+		// 	  player is within range of this weapon
+		// 2. if that's too hard, can use a collider of various lengths attatched to the end
+		//    of the weapon to detect player in range 
 		targetPos.Normalize();
 		targetPos *= 0.25f; 
 		targetZone.position = targetPos + (Vector2)transform.position;
@@ -154,38 +154,17 @@ public class Hostile : Actor
 			Die();
 
 		// apply feedback
-		StartCoroutine("GotHitFeedback");
-	}
-
-	IEnumerator GotHitFeedback()
-    {
-		SpriteRenderer renderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-	    Color originalColor = renderer.color;
-
-		renderer.color = Color.red;
-
-		// yield return null;
-		yield return new WaitForSeconds(0.2f);
-		renderer.color = originalColor;
-		yield return new WaitForSeconds(0.2f);
-		renderer.color = Color.red;
-		yield return new WaitForSeconds(0.2f);
-		renderer.color = originalColor;
-		yield return new WaitForSeconds(0.2f);
-		renderer.color = Color.red;
-		yield return new WaitForSeconds(0.2f);
-		renderer.color = originalColor;
-		
+		StartCoroutine("SpriteColorFlash");
 	}
 
 	protected override void Die()
 	{
 		// vacate the socket if occupied
-		if(targetSocket != null)
-		{
-			targetSocket.GetComponent<Socket>().EmptySocket();
-			targetSocket = null;
-		}
+		// if(targetSocket != null)
+		// {
+		// 	targetSocket.GetComponent<Socket>().EmptySocket();
+		// 	targetSocket = null;
+		// }
 
 		Scoreboard.instance.AddPoints(1);
 

@@ -19,8 +19,8 @@ public class Player : Actor
 
 	new void Start()
 	{
-		maxHitPoints = 5;
-		hitPoints = 5;
+		maxHitPoints = 10;
+		hitPoints = 10;
 	}
 
     void Update()
@@ -114,6 +114,8 @@ public class Player : Actor
 
 		if(hitPoints <= 0)
 			Die();
+
+		StartCoroutine("SpriteColorFlash");
 	}
 
 	protected override void Die()
