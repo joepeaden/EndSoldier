@@ -21,6 +21,7 @@ public class Player : Actor
 	{
 		maxHitPoints = 10;
 		hitPoints = 10;
+        UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
     void Update()
@@ -33,12 +34,11 @@ public class Player : Actor
 		bool running = false;
 
 	
-		if(moveJoystick.Vertical != 0 || moveJoystick.Horizontal != 0) //vert != 0 || horiz != 0)
+		if(moveJoystick.Vertical != 0 || moveJoystick.Horizontal != 0)
 		{
-			Vector2 moveVector = moveJoystick.Direction;//Vector3.Normalize(moveJoystick.Direction);
+			Vector2 moveVector = moveJoystick.Direction;
 			transform.Translate(moveVector * moveSpeed);
 			running = true;
-			// UpdateAim(moveVector);
 		} 
 		else
 		{
@@ -58,8 +58,9 @@ public class Player : Actor
 				bool ammoInWeapon = weapon.InitiateAttack();
 				// if out of ammo, ammoInWeapon will be false
 				if(!ammoInWeapon) {
-					weapon = bolter;
+					weapon = bolter;					
 				}
+				UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 			}
 		}
 
@@ -96,6 +97,7 @@ public class Player : Actor
 	private void SwitchWeapons()
 	{
 		weapon = heavyBolter;
+        UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
 	protected override void UpdateAim(Vector2 targetPos)
@@ -122,9 +124,4 @@ public class Player : Actor
 	{
 		FlowManager.instance.GameOver();
 	}
-
-	public GameObject[] GetSockets()
-	{
-		return sockets;
-	} 
 }

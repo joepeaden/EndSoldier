@@ -49,6 +49,7 @@ MonoBehaviour:
   attackRate: 0.25
   ammo: 1
   infiniteAmmo: 1
+  name: Bolter
   attackSound: {fileID: -692493353058466065}
 --- !u!82 &-692493353058466065
 AudioSource:

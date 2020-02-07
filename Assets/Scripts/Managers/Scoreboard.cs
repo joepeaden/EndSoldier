@@ -27,11 +27,13 @@ public class Scoreboard : MonoBehaviour
     public void AddPoints(int points)
     {
         this.points += points;
+        UIManager.instance.UpdatePointsUI(this.points);
     }
 
     public void ResetPoints()
     {
         points = 0;
+        UIManager.instance.UpdatePointsUI(this.points);
     }
 
 }

@@ -18,6 +18,8 @@ public class Weapon : MonoBehaviour
     [SerializeField]
     protected bool infiniteAmmo;
     [SerializeField]
+    protected string name;
+    [SerializeField]
 	private AudioSource attackSound;
     private bool readyToAttack;
 
@@ -72,6 +74,13 @@ public class Weapon : MonoBehaviour
         StartCoroutine("PrepareToAttack");
     }
 
-    // protected void Initialize();
+    public int GetAmmo()
+    {
+        return ammo;
+    }
 
+    public string GetName()
+    {
+        return name;
+    }
 }

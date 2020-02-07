@@ -7,63 +7,46 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    public Text waveText;
-    public SimpleHealthBar healthBar;
+    private Text waveText;
+    private Text pointsText; 
+    private Text weaponText;
+    private SimpleHealthBar healthBar;
+
 
     void Start()
     {
         if(instance == null)
             instance = this;
-
-        SceneManager.sceneLoaded += FindButtons;
-        FindButtons(SceneManager.GetActiveScene(), LoadSceneMode.Single);
     }
 
-    // eventaully remove this method, check for null in each individual method
-    // like in healthbar
-     private void FindButtons(Scene scene, LoadSceneMode mode)
+    public void UpdatePointsUI(int pts)
     {
-        switch(scene.name)
+        if(pointsText == null)
         {
-            case "Battle":
-                
-                // Reset Button 
-                // Button debugResetButton = GameObject.Find("ResetButton").GetComponent<Button>();
-                // debugResetButton.onClick.AddListener(FlowManager.instance.ResetGame);
-                // FlowManager.instance.AssignResetButton(debugResetButton);
-                // debugResetButton.gameObject.SetActive(false);
-
-                // Wave Text (UI)
-                waveText = GameObject.Find("WaveText").GetComponent<Text>();
-
-                break;
-
-            case "Menu":
-
-                // Start Button
-                Button startButton = GameObject.Find("StartButton").GetComponent<Button>();
-                startButton.onClick.AddListener(FlowManager.instance.StartGame);
-
-                break;
-
-            case "Scores":
-
-                // Score Text 
-                Text scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
-                scoreText.text = "FINAL SCORE: " + Scoreboard.instance.GetPoints();
-
-                // Reset Button 
-                Button resetButton = GameObject.Find("ResetButton").GetComponent<Button>();
-                resetButton.onClick.AddListener(FlowManager.instance.ResetGame);
-                // FlowManager.instance.AssignResetButton(resetButton);
-
-                break;
+            pointsText = GameObject.FindGameObjectWithTag("PointsText").GetComponent<Text>();
         }
-    }
+
+        pointsText.text = "Points: " + pts; 
+    } 
 
     public void UpdateWaveUI(int wave)
     {
+        if(waveText == null)
+        {
+            waveText = GameObject.FindGameObjectWithTag("WaveText").GetComponent<Text>();
+        }
+
         waveText.text = "Wave: " + wave; 
+    } 
+
+    public void UpdateWeaponInfoUI(string weaponName, int ammo)
+    {
+        if(weaponText == null)
+        {
+            weaponText = GameObject.FindGameObjectWithTag("WeaponText").GetComponent<Text>();
+        }
+
+        weaponText.text = weaponName + ": " + ammo; 
     } 
 
     public void UpdateHealthBar(int currentHP, int maxHP)
@@ -83,8 +66,5 @@ public class UIManager : MonoBehaviour
             healthBar.UpdateColor(Color.yellow);
         else
             healthBar.UpdateColor(Color.red);
-    
-
-
     }
 }

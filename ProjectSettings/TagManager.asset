@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Pickup
   - HealthBar
+  - WaveText
+  - PointsText
+  - WeaponText
   layers:
   - Default
   - TransparentFX

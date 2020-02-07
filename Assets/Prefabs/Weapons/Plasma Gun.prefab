@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7790390169505192515}
   - component: {fileID: 3196035876129628755}
   m_Layer: 0
-  m_Name: Heavy Bolter
+  m_Name: Plasma Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,12 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d02c79f0aceb34a895e5fe96533e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: -2763131945341080325, guid: a50395f0b43e1b848840f0799dc20fd0,
+  projectile: {fileID: -2763131945341080325, guid: 193766aaff9499a4d860d64e5d06a64c,
     type: 3}
-  attackRate: 0.05
+  attackRate: 0.3
   ammo: 1
   infiniteAmmo: 0
-  name: Heavy Bolter
+  name: Plasma Gun
   attackSound: {fileID: 3196035876129628755}
 --- !u!82 &3196035876129628755
 AudioSource:
