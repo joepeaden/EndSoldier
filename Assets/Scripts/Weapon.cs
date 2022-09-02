@@ -10,8 +10,13 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField]
     protected Projectile projectile;
+
     [SerializeField]
-    protected float attackRate;
+    public float recoil;
+
+    // how long it takes between attacks with this weapon
+    [SerializeField]
+    protected float attackInterval;
     // infinite ammo weapons need at least one shot
     [SerializeField]
     protected int ammo = 1;
@@ -19,8 +24,6 @@ public class Weapon : MonoBehaviour
     protected bool infiniteAmmo;
     [SerializeField]
     protected string name;
-    [SerializeField]
-    protected float recoil;
 
     [SerializeField]
 	private AudioSource attackSound;
@@ -55,10 +58,11 @@ public class Weapon : MonoBehaviour
         // need to put bullet at end of gun barrel so it doesn't hit player
         Vector3 projectileSpawnPosition = transform.position;
         projectileSpawnPosition += transform.right * 1.5f;
-        
-        Instantiate(projectile, projectileSpawnPosition, transform.rotation);
-        
-        
+
+        //Quaternion fireDirection = new Quaternion();
+        //fireDirection.eulerAngles = transform.rotation.eulerAngles * (Random.Range(-1, 1) * recoil);
+
+        Instantiate(projectile, projectileSpawnPosition, transform.rotation);//fireDirection);
 
         attackSound.Play();
         
@@ -69,7 +73,7 @@ public class Weapon : MonoBehaviour
     // refers to the time in between shots
     private IEnumerator PrepareToAttack()
     {
-        yield return new WaitForSeconds(attackRate);
+        yield return new WaitForSeconds(attackInterval);
         readyToAttack = true;
     }
 

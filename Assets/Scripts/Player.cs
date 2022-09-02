@@ -8,19 +8,10 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-	public Text ptstext;
-	public Text hptext;
-	public Text ammotext;
-	public bool reloading;
-
 	public Transform reticle;
 	public GameObject laser;
 
-    public Weapon heavyBolter;
-	public Weapon bolter;
-
-	[SerializeField]
-	private Animator anim;
+	public Weapon primaryWeapon;
 
 	[SerializeField]
 	private PlayerData data;
@@ -31,20 +22,20 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private Weapon weapon;
 
+	// should eventually probably move to PlayerData SO - just not sure how it will work out right now
+	public float rotationTorque;
+
 	private float moveSpeed;
 	private int hitPoints;
 
 	new void Start()
 	{
-		data.hitPoints = 10;
-		hitPoints = 10;
-        UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
+		hitPoints = data.hitPoints;
+        //UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
     void Update()
 	{
-		//bool firing = false;
-		//bool running = false;
 		bool sprinting = false;
 
 		// slow down and improve aim if we're "aiming"
@@ -83,68 +74,36 @@ public class Player : MonoBehaviour
 		if (moveVector != Vector3.zero)
 		{
 			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
-
-			//transform.Translate(moveVector * moveSpeed * Time.deltaTime);
-			//running = true;
 		}
-		//else
-		//{
-		//    anim.SetBool("running", false);
-		//}
 
 		if (!sprinting && Input.GetButton("Fire1"))
         {
             if (weapon != null)
             {
                 bool ammoInWeapon = weapon.InitiateAttack();
+
+                ApplyRecoil();
+
+                //upperBody.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-1, 1) * weapon.recoil);
+
                 // if out of ammo, ammoInWeapon will be false
                 if (!ammoInWeapon)
                 {
-                    weapon = bolter;
+                    weapon = primaryWeapon;
                 }
-                UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
+
+
+                //UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
             }
         }
-
-  //      if (firing)
-		//{
-		//	anim.Play("vort_firing");
-		//}
-		//else if(running)
-		//{
-		//	anim.SetBool("running", true);
-		//}
-		//else
-		//{
-		//	anim.SetBool("running", false);			
-		//	anim.SetBool("firing", false);			
-		//}
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if(other.tag == "Pickup")
-		{
-			ReloadWeapon();
-			SwitchWeapons();
-			Destroy(other.gameObject);
-		}
-	}
+    protected void ApplyRecoil()
+    {
+        weapon.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-1, 1) * weapon.recoil);
+    }
 
-	private void ReloadWeapon()
-	{
-		heavyBolter.AddAmmo(50);
-	}
-
-	private void SwitchWeapons()
-	{
-		weapon = heavyBolter;
-        UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
-	}
-
-	Vector2 oldAimVector;
-	public float rotationTorque;
-	protected void UpdateAim(Vector2 aimVector)
+    protected void UpdateAim(Vector2 aimVector)
 	{
 		// normalized direction to shoot the projectile
 		aimVector = (reticle.position - transform.position).normalized;
@@ -153,9 +112,9 @@ public class Player : MonoBehaviour
 		float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        // doesn't work
-        bool crossedZeroDown = rotation.eulerAngles.z > 305 && upperBody.transform.rotation.eulerAngles.z < 45;
-        bool crossedZeroUp = rotation.eulerAngles.z < 45 && upperBody.transform.rotation.eulerAngles.z > 305;
+        // if we cross from 360 - 0 or the other way around, handle it
+        bool crossedZeroDown = rotation.eulerAngles.z > 180 && upperBody.transform.rotation.eulerAngles.z < 90;
+        bool crossedZeroUp = rotation.eulerAngles.z < 90 && upperBody.transform.rotation.eulerAngles.z > 180;
 
 		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 3)
 		{
@@ -165,29 +124,21 @@ public class Player : MonoBehaviour
 		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
 		{
             upperBody.GetComponent<Rigidbody2D>().AddTorque(rotationTorque);
-           // Debug.Log("Current Rotation: " + upperBody.transform.rotation.eulerAngles + " | New Rotation: " + rotation.eulerAngles);
-		}
+    	}
 		else
 		{
 			upperBody.GetComponent<Rigidbody2D>().AddTorque(-rotationTorque);
 		}
-
-
-		oldAimVector = aimVector;
-
-        //upperBody.transform.rotation = rotation;
     }
 
 	public void GetHit(int damage)
 	{
 		hitPoints -= damage;
 
-		UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
+		//UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
 
 		if(hitPoints <= 0)
 			Die();
-
-		StartCoroutine("SpriteColorFlash");
 	}
 
 	protected void Die()

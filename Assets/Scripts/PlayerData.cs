@@ -13,4 +13,5 @@ public class PlayerData : ScriptableObject
 	public float sprintMoveForce;
 	[SerializeField]
 	public int hitPoints;
+	public float recoilControl;
 }

@@ -18,7 +18,7 @@ public class Hostile : Actor
 		// base.Start();
 		hitPoints = 3;
 
-		anim = transform.GetChild(0).GetComponent<Animator>();
+		////anim = transform.GetChild(0).GetComponent<Animator>();
 		
 		targetInRange = false;
 		
@@ -53,10 +53,10 @@ public class Hostile : Actor
 		{
 			if(targetInRange)
 			{
-				anim.SetBool("running", false);
+				//anim.SetBool("running", false);
 				if(weapon != null)
 				{
-					anim.Play("vort_firing");
+					//anim.Play("vort_firing");
 					bool ammoInWeapon = weapon.InitiateAttack();
 					// if out of ammo, ammoInWeapon will be false
 					if(!ammoInWeapon) {
@@ -70,24 +70,24 @@ public class Hostile : Actor
 				if(target.transform.position.x < transform.position.x)
 				{
 					transform.Translate(new Vector3(-moveSpeed * Time.deltaTime, 0, 0));
-					anim.SetBool("running", true);
+					//anim.SetBool("running", true);
 				}
 				else if(target.transform.position.x > transform.position.x)
 				{
 					transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
-					anim.SetBool("running", true);
+					//anim.SetBool("running", true);
 				}
 
 				// Up and down movement
 				if(target.transform.position.y < transform.position.y)
 				{
 					transform.Translate(new Vector3(0, -moveSpeed * Time.deltaTime, 0));
-					anim.SetBool("running", true);
+					//anim.SetBool("running", true);
 				}
 				else if(target.transform.position.y > transform.position.y)
 				{
 					transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
-					anim.SetBool("running", true);
+					//anim.SetBool("running", true);
 				}
 			}
 		}
