@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72fac8fff5bb3524d971c218fbec750d, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  aimMoveSpeed: 1
-  normalMoveSpeed: 3
-  sprintMoveSpeed: 5
+  aimMoveForce: 0.5
+  normalMoveForce: 1.5
+  sprintMoveForce: 2.5
+  hitPoints: 10

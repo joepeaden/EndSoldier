@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// the player controller.
+// things to implement: recoil control value (reduced recoil from weapon)
+
 public class Player : MonoBehaviour
 {
 	public Text ptstext;
@@ -24,46 +27,46 @@ public class Player : MonoBehaviour
 
 	[SerializeField]
 	private GameObject upperBody;
-	private int hitPoints;
-	private int maxHitPoints;
+
 	[SerializeField]
 	private Weapon weapon;
 
 	private float moveSpeed;
+	private int hitPoints;
 
 	new void Start()
 	{
-		maxHitPoints = 10;
+		data.hitPoints = 10;
 		hitPoints = 10;
         UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
     void Update()
 	{
-		bool firing = false;
-		bool running = false;
+		//bool firing = false;
+		//bool running = false;
 		bool sprinting = false;
 
 		// slow down and improve aim if we're "aiming"
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			moveSpeed = data.sprintMoveSpeed;
+			moveSpeed = data.sprintMoveForce;
 			sprinting = true;
 		}
 		else if(Input.GetButton("Fire2"))
 		{
-			moveSpeed = data.aimMoveSpeed;
+			moveSpeed = data.aimMoveForce;
 		}
 		else
         {
-			moveSpeed = data.normalMoveSpeed;
+			moveSpeed = data.normalMoveForce;
         }
 
 		// probably need to handle state better
 
 		// prob not the best way to do this, but fuck it for now
 		// check if we're aiming
-		if (moveSpeed == data.aimMoveSpeed)
+		if (moveSpeed == data.aimMoveForce)
         {
 			laser.SetActive(true);
 			reticle.GetComponent<SpriteRenderer>().enabled = true;
@@ -79,15 +82,17 @@ public class Player : MonoBehaviour
 		Vector3 moveVector = GetMoveVector();
 		if (moveVector != Vector3.zero)
 		{
-			transform.Translate(moveVector * moveSpeed * Time.deltaTime);
-			running = true;
-        }
-        //else
-        //{
-        //    anim.SetBool("running", false);
-        //}
+			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
 
-        if (!sprinting && Input.GetButton("Fire1"))
+			//transform.Translate(moveVector * moveSpeed * Time.deltaTime);
+			//running = true;
+		}
+		//else
+		//{
+		//    anim.SetBool("running", false);
+		//}
+
+		if (!sprinting && Input.GetButton("Fire1"))
         {
             if (weapon != null)
             {
@@ -137,23 +142,47 @@ public class Player : MonoBehaviour
         UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
+	Vector2 oldAimVector;
+	public float rotationTorque;
 	protected void UpdateAim(Vector2 aimVector)
 	{
 		// normalized direction to shoot the projectile
 		aimVector = (reticle.position - transform.position).normalized;
-		
+
 		// no idea what this math is.
 		float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-		
-		upperBody.transform.rotation = rotation;
-	}
+
+        // doesn't work
+        bool crossedZeroDown = rotation.eulerAngles.z > 305 && upperBody.transform.rotation.eulerAngles.z < 45;
+        bool crossedZeroUp = rotation.eulerAngles.z < 45 && upperBody.transform.rotation.eulerAngles.z > 305;
+
+		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 3)
+		{
+			upperBody.GetComponent<Rigidbody2D>().angularVelocity = 0;
+			upperBody.GetComponent<Rigidbody2D>().MoveRotation(rotation);
+		}
+		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
+		{
+            upperBody.GetComponent<Rigidbody2D>().AddTorque(rotationTorque);
+           // Debug.Log("Current Rotation: " + upperBody.transform.rotation.eulerAngles + " | New Rotation: " + rotation.eulerAngles);
+		}
+		else
+		{
+			upperBody.GetComponent<Rigidbody2D>().AddTorque(-rotationTorque);
+		}
+
+
+		oldAimVector = aimVector;
+
+        //upperBody.transform.rotation = rotation;
+    }
 
 	public void GetHit(int damage)
 	{
 		hitPoints -= damage;
 
-		UIManager.instance.UpdateHealthBar(hitPoints, maxHitPoints);
+		UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
 
 		if(hitPoints <= 0)
 			Die();

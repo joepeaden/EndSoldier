@@ -6,9 +6,11 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
 	[SerializeField]
-	public float aimMoveSpeed;
+	public float aimMoveForce;
 	[SerializeField]
-	public float normalMoveSpeed;
+	public float normalMoveForce;
 	[SerializeField]
-	public float sprintMoveSpeed;
+	public float sprintMoveForce;
+	[SerializeField]
+	public int hitPoints;
 }

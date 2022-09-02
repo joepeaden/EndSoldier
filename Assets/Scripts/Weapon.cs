@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Author: Joseph Peaden
-// Purpose: Represents all types of weapons, ranged or melee
+// Purpose: should represent all types of weapons, ranged or melee, but for now coding for ranged and will abstract later
 //          Player and AI should be able to use this
 
 public class Weapon : MonoBehaviour
@@ -19,6 +19,9 @@ public class Weapon : MonoBehaviour
     protected bool infiniteAmmo;
     [SerializeField]
     protected string name;
+    [SerializeField]
+    protected float recoil;
+
     [SerializeField]
 	private AudioSource attackSound;
     private bool readyToAttack;
@@ -55,6 +58,8 @@ public class Weapon : MonoBehaviour
         
         Instantiate(projectile, projectileSpawnPosition, transform.rotation);
         
+        
+
         attackSound.Play();
         
         if(ammo > 0)
