@@ -14,8 +14,8 @@ public class FlowManager : MonoBehaviour
     // buttons
     [SerializeField]
     private Button resetButton;
-    // [SerializeField]
-    // private Button startButton;
+    [SerializeField]
+    private Button startButton;
 
     void Start()
     {
@@ -37,7 +37,7 @@ public class FlowManager : MonoBehaviour
 	{
 		// resetButton.gameObject.SetActive(false);
 		SceneManager.LoadSceneAsync(1);
-        Scoreboard.instance.ResetPoints();
+        //Scoreboard.instance.ResetPoints();
 	}
 
     public void GameOver()

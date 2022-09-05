@@ -17,9 +17,13 @@ public class Weapon : MonoBehaviour
     // how long it takes between attacks with this weapon
     [SerializeField]
     protected float attackInterval;
+
     // infinite ammo weapons need at least one shot
     [SerializeField]
-    protected int ammo = 1;
+    protected int ammoInWeapon = 1;
+    [SerializeField]
+    int ammoCapacity;
+
     [SerializeField]
     protected bool infiniteAmmo;
     [SerializeField]
@@ -28,6 +32,7 @@ public class Weapon : MonoBehaviour
     [SerializeField]
 	private AudioSource attackSound;
     private bool readyToAttack;
+
 
     public void Start()
     {
@@ -42,7 +47,7 @@ public class Weapon : MonoBehaviour
             LaunchAttack();
 
         // returning false to indicate to player out of ammo
-        if(ammo == 0)
+        if(ammoInWeapon == 0)
            return false;
 
         return true;
@@ -51,7 +56,7 @@ public class Weapon : MonoBehaviour
     private void LaunchAttack()
     {
         if(!infiniteAmmo)
-            ammo--;
+            ammoInWeapon--;
         
         readyToAttack = false;
 
@@ -59,14 +64,11 @@ public class Weapon : MonoBehaviour
         Vector3 projectileSpawnPosition = transform.position;
         projectileSpawnPosition += transform.right * 1.5f;
 
-        //Quaternion fireDirection = new Quaternion();
-        //fireDirection.eulerAngles = transform.rotation.eulerAngles * (Random.Range(-1, 1) * recoil);
-
-        Instantiate(projectile, projectileSpawnPosition, transform.rotation);//fireDirection);
+        Instantiate(projectile, projectileSpawnPosition, transform.rotation);
 
         attackSound.Play();
         
-        if(ammo > 0)
+        if(ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
     }
 
@@ -77,15 +79,41 @@ public class Weapon : MonoBehaviour
         readyToAttack = true;
     }
 
+    // returns false if no spare ammunition
+    public bool StartReload()
+    {
+        readyToAttack = false;
+        ammoInWeapon = 0;
+
+        StartCoroutine("Reload");
+
+        return true;
+    }
+
+    private IEnumerator Reload()
+    {
+        yield return new WaitForSeconds(2);
+
+        ammoInWeapon = ammoCapacity;
+        readyToAttack = true;
+
+        Debug.Log("Finished Reloading!");
+    }
+
     public void AddAmmo(int ammo)
     {
-        this.ammo += ammo;
+        this.ammoInWeapon += ammo;
         StartCoroutine("PrepareToAttack");
     }
 
     public int GetAmmo()
     {
-        return ammo;
+        return ammoInWeapon;
+    }
+
+    public bool HasAmmo()
+    {
+        return ammoInWeapon > 0;
     }
 
     public string GetName()

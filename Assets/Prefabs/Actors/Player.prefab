@@ -161,11 +161,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reticle: {fileID: 0}
   laser: {fileID: 2360040448336568075}
-  primaryWeapon: {fileID: 0}
+  primaryWeapon: {fileID: 6805789519610580509}
   data: {fileID: 11400000, guid: ac5ff49d7c0e5f044862d858ba3e8986, type: 2}
   upperBody: {fileID: 5818711742662775400}
   weapon: {fileID: 6805789519610580509}
   rotationTorque: 10
+  recoilControl: 10
 --- !u!50 &4698506207358878742
 Rigidbody2D:
   serializedVersion: 4
@@ -468,51 +469,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &2645454340895123279
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8681373429247397388}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!233 &176136182713202708
-HingeJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8681373429247397388}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -0.18149996, y: -0.075}
-  m_UseMotor: 0
-  m_Motor:
-    m_MotorSpeed: 0
-    m_MaximumMotorForce: 10000
-  m_UseLimits: 1
-  m_AngleLimits:
-    m_LowerAngle: 32
-    m_UpperAngle: -32
 --- !u!1001 &5818711742414319345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -523,7 +479,7 @@ PrefabInstance:
     - target: {fileID: -8164126713902997268, guid: 66a6b18627347b141940a490e5f81ef0,
         type: 3}
       propertyPath: recoil
-      value: 0.1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -8164126713902997268, guid: 66a6b18627347b141940a490e5f81ef0,
         type: 3}
@@ -607,12 +563,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66a6b18627347b141940a490e5f81ef0, type: 3}
---- !u!1 &8681373429247397388 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2934755566103404797, guid: 66a6b18627347b141940a490e5f81ef0,
-    type: 3}
-  m_PrefabInstance: {fileID: 5818711742414319345}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &632642784200466567 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6343230751055826550, guid: 66a6b18627347b141940a490e5f81ef0,
@@ -625,7 +575,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5818711742414319345}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8681373429247397388}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2d02c79f0aceb34a895e5fe96533e03, type: 3}

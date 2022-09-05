@@ -22,19 +22,26 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private Weapon weapon;
 
+
+	// recoil lerp value - seems like it's gotta be a class var for some reason. Don't feel like looking into it.
+	private float t = 0.0f;
+
 	// should eventually probably move to PlayerData SO - just not sure how it will work out right now
 	public float rotationTorque;
 
 	private float moveSpeed;
 	private int hitPoints;
 
-	new void Start()
+	public float recoilControl;
+
+	private void Start()
 	{
 		hitPoints = data.hitPoints;
-        //UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
+
+		//UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
 
-    void Update()
+    private void Update()
 	{
 		bool sprinting = false;
 
@@ -76,32 +83,72 @@ public class Player : MonoBehaviour
 			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
 		}
 
-		if (!sprinting && Input.GetButton("Fire1"))
+		if (!sprinting && weapon.HasAmmo() && Input.GetButton("Fire1"))
         {
-            if (weapon != null)
-            {
-                bool ammoInWeapon = weapon.InitiateAttack();
+			Debug.Log(weapon.GetAmmo());
 
-                ApplyRecoil();
+			if (weapon != null)
+			{
+				bool ammoInWeapon = weapon.InitiateAttack();
 
-                //upperBody.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-1, 1) * weapon.recoil);
-
-                // if out of ammo, ammoInWeapon will be false
-                if (!ammoInWeapon)
-                {
-                    weapon = primaryWeapon;
-                }
-
-
+				// this should probably be in weapon class actually
+				if (ammoInWeapon)
+				{
+					StopCoroutine("ApplyRecoil");
+					StartCoroutine("ApplyRecoil");
+				}
                 //UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
             }
         }
+
+		// need to add feedback so player knows they're out of ammo
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			Debug.Log("Reloading");
+			weapon.StartReload();
+        }
 	}
 
-    protected void ApplyRecoil()
+	// should probably be in weapon class
+	protected IEnumerator ApplyRecoil()
     {
-        weapon.GetComponent<Rigidbody2D>().AddTorque(Random.Range(-1, 1) * weapon.recoil);
-    }
+
+		Transform weaponT = weapon.GetComponent<Transform>();
+
+        bool recoilComplete = false;
+		bool returning = false;
+
+		float minimum = 0;
+		float maximum = Random.Range(-1, 2) * weapon.recoil;
+
+		do
+		{
+			Quaternion q = new Quaternion();
+			q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
+
+			weaponT.localRotation = q;
+
+			t += recoilControl * Time.deltaTime;
+
+			if (t > 1.0f)
+			{  
+				if (returning)
+					recoilComplete = true;
+
+				float temp = maximum;
+				maximum = minimum;
+				minimum = temp;
+				t = 0.0f;
+				returning = true;
+			}
+
+			yield return null;
+		} while (!recoilComplete);
+
+		weaponT.localRotation = Quaternion.identity;
+
+		yield return null;
+	}
 
     protected void UpdateAim(Vector2 aimVector)
 	{
@@ -116,7 +163,7 @@ public class Player : MonoBehaviour
         bool crossedZeroDown = rotation.eulerAngles.z > 180 && upperBody.transform.rotation.eulerAngles.z < 90;
         bool crossedZeroUp = rotation.eulerAngles.z < 90 && upperBody.transform.rotation.eulerAngles.z > 180;
 
-		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 3)
+		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
 		{
 			upperBody.GetComponent<Rigidbody2D>().angularVelocity = 0;
 			upperBody.GetComponent<Rigidbody2D>().MoveRotation(rotation);
@@ -137,14 +184,16 @@ public class Player : MonoBehaviour
 
 		//UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
 
+		Debug.Log(hitPoints);
+
 		if(hitPoints <= 0)
 			Die();
 	}
 
 	protected void Die()
 	{
-		FlowManager.instance.GameOver();
-	}
+        FlowManager.instance.GameOver();
+    }
 
 	private Vector3 GetMoveVector()
     {
@@ -168,4 +217,9 @@ public class Player : MonoBehaviour
 
 		return moveVector;
 	}
+
+	private void Reload()
+    {
+
+    }
 }
