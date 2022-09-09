@@ -1,38 +1,27 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 // the player controller.
 // things to implement: recoil control value (reduced recoil from weapon)
 
-public class Player : MonoBehaviour
+public class Player : Actor
 {
-	public Transform reticle;
-	public GameObject laser;
-
-	public Weapon primaryWeapon;
-
 	[SerializeField]
 	private PlayerData data;
-
 	[SerializeField]
 	private GameObject upperBody;
-
 	[SerializeField]
 	private Weapon weapon;
+	[SerializeField]
+	private Transform reticle;
+	[SerializeField]
+	private GameObject laser;
 
-
+	//// vars local to this class that change ////
 	// recoil lerp value - seems like it's gotta be a class var for some reason. Don't feel like looking into it.
 	private float t = 0.0f;
-
-	// should eventually probably move to PlayerData SO - just not sure how it will work out right now
-	public float rotationTorque;
-
 	private float moveSpeed;
 	private int hitPoints;
-
-	public float recoilControl;
 
 	private void Start()
 	{
@@ -75,29 +64,13 @@ public class Player : MonoBehaviour
 			reticle.GetComponent<SpriteRenderer>().enabled = false;
 		}
 
-		UpdateAim(Vector3.zero);
-
-		Vector3 moveVector = GetMoveVector();
-		if (moveVector != Vector3.zero)
-		{
-			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
-		}
-
 		if (!sprinting && weapon.HasAmmo() && Input.GetButton("Fire1"))
         {
 			Debug.Log(weapon.GetAmmo());
 
 			if (weapon != null)
 			{
-				bool ammoInWeapon = weapon.InitiateAttack();
-
-				// this should probably be in weapon class actually
-				if (ammoInWeapon)
-				{
-					StopCoroutine("ApplyRecoil");
-					StartCoroutine("ApplyRecoil");
-				}
-                //UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
+				weapon.InitiateAttack(data.recoilControl);
             }
         }
 
@@ -109,46 +82,57 @@ public class Player : MonoBehaviour
         }
 	}
 
-	// should probably be in weapon class
-	protected IEnumerator ApplyRecoil()
+    private void FixedUpdate()
     {
+		UpdateAim(Vector3.zero);
 
-		Transform weaponT = weapon.GetComponent<Transform>();
-
-        bool recoilComplete = false;
-		bool returning = false;
-
-		float minimum = 0;
-		float maximum = Random.Range(-1, 2) * weapon.recoil;
-
-		do
+		Vector3 moveVector = GetMoveVector();
+		if (moveVector != Vector3.zero)
 		{
-			Quaternion q = new Quaternion();
-			q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
-
-			weaponT.localRotation = q;
-
-			t += recoilControl * Time.deltaTime;
-
-			if (t > 1.0f)
-			{  
-				if (returning)
-					recoilComplete = true;
-
-				float temp = maximum;
-				maximum = minimum;
-				minimum = temp;
-				t = 0.0f;
-				returning = true;
-			}
-
-			yield return null;
-		} while (!recoilComplete);
-
-		weaponT.localRotation = Quaternion.identity;
-
-		yield return null;
+			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
+		}
 	}
+
+    // should probably be in weapon class
+    //protected IEnumerator ApplyRecoil()
+    //   {
+
+    //	Transform weaponT = weapon.GetComponent<Transform>();
+
+    //       bool recoilComplete = false;
+    //	bool returning = false;
+
+    //	float minimum = 0;
+    //	float maximum = Random.Range(-1, 2) * weapon.recoil;
+
+    //	do
+    //	{
+    //		Quaternion q = new Quaternion();
+    //		q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
+
+    //		weaponT.localRotation = q;
+
+    //		t += data.recoilControl * Time.deltaTime;
+
+    //		if (t > 1.0f)
+    //		{  
+    //			if (returning)
+    //				recoilComplete = true;
+
+    //			float temp = maximum;
+    //			maximum = minimum;
+    //			minimum = temp;
+    //			t = 0.0f;
+    //			returning = true;
+    //		}
+
+    //		yield return null;
+    //	} while (!recoilComplete);
+
+    //	weaponT.localRotation = Quaternion.identity;
+
+    //	yield return null;
+    //}
 
     protected void UpdateAim(Vector2 aimVector)
 	{
@@ -170,15 +154,15 @@ public class Player : MonoBehaviour
 		}
 		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
 		{
-            upperBody.GetComponent<Rigidbody2D>().AddTorque(rotationTorque);
+            upperBody.GetComponent<Rigidbody2D>().AddTorque(data.rotationTorque);
     	}
 		else
 		{
-			upperBody.GetComponent<Rigidbody2D>().AddTorque(-rotationTorque);
+			upperBody.GetComponent<Rigidbody2D>().AddTorque(-data.rotationTorque);
 		}
     }
 
-	public void GetHit(int damage)
+	public override void GetHit(int damage)
 	{
 		hitPoints -= damage;
 

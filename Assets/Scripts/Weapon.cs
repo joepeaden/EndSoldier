@@ -33,6 +33,7 @@ public class Weapon : MonoBehaviour
 	private AudioSource attackSound;
     private bool readyToAttack;
 
+    private float t = 0.0f;
 
     public void Start()
     {
@@ -40,11 +41,11 @@ public class Weapon : MonoBehaviour
         // Initialize();
     }
 
-    public bool InitiateAttack()
+    public bool InitiateAttack(float actorRecoilControl)
     {
         // wait for gun to cycle (fire rate)
         if(readyToAttack)
-            LaunchAttack();
+            LaunchAttack(actorRecoilControl);
 
         // returning false to indicate to player out of ammo
         if(ammoInWeapon == 0)
@@ -53,7 +54,7 @@ public class Weapon : MonoBehaviour
         return true;
     }
 
-    private void LaunchAttack()
+    private void LaunchAttack(float actorRecoilControl)
     {
         if(!infiniteAmmo)
             ammoInWeapon--;
@@ -67,9 +68,52 @@ public class Weapon : MonoBehaviour
         Instantiate(projectile, projectileSpawnPosition, transform.rotation);
 
         attackSound.Play();
+
+        StopCoroutine(ApplyRecoil(actorRecoilControl));
+        StartCoroutine(ApplyRecoil(actorRecoilControl));
         
-        if(ammoInWeapon > 0)
+        if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
+    }
+
+    // should probably be in weapon class
+    protected IEnumerator ApplyRecoil(float actorRecoilControl)
+    {
+        bool recoilComplete = false;
+        bool returning = false;
+
+        float minimum = 0;
+        float maximum = Random.Range(-1, 2) * recoil;
+
+        // COULD USE Quaternion.Slerp()
+
+        do
+        {
+            Quaternion q = new Quaternion();
+            q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
+
+            transform.localRotation = q;
+
+            t += actorRecoilControl * Time.deltaTime;
+
+            if (t > 1.0f)
+            {
+                if (returning)
+                    recoilComplete = true;
+
+                float temp = maximum;
+                maximum = minimum;
+                minimum = temp;
+                t = 0.0f;
+                returning = true;
+            }
+
+            yield return null;
+        } while (!recoilComplete);
+
+        transform.localRotation = Quaternion.identity;
+
+        yield return null;
     }
 
     // refers to the time in between shots

@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class targetZone : MonoBehaviour
 {
-	public Collider2D meleeZone;
-	public GameObject parent;
+	//public Collider2D meleeZone;
+	//public GameObject parent;
 
-	void OnTriggerEnter2D(Collider2D other)
-	{
-		if(other.tag == "Player")
-		{
-			parent.GetComponent<Hostile>().TargetInRange(true);
-		}
-	}
+	//void OnTriggerEnter2D(Collider2D other)
+	//{
+	//	if(other.tag == "Player")
+	//	{
+	//		parent.GetComponent<Hostile>().TargetInRange(true);
+	//	}
+	//}
 
 
-	void OnTriggerExit2D(Collider2D other)
-	{
-		if(other.tag == "Player")
-		{
-			parent.GetComponent<Hostile>().TargetInRange(false);
-		}
-	}
+	//void OnTriggerExit2D(Collider2D other)
+	//{
+	//	if(other.tag == "Player")
+	//	{
+	//		parent.GetComponent<Hostile>().TargetInRange(false);
+	//	}
+	//}
 
 }
