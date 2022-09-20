@@ -35,6 +35,8 @@ public class Weapon : MonoBehaviour
 
     private float t = 0.0f;
 
+    private bool reloading;
+
     public void Start()
     {
         readyToAttack = true;
@@ -129,7 +131,12 @@ public class Weapon : MonoBehaviour
         readyToAttack = false;
         ammoInWeapon = 0;
 
-        StartCoroutine("Reload");
+        if (!reloading)
+        {
+            StartCoroutine("Reload");
+        }
+
+        reloading = true;
 
         return true;
     }
@@ -140,8 +147,7 @@ public class Weapon : MonoBehaviour
 
         ammoInWeapon = ammoCapacity;
         readyToAttack = true;
-
-        Debug.Log("Finished Reloading!");
+        reloading = false;
     }
 
     public void AddAmmo(int ammo)

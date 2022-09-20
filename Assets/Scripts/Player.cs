@@ -20,15 +20,36 @@ public class Player : Actor
 	//// vars local to this class that change ////
 	// recoil lerp value - seems like it's gotta be a class var for some reason. Don't feel like looking into it.
 	private float t = 0.0f;
-	private float moveSpeed;
+	private float movementSpeed;
 	private int hitPoints;
+
+	private Rigidbody2D rb;
+
+	[SerializeField] private GameObject sprite;
+	private bool isCrouching;
 
 	private void Start()
 	{
 		hitPoints = data.hitPoints;
 
+		TestMethod(2);
+
+		rb = GetComponent<Rigidbody2D>();
+
 		//UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
+
+	/// <summary>
+	/// just for test
+	/// </summary>
+	/// <param name="p">
+	/// a param
+	/// </param>
+	private void TestMethod(int p)
+    {
+		p += 1;
+		return;
+    }
 
     private void Update()
 	{
@@ -37,23 +58,23 @@ public class Player : Actor
 		// slow down and improve aim if we're "aiming"
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			moveSpeed = data.sprintMoveForce;
+			movementSpeed = data.sprintMoveForce;
 			sprinting = true;
 		}
 		else if(Input.GetButton("Fire2"))
 		{
-			moveSpeed = data.aimMoveForce;
+			movementSpeed = data.aimMoveForce;
 		}
 		else
         {
-			moveSpeed = data.normalMoveForce;
+			movementSpeed = data.normalMoveForce;
         }
 
 		// probably need to handle state better
 
 		// prob not the best way to do this, but fuck it for now
 		// check if we're aiming
-		if (moveSpeed == data.aimMoveForce)
+		if (movementSpeed == data.aimMoveForce)
         {
 			laser.SetActive(true);
 			reticle.GetComponent<SpriteRenderer>().enabled = true;
@@ -66,8 +87,6 @@ public class Player : Actor
 
 		if (!sprinting && weapon.HasAmmo() && Input.GetButton("Fire1"))
         {
-			Debug.Log(weapon.GetAmmo());
-
 			if (weapon != null)
 			{
 				weapon.InitiateAttack(data.recoilControl);
@@ -77,8 +96,12 @@ public class Player : Actor
 		// need to add feedback so player knows they're out of ammo
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			Debug.Log("Reloading");
 			weapon.StartReload();
+        }
+
+		if (Input.GetKeyDown(KeyCode.C))
+        {
+			ToggleCrouch();
         }
 	}
 
@@ -89,50 +112,34 @@ public class Player : Actor
 		Vector3 moveVector = GetMoveVector();
 		if (moveVector != Vector3.zero)
 		{
-			GetComponent<Rigidbody2D>().AddForce(moveVector * moveSpeed);
+			rb.AddForce(moveVector * movementSpeed);
 		}
+
+		// do we want to have jumping?
+		//if (Input.GetKeyDown(KeyCode.Space))
+  //      {
+		//	rb.AddForce(data.jumpForce);
+  //      }
 	}
 
-    // should probably be in weapon class
-    //protected IEnumerator ApplyRecoil()
-    //   {
+	protected void ToggleCrouch()
+    {
+		Collider2D playerCollider = GetComponent<BoxCollider2D>();
+		if (isCrouching)
+		{
+			transform.localScale = new Vector2(1f, 1f);
+			//playerCollider.offset = new Vector2(0, 0);
+			//playerCollider. = new Vector2(1, 1);
+		}
+		else
+        {
+			transform.localScale = new Vector2(1f, .5f);
+			//playerCollider.offset = new Vector2(0, -.25f);
+			//playerCollider.size = new Vector2(1, .5f);
+		}
 
-    //	Transform weaponT = weapon.GetComponent<Transform>();
-
-    //       bool recoilComplete = false;
-    //	bool returning = false;
-
-    //	float minimum = 0;
-    //	float maximum = Random.Range(-1, 2) * weapon.recoil;
-
-    //	do
-    //	{
-    //		Quaternion q = new Quaternion();
-    //		q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
-
-    //		weaponT.localRotation = q;
-
-    //		t += data.recoilControl * Time.deltaTime;
-
-    //		if (t > 1.0f)
-    //		{  
-    //			if (returning)
-    //				recoilComplete = true;
-
-    //			float temp = maximum;
-    //			maximum = minimum;
-    //			minimum = temp;
-    //			t = 0.0f;
-    //			returning = true;
-    //		}
-
-    //		yield return null;
-    //	} while (!recoilComplete);
-
-    //	weaponT.localRotation = Quaternion.identity;
-
-    //	yield return null;
-    //}
+		isCrouching = !isCrouching;
+	}
 
     protected void UpdateAim(Vector2 aimVector)
 	{
@@ -168,8 +175,6 @@ public class Player : Actor
 
 		//UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
 
-		Debug.Log(hitPoints);
-
 		if(hitPoints <= 0)
 			Die();
 	}
@@ -182,14 +187,14 @@ public class Player : Actor
 	private Vector3 GetMoveVector()
     {
 		Vector3 moveVector = Vector3.zero;
-		if (Input.GetKey(KeyCode.W))
-		{
-			moveVector += Vector3.up;
-		}
-		if (Input.GetKey(KeyCode.S))
-		{
-			moveVector += -Vector3.up;
-		}
+		//if (Input.GetKey(KeyCode.W))
+		//{
+		//	moveVector += Vector3.up;
+		//}
+		//if (Input.GetKey(KeyCode.S))
+		//{
+		//	moveVector += -Vector3.up;
+		//}
 		if (Input.GetKey(KeyCode.A))
 		{
 			moveVector += -Vector3.right;
