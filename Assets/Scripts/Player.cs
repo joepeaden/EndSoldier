@@ -23,7 +23,7 @@ public class Player : Actor
 	private float movementSpeed;
 	private int hitPoints;
 
-	private Rigidbody2D rb;
+	private Rigidbody rb;
 
 	[SerializeField] private GameObject sprite;
 	private bool isCrouching;
@@ -34,7 +34,7 @@ public class Player : Actor
 
 		TestMethod(2);
 
-		rb = GetComponent<Rigidbody2D>();
+		rb = GetComponent<Rigidbody>();
 
 		//UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
@@ -124,7 +124,7 @@ public class Player : Actor
 
 	protected void ToggleCrouch()
     {
-		Collider2D playerCollider = GetComponent<BoxCollider2D>();
+		Collider playerCollider = GetComponent<BoxCollider>();
 		if (isCrouching)
 		{
 			transform.localScale = new Vector2(1f, 1f);
@@ -156,16 +156,16 @@ public class Player : Actor
 
 		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
 		{
-			upperBody.GetComponent<Rigidbody2D>().angularVelocity = 0;
-			upperBody.GetComponent<Rigidbody2D>().MoveRotation(rotation);
+			upperBody.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			upperBody.GetComponent<Rigidbody>().MoveRotation(rotation);
 		}
 		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
 		{
-            upperBody.GetComponent<Rigidbody2D>().AddTorque(data.rotationTorque);
+            upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * data.rotationTorque);
     	}
 		else
 		{
-			upperBody.GetComponent<Rigidbody2D>().AddTorque(-data.rotationTorque);
+			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * -data.rotationTorque);
 		}
     }
 
