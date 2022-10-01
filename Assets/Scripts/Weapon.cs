@@ -37,6 +37,8 @@ public class Weapon : MonoBehaviour
 
     private bool reloading;
 
+    [SerializeField] protected GameObject weaponFlash;
+
     public void Start()
     {
         readyToAttack = true;
@@ -69,6 +71,9 @@ public class Weapon : MonoBehaviour
 
         Instantiate(projectile, projectileSpawnPosition, transform.rotation);
 
+        StopCoroutine(Flash());
+        StartCoroutine(Flash());
+
         attackSound.Play();
 
         StopCoroutine(ApplyRecoil(actorRecoilControl));
@@ -76,6 +81,15 @@ public class Weapon : MonoBehaviour
         
         if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
+    }
+
+    protected IEnumerator Flash()
+    {
+        weaponFlash.SetActive(true);
+
+        yield return new WaitForSeconds(0.1f);
+
+        weaponFlash.SetActive(false);
     }
 
     // should probably be in weapon class

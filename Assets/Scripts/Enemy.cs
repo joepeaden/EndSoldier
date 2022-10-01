@@ -5,13 +5,12 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-	[SerializeField] Transform torsoT;
+	//[SerializeField] Transform torsoT;
 	
 	private NavMeshAgent navAgent;
 
 	private GameObject target;
 
-	public Transform reticle;
 	public GameObject upperBody;
 
 	private bool playerInSights;
@@ -95,8 +94,8 @@ public class Enemy : MonoBehaviour
 
 		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
 		{
-			upperBody.GetComponent<Rigidbody2D>().angularVelocity = 0;
-			upperBody.GetComponent<Rigidbody2D>().MoveRotation(rotation);
+			upperBody.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			upperBody.GetComponent<Rigidbody>().MoveRotation(rotation);
 
 			playerInSights = true;
 
@@ -104,11 +103,11 @@ public class Enemy : MonoBehaviour
 		}
 		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
 		{
-			upperBody.GetComponent<Rigidbody2D>().AddTorque(data.rotationTorque);
+			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * data.rotationTorque);
 		}
 		else
 		{
-			upperBody.GetComponent<Rigidbody2D>().AddTorque(-data.rotationTorque);
+			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * -data.rotationTorque);
 		}
 
 		playerInSights = false;

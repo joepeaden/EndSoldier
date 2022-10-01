@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Cinemachine;
 
 // the player controller.
 // things to implement: recoil control value (reduced recoil from weapon)
 
 public class Player : Actor
 {
+	[SerializeField] private CinemachineVirtualCamera vCam;
+
 	[SerializeField]
 	private PlayerData data;
 	[SerializeField]
@@ -68,6 +71,16 @@ public class Player : Actor
 		else
         {
 			movementSpeed = data.normalMoveForce;
+        }
+
+		// if we're 
+		if (Input.GetButton("Fire2"))
+        {
+			vCam.Follow = reticle;
+		}
+        else
+        {
+			vCam.Follow = transform;
         }
 
 		// probably need to handle state better
