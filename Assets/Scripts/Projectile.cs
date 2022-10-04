@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField]
-	protected float speed;
+	protected float force;
     [SerializeField]
     public float impact;
     [SerializeField]
@@ -22,20 +22,20 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        if(speed != 0)
-            transform.Translate(Vector3.right * speed);
+        if (force != 0)
+            GetComponent<Rigidbody>().AddForce(force * transform.right);
         else
-            Debug.LogWarning("Projectile speed for " + gameObject.name + " is not set");
+            Debug.LogWarning("Projectile force for " + gameObject.name + " is not set");
 
-        // record distance travelled, delete if outside range+ 
+        // record distance travelled, delete if outside range
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter(Collision other)
     {
-    	Actor actor = other.GetComponent<Actor>();
-    	if(actor != null)
+    	Actor actor = other.gameObject.GetComponent<Actor>();
+    	if(actor != null && actor.CanBeHit())
 	    {
-            actor.GetComponent<Rigidbody2D>().AddForce(transform.right * impact);
+            //actor.GetComponent<Rigidbody>().AddForce(transform.right * impact);
             actor.GetHit(damage);
 
             if(is_explosive)
@@ -44,9 +44,10 @@ public class Projectile : MonoBehaviour
                 CreateExplosion();
             }
 
-            Destroy(gameObject);
-	    }
-    } 
+        }
+
+        Destroy(gameObject);
+    }
 
     protected void CreateExplosion()
     {

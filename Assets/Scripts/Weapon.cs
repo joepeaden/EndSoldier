@@ -3,46 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Author: Joseph Peaden
-// Purpose: should represent all types of weapons, ranged or melee, but for now coding for ranged and will abstract later
-//          Player and AI should be able to use this
 
+/// <summary>
+/// Should represent all types of weapons, ranged or melee. Any actor should be able to use this
+/// </summary>
 public class Weapon : MonoBehaviour
 {
-    [SerializeField]
-    protected Projectile projectile;
+    // components & child objects
+    [SerializeField] private WeaponData data;
+    [SerializeField] private GameObject weaponFlash;
+    [SerializeField] private AudioSource attackAudioSource;
 
-    [SerializeField]
-    public float recoil;
+    [SerializeField] private bool infiniteAmmo;
 
-    // how long it takes between attacks with this weapon
-    [SerializeField]
-    protected float attackInterval;
+    private int ammoInWeapon;
 
-    // infinite ammo weapons need at least one shot
-    [SerializeField]
-    protected int ammoInWeapon = 1;
-    [SerializeField]
-    int ammoCapacity;
-
-    [SerializeField]
-    protected bool infiniteAmmo;
-    [SerializeField]
-    protected string name;
-
-    [SerializeField]
-	private AudioSource attackSound;
-    private bool readyToAttack;
-
-    private float t = 0.0f;
-
+    // states
+    private bool readyToAttack = true;
     private bool reloading;
 
-    [SerializeField] protected GameObject weaponFlash;
+    // has to do with weapon recoil - honestly confused how it works but right now it has to be class var
+    private float t = 0.0f;
 
     public void Start()
     {
-        readyToAttack = true;
-        // Initialize();
+        ammoInWeapon = data.ammoCapacity;
+        attackAudioSource.clip = data.attackSound;
     }
 
     public bool InitiateAttack(float actorRecoilControl)
@@ -69,12 +55,12 @@ public class Weapon : MonoBehaviour
         Vector3 projectileSpawnPosition = transform.position;
         projectileSpawnPosition += transform.right * 1.5f;
 
-        Instantiate(projectile, projectileSpawnPosition, transform.rotation);
+        Instantiate(data.projectile, projectileSpawnPosition, transform.rotation);
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
-        attackSound.Play();
+        attackAudioSource.Play();
 
         StopCoroutine(ApplyRecoil(actorRecoilControl));
         StartCoroutine(ApplyRecoil(actorRecoilControl));
@@ -83,7 +69,7 @@ public class Weapon : MonoBehaviour
             StartCoroutine("PrepareToAttack");
     }
 
-    protected IEnumerator Flash()
+    private IEnumerator Flash()
     {
         weaponFlash.SetActive(true);
 
@@ -99,7 +85,7 @@ public class Weapon : MonoBehaviour
         bool returning = false;
 
         float minimum = 0;
-        float maximum = Random.Range(-1, 2) * recoil;
+        float maximum = Random.Range(-1, 2) * data.recoil;
 
         // COULD USE Quaternion.Slerp()
 
@@ -135,7 +121,7 @@ public class Weapon : MonoBehaviour
     // refers to the time in between shots
     private IEnumerator PrepareToAttack()
     {
-        yield return new WaitForSeconds(attackInterval);
+        yield return new WaitForSeconds(data.attackInterval);
         readyToAttack = true;
     }
 
@@ -159,7 +145,7 @@ public class Weapon : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
 
-        ammoInWeapon = ammoCapacity;
+        ammoInWeapon = data.ammoCapacity;
         readyToAttack = true;
         reloading = false;
     }
@@ -182,6 +168,6 @@ public class Weapon : MonoBehaviour
 
     public string GetName()
     {
-        return name;
+        return data.displayName;
     }
 }

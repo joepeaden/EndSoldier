@@ -1,58 +1,37 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Cinemachine;
 
-// the player controller.
-// things to implement: recoil control value (reduced recoil from weapon)
+// Author: Joseph Peaden
 
+/// <summary>
+/// Main player script.
+/// </summary>
 public class Player : Actor
 {
-	[SerializeField] private CinemachineVirtualCamera vCam;
+	[SerializeField] private PlayerData data;
+	[SerializeField] private GameObject upperBody;
+	[SerializeField] private Weapon weapon;
+	[SerializeField] private Transform reticle;
 
-	[SerializeField]
-	private PlayerData data;
-	[SerializeField]
-	private GameObject upperBody;
-	[SerializeField]
-	private Weapon weapon;
-	[SerializeField]
-	private Transform reticle;
-	[SerializeField]
-	private GameObject laser;
-
-	//// vars local to this class that change ////
-	// recoil lerp value - seems like it's gotta be a class var for some reason. Don't feel like looking into it.
-	private float t = 0.0f;
+	// vars local to this class that change
 	private float movementSpeed;
 	private int hitPoints;
 
+	// components
 	private Rigidbody rb;
 
-	[SerializeField] private GameObject sprite;
+	// states
 	private bool isCrouching;
+	private bool canBeHit;
 
 	private void Start()
 	{
+		canBeHit = true;
+
 		hitPoints = data.hitPoints;
 
-		TestMethod(2);
-
 		rb = GetComponent<Rigidbody>();
-
-		//UIManager.instance.UpdateWeaponInfoUI(weapon.GetName(), weapon.GetAmmo());
 	}
-
-	/// <summary>
-	/// just for test
-	/// </summary>
-	/// <param name="p">
-	/// a param
-	/// </param>
-	private void TestMethod(int p)
-    {
-		p += 1;
-		return;
-    }
 
     private void Update()
 	{
@@ -76,11 +55,11 @@ public class Player : Actor
 		// if we're 
 		if (Input.GetButton("Fire2"))
         {
-			vCam.Follow = reticle;
+		 	CameraManager.Instance.FollowTarget(reticle);
 		}
         else
         {
-			vCam.Follow = transform;
+			CameraManager.Instance.FollowTarget(transform);
         }
 
 		// probably need to handle state better
@@ -89,12 +68,10 @@ public class Player : Actor
 		// check if we're aiming
 		if (movementSpeed == data.aimMoveForce)
         {
-			laser.SetActive(true);
 			reticle.GetComponent<SpriteRenderer>().enabled = true;
 		}
 		else
         {
-			laser.SetActive(false);
 			reticle.GetComponent<SpriteRenderer>().enabled = false;
 		}
 
@@ -127,28 +104,25 @@ public class Player : Actor
 		{
 			rb.AddForce(moveVector * movementSpeed);
 		}
-
-		// do we want to have jumping?
-		//if (Input.GetKeyDown(KeyCode.Space))
-  //      {
-		//	rb.AddForce(data.jumpForce);
-  //      }
 	}
 
 	protected void ToggleCrouch()
     {
-		Collider playerCollider = GetComponent<BoxCollider>();
 		if (isCrouching)
 		{
-			transform.localScale = new Vector2(1f, 1f);
-			//playerCollider.offset = new Vector2(0, 0);
-			//playerCollider. = new Vector2(1, 1);
+			gameObject.layer = (int) IgnoreLayerCollisions.CollisionLayers.Default;
+			canBeHit = true;
+			transform.localScale = new Vector3(1f, 1f, 1f);
 		}
 		else
-        {
-			transform.localScale = new Vector2(1f, .5f);
-			//playerCollider.offset = new Vector2(0, -.25f);
-			//playerCollider.size = new Vector2(1, .5f);
+		{
+			// need to add clause to this to check if player is actually in cover, not just crouching.
+			// set to InCover layer, ignores collisions with bullets
+			gameObject.layer = (int) IgnoreLayerCollisions.CollisionLayers.InCover;
+
+			// is canbehit necessary when the layers ignore collision? Probably not.
+			canBeHit = false;
+			transform.localScale = new Vector3(1f, .5f, 1f);
 		}
 
 		isCrouching = !isCrouching;
@@ -182,11 +156,14 @@ public class Player : Actor
 		}
     }
 
+	public override bool CanBeHit()
+    {
+		return canBeHit;
+    }
+
 	public override void GetHit(int damage)
 	{
 		hitPoints -= damage;
-
-		//UIManager.instance.UpdateHealthBar(hitPoints, data.hitPoints);
 
 		if(hitPoints <= 0)
 			Die();
@@ -194,20 +171,12 @@ public class Player : Actor
 
 	protected void Die()
 	{
-        FlowManager.instance.GameOver();
+        //FlowManager.instance.GameOver();
     }
 
 	private Vector3 GetMoveVector()
     {
 		Vector3 moveVector = Vector3.zero;
-		//if (Input.GetKey(KeyCode.W))
-		//{
-		//	moveVector += Vector3.up;
-		//}
-		//if (Input.GetKey(KeyCode.S))
-		//{
-		//	moveVector += -Vector3.up;
-		//}
 		if (Input.GetKey(KeyCode.A))
 		{
 			moveVector += -Vector3.right;
@@ -219,9 +188,4 @@ public class Player : Actor
 
 		return moveVector;
 	}
-
-	private void Reload()
-    {
-
-    }
 }

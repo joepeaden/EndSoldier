@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 		//navAgent.updateUpAxis = false;
 
 		// temporary
-		target = GameObject.FindObjectOfType<Player>().gameObject;
+		target = GameManager.Instance.GetPlayerGO();
 	}
 
     private void Update()

@@ -16,7 +16,6 @@ public class FollowMouse3D : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, mask))
         {
-            Debug.Log(hit.transform.name);
             if (hit.transform.gameObject == raycastPlane)
             {
                 transform.position = hit.point;
