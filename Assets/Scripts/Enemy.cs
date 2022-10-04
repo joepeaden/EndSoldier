@@ -3,22 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+// Author: Joseph Peaden
+
+/// <summary>
+/// Base class for enemy actors.
+/// </summary>
+public class Enemy : Actor
 {
-	//[SerializeField] Transform torsoT;
-	
 	private NavMeshAgent navAgent;
-
 	private GameObject target;
-
-	public GameObject upperBody;
-
-	private bool playerInSights;
 	private bool pauseFiring;
-
-	public Weapon weapon;
-
-	public PlayerData data;
 
 	private void Start()
 	{
@@ -41,9 +35,8 @@ public class Enemy : MonoBehaviour
 		{
 			weapon.StartReload();
 		} 
-		else if (playerInSights && !pauseFiring)
+		else if (upperBodyFinishedRotating && !pauseFiring)
         {
-
 			int numToFire = Random.Range(1, 7);
 
 			StartCoroutine(FireBurst(numToFire));
@@ -77,39 +70,5 @@ public class Enemy : MonoBehaviour
 		yield return new WaitForSeconds(.5f);
 
 		pauseFiring = false;
-	}
-
-	protected void UpdateAim(Vector2 aimVector)
-	{
-		// normalized direction to shoot the projectile
-		//aimVector = (reticle.position - transform.position).normalized;
-
-		// no idea what this math is.
-		float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
-		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-		// if we cross from 360 - 0 or the other way around, handle it
-		bool crossedZeroDown = rotation.eulerAngles.z > 180 && upperBody.transform.rotation.eulerAngles.z < 90;
-		bool crossedZeroUp = rotation.eulerAngles.z < 90 && upperBody.transform.rotation.eulerAngles.z > 180;
-
-		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
-		{
-			upperBody.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-			upperBody.GetComponent<Rigidbody>().MoveRotation(rotation);
-
-			playerInSights = true;
-
-			return;
-		}
-		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
-		{
-			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * data.rotationTorque);
-		}
-		else
-		{
-			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * -data.rotationTorque);
-		}
-
-		playerInSights = false;
 	}
 }

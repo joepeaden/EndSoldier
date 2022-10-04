@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72fac8fff5bb3524d971c218fbec750d, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: d353c0846a3f6a8438f71cbf95ebf6bd, type: 3}
+  m_Name: ActorData
   m_EditorClassIdentifier: 
   hitPoints: 10
   recoilControl: 10

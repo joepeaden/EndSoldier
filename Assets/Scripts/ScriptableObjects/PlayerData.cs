@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// Author: Joseph Peaden
+
+/// <summary>
+/// Holds data specific to player.
+/// </summary>
 [CreateAssetMenu(fileName = "PlayerData", menuName = "MyScriptables/PlayerData")]
 public class PlayerData : ActorData
 {
-	public float aimMoveForce;
-	public float normalMoveForce;
-	public float sprintMoveForce;
-	public float rotationTorque;
+    // right now there's nothing specific
 }

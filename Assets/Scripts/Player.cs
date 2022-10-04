@@ -8,21 +8,8 @@ using UnityEngine;
 /// </summary>
 public class Player : Actor
 {
-	[SerializeField] private PlayerData data;
-	[SerializeField] private GameObject upperBody;
-	[SerializeField] private Weapon weapon;
+	//[SerializeField] private PlayerData data;
 	[SerializeField] private Transform reticle;
-
-	// vars local to this class that change
-	private float movementSpeed;
-	private int hitPoints;
-
-	// components
-	private Rigidbody rb;
-
-	// states
-	private bool isCrouching;
-	private bool canBeHit;
 
 	private void Start()
 	{
@@ -97,7 +84,9 @@ public class Player : Actor
 
     private void FixedUpdate()
     {
-		UpdateAim(Vector3.zero);
+		// normalized direction to shoot the projectile
+		Vector2 aimVector = (reticle.position - transform.position).normalized;
+		UpdateAim(aimVector);
 
 		Vector3 moveVector = GetMoveVector();
 		if (moveVector != Vector3.zero)
@@ -127,34 +116,6 @@ public class Player : Actor
 
 		isCrouching = !isCrouching;
 	}
-
-    protected void UpdateAim(Vector2 aimVector)
-	{
-		// normalized direction to shoot the projectile
-		aimVector = (reticle.position - transform.position).normalized;
-
-		// no idea what this math is.
-		float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
-		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-        // if we cross from 360 - 0 or the other way around, handle it
-        bool crossedZeroDown = rotation.eulerAngles.z > 180 && upperBody.transform.rotation.eulerAngles.z < 90;
-        bool crossedZeroUp = rotation.eulerAngles.z < 90 && upperBody.transform.rotation.eulerAngles.z > 180;
-
-		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
-		{
-			upperBody.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-			upperBody.GetComponent<Rigidbody>().MoveRotation(rotation);
-		}
-		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
-		{
-            upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * data.rotationTorque);
-    	}
-		else
-		{
-			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * -data.rotationTorque);
-		}
-    }
 
 	public override bool CanBeHit()
     {
