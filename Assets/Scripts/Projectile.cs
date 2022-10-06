@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
     	Actor actor = other.gameObject.GetComponent<Actor>();
-    	if(actor != null && actor.CanBeHit())
+    	if(actor != null)
 	    {
             //actor.GetComponent<Rigidbody>().AddForce(transform.right * impact);
             actor.GetHit(damage);

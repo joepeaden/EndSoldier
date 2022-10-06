@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: 10
   recoilControl: 10
-  aimMoveForce: 10
-  normalMoveForce: 23
+  slowWalkMoveForce: 8
+  fastWalkMoveForce: 20
   sprintMoveForce: 40
   rotationTorque: 30

@@ -8,13 +8,19 @@ using UnityEngine.AI;
 /// <summary>
 /// Base class for enemy actors.
 /// </summary>
-public class Enemy : Actor
+public class Enemy : MonoBehaviour
 {
+	private Actor actor;
 	private NavMeshAgent navAgent;
 	private GameObject target;
 	private bool pauseFiring;
 
-	private void Start()
+    private void Awake()
+    {
+		actor = GetComponent<Actor>();
+    }
+
+    private void Start()
 	{
 		// required settings for 2D navmesh to work correctly
 		//navAgent = GetComponent<NavMeshAgent>();
@@ -27,15 +33,15 @@ public class Enemy : Actor
 
     private void Update()
     {
-		Vector3 direction = (target.transform.position - transform.position).normalized;
+		Vector3 aimDir = (target.transform.position - transform.position).normalized;
 
-		UpdateAim(direction);
+		actor.UpdateAim(aimDir);
 
-		if (!weapon.HasAmmo())
+		if (actor.GetEquippedWeaponAmmo() <= 0)
 		{
-			weapon.StartReload();
+			actor.AttemptReload();
 		} 
-		else if (upperBodyFinishedRotating && !pauseFiring)
+		else if (actor.state[Actor.State.BodyRotationFinished] && !pauseFiring)
         {
 			int numToFire = Random.Range(1, 7);
 
@@ -55,13 +61,13 @@ public class Enemy : Actor
     {
 		pauseFiring = true;
 
-		int initialWeaponAmmo = weapon.GetAmmo();
+		int initialWeaponAmmo = actor.GetEquippedWeaponAmmo();
 		int currentWeaponAmmo = initialWeaponAmmo;
 
 		while (initialWeaponAmmo - currentWeaponAmmo < numToFire && currentWeaponAmmo > 0)
         {
-            weapon.InitiateAttack(data.recoilControl);
-			currentWeaponAmmo = weapon.GetAmmo();
+            actor.AttemptAttack();
+			currentWeaponAmmo = actor.GetEquippedWeaponAmmo();
 
 			yield return null;
         }

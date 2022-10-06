@@ -15,11 +15,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerGO;
     private Player player;
 
+    [SerializeField] private GameObject reticleGO;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
         {
-            Debug.Log("More than one Camera Manager, deleting one.");
+            Debug.Log("More than one Game Manager, deleting one.");
             Destroy(this.gameObject);
         }
         else
@@ -27,7 +29,21 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
 
+        if (!playerGO)
+        {
+            Debug.LogWarning("Player not assigned, finding by tag.");
+            playerGO = GameObject.FindGameObjectWithTag("Player");
+
+            if (!playerGO)
+            {
+                Debug.LogWarning("Player not found by tag.");
+            }
+        }
+
         player = playerGO.GetComponent<Player>();
+
+        Player.OnPlayerBeginAim += delegate { SetReticleActive(true); };
+        Player.OnPlayerEndAim += delegate { SetReticleActive(false); };
     }
 
     public Player GetPlayerScript()
@@ -38,5 +54,15 @@ public class GameManager : MonoBehaviour
     public GameObject GetPlayerGO()
     {
         return playerGO;
+    }
+
+    public GameObject GetReticleGO()
+    {
+        return reticleGO;
+    }    
+
+    public void SetReticleActive(bool isActive)
+    {
+        reticleGO.GetComponent<SpriteRenderer>().enabled = isActive;
     }
 }

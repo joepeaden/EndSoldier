@@ -10,8 +10,8 @@ public class ActorData : ScriptableObject
 {
 	public int hitPoints;
 	public float recoilControl; 
-	public float aimMoveForce;
-	public float normalMoveForce;
+	public float slowWalkMoveForce;
+	public float fastWalkMoveForce;
 	public float sprintMoveForce;
 	public float rotationTorque;
 }
