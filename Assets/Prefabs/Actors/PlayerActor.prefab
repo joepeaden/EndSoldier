@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 872553116337195829, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f464ba89ef4ac64984e8609524b2647, type: 2}
     - target: {fileID: 883911243683594172, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -63,19 +67,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4404756533418901247, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: coverMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c15b1f4c1b358894b9ea5d972ae35226, type: 2}
+    - target: {fileID: 4404756533418901247, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: originalMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f464ba89ef4ac64984e8609524b2647, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
---- !u!114 &1195520878132369631 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4404756533418901247, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
-  m_PrefabInstance: {fileID: 3294243890456372768}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4582820473528141267}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da4bea2ea1740f3408c95ad64b62686f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4582820473528141267 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1310252469257724915, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
@@ -93,4 +94,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3bfc243c5b4e4479f0b6d7fd729add, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 1195520878132369631}

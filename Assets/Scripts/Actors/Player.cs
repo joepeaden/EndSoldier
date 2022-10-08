@@ -65,7 +65,12 @@ public class Player : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.C))
         {
-			actor.SetState(Actor.State.Crouching);
+			actor.ToggleCrouch();
+        }
+
+		if (Input.GetKeyDown(KeyCode.Space))
+        {
+			actor.AttemptDuckInCover();
         }
 	}
 

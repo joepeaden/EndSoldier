@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 // Author: Joseph Peaden
 
@@ -16,19 +17,28 @@ public class Actor : MonoBehaviour
 		Aiming,
 		Crouching,
 		// true if the upperbody is facing the desired aim direction
-		BodyRotationFinished
+		BodyRotationFinished,
+		InCover
 	}
 
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
-
+	
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
+	[SerializeField] private GameObject modelGO;
 	[SerializeField] private GameObject upperBody;
 
+	// temporary to visually show cover status. Remove once we have models, animations etc.
+	[SerializeField] private Material originalMaterial;
+	[SerializeField] private Material coverMaterial;
+
+	private ActorCoverSensor coverSensor;
 	private CapsuleCollider mainCollider;
-    private Rigidbody rb;
-    private float moveForce;
+    private Rigidbody rigidBody;
+
+	// values
+	private float moveForce;
     private int hitPoints;
 
     private void Awake()
@@ -38,13 +48,22 @@ public class Actor : MonoBehaviour
 			{ State.Walking, false },
 			{ State.Sprinting, false },
 			{ State.Aiming, false },
-			{ State.Crouching, false }
+			{ State.Crouching, false },
+			{ State.BodyRotationFinished, true },
+			{ State.InCover, false }
 		};
 
 		mainCollider = GetComponentInChildren<CapsuleCollider>();
-		rb = GetComponent<Rigidbody>();
+		coverSensor = GetComponentInChildren<ActorCoverSensor>();
+
+		rigidBody = GetComponent<Rigidbody>();
 		hitPoints = data.hitPoints;
 	}
+
+	// Either this method needs to be done away with or it needs to be only internal... I don't think
+	// that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
+	// SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
+	// that states are modfified if it isn't
 
 	/// <summary>
 	/// Set a state of the actor.
@@ -73,13 +92,13 @@ public class Actor : MonoBehaviour
 				moveForce = data.slowWalkMoveForce;
 				break;
 			case State.Crouching:
-				ToggleCrouch();
+				state[State.Crouching] = true;
 				break;
 			default:
 				break;
-		} 
-	}
-
+		}
+	} 
+	
 	/// <summary>
 	/// Rotate the actor's aim to point in aimVector direction.
 	/// </summary>
@@ -153,39 +172,178 @@ public class Actor : MonoBehaviour
     }
 
 	/// <summary>
-	/// Make the actor crouch.
+	/// Toggle the actor crouch.
 	/// </summary>
 	public void ToggleCrouch()
 	{
 		if (state[State.Crouching])
 		{
-			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
-			//canBeHit = true;
-			transform.localScale = new Vector3(1f, 1f, 1f);
+			SetCrouch(false);
 		}
 		else
 		{
-			// need to add clause to this to check if player is actually in cover, not just crouching.
+			SetCrouch(true);
+		}
+	}
+
+	/// <summary>
+	/// Make the actor crouch.
+	/// </summary>
+	public void SetCrouch(bool shouldCrouch)
+	{
+		if (shouldCrouch)
+		{
+			transform.localScale = new Vector3(1f, .5f, 1f);
+		}
+		else
+		{
+			transform.localScale = new Vector3(1f, 1f, 1f);
+		}
+
+		state[State.Crouching] = shouldCrouch;
+	}
+
+
+	/// <summary>
+	/// Adds a listener to the CoverSensor's OnCoverNearby event.
+	/// </summary>
+	/// <param name="listener">The method to trigger when nearby cover is detected</param>
+	public void AddCoverListener(UnityAction listener)
+    {
+		coverSensor.OnCoverNearby.AddListener(listener);
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public bool AttemptDuckInCover()
+    {
+		Cover cover = coverSensor.GetCover();
+		
+		if (cover)
+		{
+			modelGO.GetComponent<MeshRenderer>().material = coverMaterial;
+
 			// set to InCover layer, ignores collisions with bullets
 			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
 
-			// is canbehit necessary when the layers ignore collision? Probably not.
-			//canBeHit = false;
-			transform.localScale = new Vector3(1f, .5f, 1f);
+			StartCoroutine(MoveActorToCover());
+
+			SetCrouch(true);
+
+			return true;
 		}
 
-		state[State.Crouching] = !state[State.Crouching];
+		return false;
+    }
+
+	public bool AttemptExitCover()
+	{
+		state[State.InCover] = false;
+
+		modelGO.GetComponent<MeshRenderer>().material = originalMaterial;
+
+		mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
+
+		return true;
+	}
+
+	// much is a duplicate of movetoposition. fix that.
+	private IEnumerator MoveActorToCover()
+	{
+		if (!coverSensor.GetCover())
+		{
+			Debug.LogWarning("MoveActorToPosition is called but no cover is set in the sensor.");
+			yield return null;
+		}
+		else
+		{
+
+			Vector3 moveVector = Vector3.zero;
+			if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
+			{
+				moveVector = new Vector3(coverSensor.GetCover().actorTargetPosition.x - transform.position.x, 0, 0);
+			}
+
+			bool actorNotAtTargetPosition = moveVector.magnitude > (mainCollider.transform.localScale.y / 2);
+
+			while (actorNotAtTargetPosition)
+			{
+				//transform.Translate(moveVector.normalized * Time.deltaTime *);
+				Move(moveVector.normalized);
+
+				if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
+				{
+					moveVector = new Vector3(coverSensor.GetCover().actorTargetPosition.x - transform.position.x, 0, 0);
+				}
+				actorNotAtTargetPosition = moveVector.magnitude > 1f;
+
+				yield return null;
+			}
+
+			rigidBody.velocity = Vector3.zero;
+			Move(-moveVector.normalized);
+			//rigidBody.
+			//rigidBody.position = targetPosition;
+
+			state[State.InCover] = true;
+
+		}
+	}
+
+	private IEnumerator MoveActorToPosition(Vector3 targetPosition)
+	{
+		if (!coverSensor.GetCover())
+		{
+			Debug.LogWarning("MoveActorToPosition is called but no cover is set in the sensor.");
+			yield return null;
+		}
+		else
+		{
+
+			Vector3 moveVector = Vector3.zero;
+			if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
+            {
+				moveVector = new Vector3(targetPosition.x - transform.position.x, 0, 0);
+			}
+
+			bool actorNotAtTargetPosition = moveVector.magnitude > (mainCollider.transform.localScale.y / 2);
+
+			while (actorNotAtTargetPosition)
+			{
+				//transform.Translate(moveVector.normalized * Time.deltaTime *);
+                Move(moveVector.normalized);
+
+				if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
+				{
+					moveVector = new Vector3(targetPosition.x - transform.position.x, 0, 0);
+				}
+				actorNotAtTargetPosition = moveVector.magnitude > 1f;
+
+				yield return null;
+			}
+
+			rigidBody.velocity = Vector3.zero;
+			Move(-moveVector.normalized);
+            //rigidBody.
+            //rigidBody.position = targetPosition;
+        }
 	}
 
 	/// <summary>
 	/// Move laterally in moveVector direction. Move force can be found in the ActorData Scriptable Object.
 	/// </summary>
 	/// <param name="moveVector">Direction of movement.</param>
-    public void Move(Vector3 moveVector)
+	public void Move(Vector3 moveVector)
     {
 		if (moveVector != Vector3.zero)
 		{
-			rb.AddForce(moveVector * moveForce);
+			rigidBody.AddForce(moveVector * moveForce);
+
+			if (state[State.InCover])
+            {
+				AttemptExitCover();
+            }
 		}
 	}
 
@@ -204,7 +362,7 @@ public class Actor : MonoBehaviour
 	/// <summary>
 	/// Kill this actor.
 	/// </summary>
-	protected void Die()
+	private void Die()
 	{
 		;
 	}

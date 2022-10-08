@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour
 
 		// temporary
 		target = GameManager.Instance.GetPlayerGO();
+
+		actor.AddCoverListener(ActorHasPotentialCover);
 	}
 
     private void Update()
@@ -55,6 +57,11 @@ public class Enemy : MonoBehaviour
 		//Quaternion q = new Quaternion();
 		//Vector3 v3 = navAgent.path.corners[1];
 		//torsoT.right = navAgent.path.corners[1] - transform.position;
+    }
+
+	private void ActorHasPotentialCover()
+    {
+		Debug.Log("Enemy sees potential cover");
     }
 
 	private IEnumerator FireBurst(int numToFire)
