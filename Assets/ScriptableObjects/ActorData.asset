@@ -18,3 +18,4 @@ MonoBehaviour:
   fastWalkMoveForce: 20
   sprintMoveForce: 40
   rotationTorque: 30
+  moveToCoverSpeed: 10

@@ -12,11 +12,20 @@ public class Cover : MonoBehaviour
 
     public CoverType coverType;
     // where the actor should move to when going into this cover
-    [HideInInspector]
-    public Vector3 actorTargetPosition;
+    [SerializeField] private GameObject actorTargetPositionGO;
 
     public void Awake()
     {
-        actorTargetPosition = transform.GetChild(0).position;
+        // disable actor target position mesh during play
+        actorTargetPositionGO.SetActive(false);
+    }
+
+    public Vector3 GetActorTargetPosition()
+    {
+        Vector3 targetPos = actorTargetPositionGO.transform.position;
+        // nullify Y value (don't want actor moving up)
+        targetPos.y = 0f;
+
+        return targetPos;
     }
 }

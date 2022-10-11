@@ -40,8 +40,14 @@ public class Actor : MonoBehaviour
 	// values
 	private float moveForce;
     private int hitPoints;
+	// position before actor enters cover (for returning to correct position)
+	private Vector3 posBeforeCover;
+	// is the EnterExitCover coroutine running?
+	private bool coverCoroutineRunning;
+	// original dimensions of actor object
+	private Vector3 originalDimensions;
 
-    private void Awake()
+	private void Awake()
     {
 		state = new Dictionary<State, bool>()
 		{
@@ -58,6 +64,8 @@ public class Actor : MonoBehaviour
 
 		rigidBody = GetComponent<Rigidbody>();
 		hitPoints = data.hitPoints;
+
+		originalDimensions = transform.localScale;
 	}
 
 	// Either this method needs to be done away with or it needs to be only internal... I don't think
@@ -197,7 +205,7 @@ public class Actor : MonoBehaviour
 		}
 		else
 		{
-			transform.localScale = new Vector3(1f, 1f, 1f);
+			transform.localScale = originalDimensions;
 		}
 
 		state[State.Crouching] = shouldCrouch;
@@ -214,22 +222,30 @@ public class Actor : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 
+	/// Attempt to move the actor to the actorTargetPosition of a cover object, as well as change the collisions layer and visuals for the actor.
 	/// </summary>
+	/// <returns>Whether or not the attempt was successful.</returns>
 	public bool AttemptDuckInCover()
     {
 		Cover cover = coverSensor.GetCover();
 		
-		if (cover)
+		if (cover && !state[State.InCover] && !coverCoroutineRunning)
 		{
 			modelGO.GetComponent<MeshRenderer>().material = coverMaterial;
 
 			// set to InCover layer, ignores collisions with bullets
 			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
 
-			StartCoroutine(MoveActorToCover());
+			if (cover.coverType == Cover.CoverType.Floor)
+			{
+				SetCrouch(true);
+			}
 
-			SetCrouch(true);
+			StartCoroutine(EnterOrExitCover(true));
+
+			posBeforeCover = transform.position;
+			// ensure that the original pos goes back to the zero z position
+			posBeforeCover.z = 0f;
 
 			return true;
 		}
@@ -237,97 +253,65 @@ public class Actor : MonoBehaviour
 		return false;
     }
 
+	/// <summary>
+	/// Attempt to exit a cover object.
+	/// </summary>
+	/// <returns>Whether or not the attempt was successful.</returns>
 	public bool AttemptExitCover()
 	{
-		state[State.InCover] = false;
-
-		modelGO.GetComponent<MeshRenderer>().material = originalMaterial;
-
-		mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
-
-		return true;
-	}
-
-	// much is a duplicate of movetoposition. fix that.
-	private IEnumerator MoveActorToCover()
-	{
-		if (!coverSensor.GetCover())
-		{
-			Debug.LogWarning("MoveActorToPosition is called but no cover is set in the sensor.");
-			yield return null;
-		}
-		else
-		{
-
-			Vector3 moveVector = Vector3.zero;
-			if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
-			{
-				moveVector = new Vector3(coverSensor.GetCover().actorTargetPosition.x - transform.position.x, 0, 0);
-			}
-
-			bool actorNotAtTargetPosition = moveVector.magnitude > (mainCollider.transform.localScale.y / 2);
-
-			while (actorNotAtTargetPosition)
-			{
-				//transform.Translate(moveVector.normalized * Time.deltaTime *);
-				Move(moveVector.normalized);
-
-				if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
-				{
-					moveVector = new Vector3(coverSensor.GetCover().actorTargetPosition.x - transform.position.x, 0, 0);
-				}
-				actorNotAtTargetPosition = moveVector.magnitude > 1f;
-
-				yield return null;
-			}
-
-			rigidBody.velocity = Vector3.zero;
-			Move(-moveVector.normalized);
-			//rigidBody.
-			//rigidBody.position = targetPosition;
-
-			state[State.InCover] = true;
-
-		}
-	}
-
-	private IEnumerator MoveActorToPosition(Vector3 targetPosition)
-	{
-		if (!coverSensor.GetCover())
-		{
-			Debug.LogWarning("MoveActorToPosition is called but no cover is set in the sensor.");
-			yield return null;
-		}
-		else
-		{
-
-			Vector3 moveVector = Vector3.zero;
-			if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
-            {
-				moveVector = new Vector3(targetPosition.x - transform.position.x, 0, 0);
-			}
-
-			bool actorNotAtTargetPosition = moveVector.magnitude > (mainCollider.transform.localScale.y / 2);
-
-			while (actorNotAtTargetPosition)
-			{
-				//transform.Translate(moveVector.normalized * Time.deltaTime *);
-                Move(moveVector.normalized);
-
-				if (coverSensor.GetCover().coverType == Cover.CoverType.Floor)
-				{
-					moveVector = new Vector3(targetPosition.x - transform.position.x, 0, 0);
-				}
-				actorNotAtTargetPosition = moveVector.magnitude > 1f;
-
-				yield return null;
-			}
-
-			rigidBody.velocity = Vector3.zero;
-			Move(-moveVector.normalized);
-            //rigidBody.
-            //rigidBody.position = targetPosition;
+		if (!coverSensor.GetCover() || !state[State.InCover])
+        {
+			Debug.LogWarning("AttemptExitCover was called, but no cover or actor not in cover state");
+			return false;
         }
+
+		if (!coverCoroutineRunning)
+		{
+			modelGO.GetComponent<MeshRenderer>().material = originalMaterial;
+
+			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
+
+			StartCoroutine(EnterOrExitCover(false));
+			
+			return true;
+		}
+
+		return false;
+	}
+
+	/// <summary>
+	/// Enter or exit a cover object.
+	/// </summary>
+	/// <param name="enteringCover">True if the actor is entering cover.</param>
+	/// <returns></returns>
+	private IEnumerator EnterOrExitCover(bool enteringCover)
+	{
+		if (!coverSensor.GetCover())
+		{
+			Debug.LogWarning("StartDuckInCover is called but no cover is set in the sensor.");
+			yield return null;
+		}
+		else
+		{
+			coverCoroutineRunning = true;
+
+			rigidBody.velocity = Vector3.zero;
+
+			Vector3 targetPos = enteringCover ? coverSensor.GetCover().GetActorTargetPosition() : posBeforeCover;
+			targetPos.y = transform.position.y;
+
+			do
+			{
+				var step = data.moveToCoverSpeed * Time.deltaTime;
+				transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+
+				yield return null;
+			} while (transform.position != targetPos);	
+
+			state[State.InCover] = enteringCover;
+
+			coverCoroutineRunning = false;
+		}
 	}
 
 	/// <summary>
@@ -340,6 +324,7 @@ public class Actor : MonoBehaviour
 		{
 			rigidBody.AddForce(moveVector * moveForce);
 
+			// if actor tries to move, exit cover
 			if (state[State.InCover])
             {
 				AttemptExitCover();
