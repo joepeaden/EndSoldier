@@ -15,4 +15,5 @@ public class ActorData : ScriptableObject
 	public float sprintMoveForce;
 	public float rotationTorque;
 	public int moveToCoverSpeed;
+	public float coverSensorDistance;
 }

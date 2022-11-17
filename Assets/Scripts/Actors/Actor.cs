@@ -46,6 +46,8 @@ public class Actor : MonoBehaviour
 	private bool coverCoroutineRunning;
 	// original dimensions of actor object
 	private Vector3 originalDimensions;
+	// for flipping the coverSensor's position when going different directions
+	private int previousXMoveDirection;
 
 	private void Awake()
     {
@@ -297,7 +299,7 @@ public class Actor : MonoBehaviour
 
 			rigidBody.velocity = Vector3.zero;
 
-			Vector3 targetPos = enteringCover ? coverSensor.GetCover().GetActorTargetPosition() : posBeforeCover;
+			Vector3 targetPos = enteringCover ? coverSensor.GetCover().GetActorCoverPosition(transform.position) : posBeforeCover;
 			targetPos.y = transform.position.y;
 
 			do
@@ -314,12 +316,37 @@ public class Actor : MonoBehaviour
 		}
 	}
 
+	private bool AttemptVaultOverCover()
+    {
+		Cover cover = coverSensor.GetCover();
+		if (cover && cover.coverType == Cover.CoverType.Floor)
+        {
+			// when implementing animations, will have a vault over animation here. for now, just move through.
+			cover.GetComponent<Collider>().enabled = false;
+
+			cover.GetActorFlipPosition(transform.position);
+        }
+
+		return false;
+    }
+
 	/// <summary>
 	/// Move laterally in moveVector direction. Move force can be found in the ActorData Scriptable Object.
 	/// </summary>
 	/// <param name="moveVector">Direction of movement.</param>
 	public void Move(Vector3 moveVector)
     {
+		
+		// if we're moving right, move cover sensor to face that direction. Otherwise, the opposite.
+		int currentXMoveDirection = rigidBody.velocity.x > 0 ? 1 : -1;
+		if (currentXMoveDirection != previousXMoveDirection)
+		{
+			Vector3 newCoverSensorPos = coverSensor.transform.localPosition;
+			newCoverSensorPos.x = -1 * newCoverSensorPos.x;
+			coverSensor.transform.localPosition = newCoverSensorPos;
+			previousXMoveDirection = currentXMoveDirection;
+		}
+
 		if (moveVector != Vector3.zero)
 		{
 			rigidBody.AddForce(moveVector * moveForce);

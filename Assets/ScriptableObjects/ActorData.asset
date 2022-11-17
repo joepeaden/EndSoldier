@@ -19,3 +19,4 @@ MonoBehaviour:
   sprintMoveForce: 40
   rotationTorque: 30
   moveToCoverSpeed: 10
+  coverSensorDistance: 1.25
