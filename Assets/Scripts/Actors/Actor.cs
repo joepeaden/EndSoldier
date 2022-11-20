@@ -336,26 +336,28 @@ public class Actor : MonoBehaviour
 	/// <param name="moveVector">Direction of movement.</param>
 	public void Move(Vector3 moveVector)
     {
-		
+
+		// commented because haven't refactored for topdown yet
+
 		// if we're moving right, move cover sensor to face that direction. Otherwise, the opposite.
-		int currentXMoveDirection = rigidBody.velocity.x > 0 ? 1 : -1;
-		if (currentXMoveDirection != previousXMoveDirection)
-		{
-			Vector3 newCoverSensorPos = coverSensor.transform.localPosition;
-			newCoverSensorPos.x = -1 * newCoverSensorPos.x;
-			coverSensor.transform.localPosition = newCoverSensorPos;
-			previousXMoveDirection = currentXMoveDirection;
-		}
+		//int currentXMoveDirection = rigidBody.velocity.x > 0 ? 1 : -1;
+		//if (currentXMoveDirection != previousXMoveDirection)
+		//{
+		//	Vector3 newCoverSensorPos = coverSensor.transform.localPosition;
+		//	newCoverSensorPos.x = -1 * newCoverSensorPos.x;
+		//	coverSensor.transform.localPosition = newCoverSensorPos;
+		//	previousXMoveDirection = currentXMoveDirection;
+		//}
 
 		if (moveVector != Vector3.zero)
 		{
 			rigidBody.AddForce(moveVector * moveForce);
 
 			// if actor tries to move, exit cover
-			if (state[State.InCover])
-            {
-				AttemptExitCover();
-            }
+			//if (state[State.InCover])
+   //         {
+			//	AttemptExitCover();
+   //         }
 		}
 	}
 

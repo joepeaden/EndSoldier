@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy
   - Cover
+  - WaveText
+  - PointsText
+  - WeaponText
+  - Pickup
+  - HealthBar
   layers:
   - Default
   - TransparentFX
@@ -16,7 +21,7 @@ TagManager:
   - MouseOnly
   - InCover
   - Projectiles
-  - 
+  - HouseAndFurniture
   - 
   - 
   - 

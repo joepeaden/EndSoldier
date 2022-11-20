@@ -14,6 +14,7 @@ public class CameraManager : MonoBehaviour
     public static CameraManager Instance { get { return _instance; } }
 
     [SerializeField] private CinemachineVirtualCamera vCam;
+    // is this ref needed?
     [SerializeField] private Camera mainCam;
 
     private void Awake()
