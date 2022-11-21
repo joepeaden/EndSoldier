@@ -77,8 +77,10 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
 		// Normalized direction to shoot the projectile
-		Vector2 aimVector = (reticle.position - transform.position).normalized;
-		actor.UpdateAim(aimVector);
+		//Vector2 aimVector = (reticle.position - transform.position).normalized;
+		Vector3 retPos = reticle.position;
+		retPos.y = transform.position.y;
+		actor.UpdateAim(retPos);
 
 		// Movement inputs
 		if (Input.GetKey(KeyCode.W))

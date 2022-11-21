@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
     void Update()
     {
         if (force != 0)
-            GetComponent<Rigidbody>().AddForce(force * transform.right);
+            GetComponent<Rigidbody>().AddForce(force * transform.forward);
         else
             Debug.LogWarning("Projectile force for " + gameObject.name + " is not set");
 

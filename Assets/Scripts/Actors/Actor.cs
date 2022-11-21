@@ -27,7 +27,6 @@ public class Actor : MonoBehaviour
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
 	[SerializeField] private GameObject modelGO;
-	[SerializeField] private GameObject upperBody;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	[SerializeField] private Material originalMaterial;
@@ -112,32 +111,34 @@ public class Actor : MonoBehaviour
 	/// <summary>
 	/// Rotate the actor's aim to point in aimVector direction.
 	/// </summary>
-	/// <param name="aimVector">The direction to aim in.</param>
-	public void UpdateAim(Vector2 aimVector)
+	/// <param name="aimVector">The target to aim at.</param>
+	public void UpdateAim(Vector3 aimVector)
 	{
 		// no idea what this math is.
-		float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
-		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		//float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
+		//Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-		// if we cross from 360 - 0 or the other way around, handle it
-		bool crossedZeroDown = rotation.eulerAngles.z > 180 && upperBody.transform.rotation.eulerAngles.z < 90;
-		bool crossedZeroUp = rotation.eulerAngles.z < 90 && upperBody.transform.rotation.eulerAngles.z > 180;
+		//// if we cross from 360 - 0 or the other way around, handle it
+		//bool crossedZeroDown = rotation.eulerAngles.y > 180 && transform.rotation.eulerAngles.y < 90;
+		//bool crossedZeroUp = rotation.eulerAngles.y < 90 && transform.rotation.eulerAngles.y > 180;
 
-		if (Mathf.Abs(rotation.eulerAngles.z - upperBody.transform.rotation.eulerAngles.z) < 10)
-		{
-			upperBody.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-			upperBody.GetComponent<Rigidbody>().MoveRotation(rotation);
-			state[State.BodyRotationFinished] = true;
-			return;
-		}
-		else if (!crossedZeroDown && rotation.eulerAngles.z > upperBody.transform.rotation.eulerAngles.z || crossedZeroUp)
-		{
-			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * data.rotationTorque);
-		}
-		else
-		{
-			upperBody.GetComponent<Rigidbody>().AddTorque(Vector3.forward * -data.rotationTorque);
-		}
+		//if (Mathf.Abs(rotation.eulerAngles.y - transform.rotation.eulerAngles.y) < 10)
+		//{
+		//	GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+		//	GetComponent<Rigidbody>().MoveRotation(rotation);
+		//	state[State.BodyRotationFinished] = true;
+		//	return;
+		//}
+		//else if (!crossedZeroDown && rotation.eulerAngles.y > transform.rotation.eulerAngles.y || crossedZeroUp)
+		//{
+		//	GetComponent<Rigidbody>().AddTorque(Vector3.up * data.rotationTorque);
+		//}
+		//else
+		//{
+		//	GetComponent<Rigidbody>().AddTorque(Vector3.up * -data.rotationTorque);
+		//}
+
+		transform.LookAt(aimVector);
 
 		state[State.BodyRotationFinished] = false;
 	}

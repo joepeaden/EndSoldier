@@ -63,6 +63,6 @@ public class GameManager : MonoBehaviour
 
     public void SetReticleActive(bool isActive)
     {
-        reticleGO.GetComponent<SpriteRenderer>().enabled = isActive;
+        reticleGO.GetComponent<MeshRenderer>().enabled = isActive;
     }
 }

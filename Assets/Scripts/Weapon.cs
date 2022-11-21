@@ -53,7 +53,7 @@ public class Weapon : MonoBehaviour
 
         // need to put bullet at end of gun barrel so it doesn't hit player
         Vector3 projectileSpawnPosition = transform.position;
-        projectileSpawnPosition += transform.right * 1.5f;
+        projectileSpawnPosition += transform.forward * 1.5f;
 
         Instantiate(data.projectile, projectileSpawnPosition, transform.rotation);
 
