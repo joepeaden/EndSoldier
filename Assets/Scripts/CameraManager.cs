@@ -29,8 +29,8 @@ public class CameraManager : MonoBehaviour
             _instance = this;
         }
 
-        Player.OnPlayerBeginAim += FollowReticle;
-        Player.OnPlayerEndAim += FollowPlayer;
+        //Player.OnPlayerBeginAim += FollowReticle;
+        //Player.OnPlayerEndAim += FollowPlayer;
     }
 
     private void FollowPlayer()
