@@ -10,13 +10,13 @@ public class Room : MonoBehaviour
 {
     [SerializeField] private GameObject walls;
     [SerializeField] private GameObject wallsCut;
-    //[SerializeField] private GameObject roomObjectsParent;
+    [SerializeField] private GameObject roomObjectsParent;
 
-   // private RoomObjects[] roomObjects;
+    private RoomContent[] roomObjects;
 
     private void Start()
     {
-    //    roomObjects = roomObjectsParent.GetComponentsInChildren<RoomObject>();
+        roomObjects = roomObjectsParent.GetComponentsInChildren<RoomContent>();
 
         RoomTrigger trigger = GetComponentInChildren<RoomTrigger>();
         trigger.OnRoomExit.AddListener(UpdateRoomVisuals);
@@ -28,14 +28,11 @@ public class Room : MonoBehaviour
     /// </summary>
     private void UpdateRoomVisuals()
     {
-        // if walls are active currently, then player is entering the room
-        //if (walls.activeInHierarchy)
-        //{
-        //    foreach (RoomObject)
-        //    {
-        //        r.material = walls.activeInHierarchy ? transparentMaterial ;
-        //    }
-        //}
+        foreach (RoomContent content in roomObjects)
+        {
+            content.SetTransparency(!walls.activeInHierarchy);
+        }
+        
 
         walls.SetActive(!walls.activeInHierarchy);
         wallsCut.SetActive(!wallsCut.activeInHierarchy);

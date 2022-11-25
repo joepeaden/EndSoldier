@@ -11,7 +11,6 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
 	private Actor actor;
-	private NavMeshAgent navAgent;
 	private GameObject target;
 	private bool pauseFiring;
 
@@ -31,33 +30,38 @@ public class Enemy : MonoBehaviour
 		target = GameManager.Instance.GetPlayerGO();
 
 		actor.AddCoverListener(ActorHasPotentialCover);
+		actor.OnDeath.AddListener(HandleEnemyDeath);
 	}
 
     private void Update()
     {
-		Vector3 aimDir = (target.transform.position - transform.position).normalized;
+		actor.Move(target.transform.position);
+		actor.UpdateAim(target.transform.position);
 
-		actor.UpdateAim(aimDir);
-
-		if (actor.GetEquippedWeaponAmmo() <= 0)
-		{
-			actor.AttemptReload();
-		} 
-		else if (actor.state[Actor.State.BodyRotationFinished] && !pauseFiring)
+        if (actor.GetEquippedWeaponAmmo() <= 0)
         {
-			int numToFire = Random.Range(1, 7);
+            actor.AttemptReload();
+        }
+        else if (!pauseFiring)//(actor.state[Actor.State.BodyRotationFinished] && !pauseFiring)
+        {
+            int numToFire = Random.Range(1, 7);
 
 			StartCoroutine(FireBurst(numToFire));
         }
-
-		// chase player
-		//navAgent.destination = FindObjectOfType<Player>().transform.position;
-
-		//// update aim rotation
-		//Quaternion q = new Quaternion();
-		//Vector3 v3 = navAgent.path.corners[1];
-		//torsoT.right = navAgent.path.corners[1] - transform.position;
     }
+
+	/// <summary>
+    /// For now, just rotates the actor 90 degrees to look ded.
+    /// </summary>
+	private void HandleEnemyDeath()
+    {
+		// for now just make him look ded.
+		Quaternion q = new Quaternion();
+		q.eulerAngles = new Vector3(0, 0, 90);
+		transform.rotation = q;
+
+		this.enabled = false;
+	}
 
 	private void ActorHasPotentialCover()
     {

@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
     }
 
     private void Start()
-    {
+	{
+		actor.OnDeath.AddListener(HandlePlayerDeath);
+
 		reticle = GameManager.Instance.GetReticleGO().transform;
     }
 
@@ -85,19 +87,36 @@ public class Player : MonoBehaviour
 		// Movement inputs
 		if (Input.GetKey(KeyCode.W))
 		{
-			actor.Move(Vector3.forward);
+			actor.Move(Vector3.forward, false);
 		}
 		if (Input.GetKey(KeyCode.S))
 		{
-			actor.Move(-Vector3.forward);
+			actor.Move(-Vector3.forward, false);
 		}
 		if (Input.GetKey(KeyCode.A))
 		{
-			actor.Move(-Vector3.right);
+			actor.Move(-Vector3.right, false);
 		}
 		if (Input.GetKey(KeyCode.D))
 		{
-			actor.Move(Vector3.right);
+			actor.Move(Vector3.right, false);
 		}
+	}
+
+    private void OnDestroy()
+    {
+		actor.OnDeath.RemoveListener(HandlePlayerDeath);
+    }
+
+    private void HandlePlayerDeath()
+	{
+		// for now just make him look ded.
+		Quaternion q = new Quaternion();
+		q.eulerAngles = new Vector3(0, 0, 90);
+		transform.rotation = q;
+
+		this.enabled = false;
+
+		SceneLoader.Instance.LoadScene(SceneLoader.SceneList.FailMenu, true);
 	}
 }

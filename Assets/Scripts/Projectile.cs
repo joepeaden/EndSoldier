@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     protected int damage;
     [SerializeField]
-    protected bool is_explosive;
+    protected bool isExplosive;
  
     void Start()
     {
@@ -38,7 +38,7 @@ public class Projectile : MonoBehaviour
             //actor.GetComponent<Rigidbody>().AddForce(transform.right * impact);
             actor.GetHit(damage);
 
-            if(is_explosive)
+            if(isExplosive)
             {
                 // implement method per projectile types
                 CreateExplosion();

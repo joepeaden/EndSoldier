@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.AI;
 
 // Author: Joseph Peaden
 
@@ -10,6 +11,8 @@ using UnityEngine.Events;
 /// </summary>
 public class Actor : MonoBehaviour
 {
+	public UnityEvent OnDeath = new UnityEvent();
+
 	public enum State
 	{
 		Walking,
@@ -35,6 +38,7 @@ public class Actor : MonoBehaviour
 	private ActorCoverSensor coverSensor;
 	private CapsuleCollider mainCollider;
     private Rigidbody rigidBody;
+	private NavMeshAgent navAgent;
 
 	// values
 	private float moveForce;
@@ -60,24 +64,31 @@ public class Actor : MonoBehaviour
 			{ State.InCover, false }
 		};
 
-		mainCollider = GetComponentInChildren<CapsuleCollider>();
+		mainCollider = GetComponent<CapsuleCollider>();
 		coverSensor = GetComponentInChildren<ActorCoverSensor>();
 
 		rigidBody = GetComponent<Rigidbody>();
 		hitPoints = data.hitPoints;
 
 		originalDimensions = transform.localScale;
+
+		navAgent = GetComponent<NavMeshAgent>();
 	}
 
-	// Either this method needs to be done away with or it needs to be only internal... I don't think
-	// that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
-	// SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
-	// that states are modfified if it isn't
+    private void OnDestroy()
+    {
+		OnDeath.RemoveAllListeners();
+    }
 
-	/// <summary>
-	/// Set a state of the actor.
-	/// </summary>
-	/// <param name="stateToModify">The state to activate.</param>
+    // Either this method needs to be done away with or it needs to be only internal... I don't think
+    // that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
+    // SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
+    // that states are modfified if it isn't
+
+    /// <summary>
+    /// Set a state of the actor.
+    /// </summary>
+    /// <param name="stateToModify">The state to activate.</param>
     public void SetState(State stateToModify)
 	{
 		switch (stateToModify)
@@ -109,38 +120,12 @@ public class Actor : MonoBehaviour
 	} 
 	
 	/// <summary>
-	/// Rotate the actor's aim to point in aimVector direction.
+	/// Rotate the actor's aim to point at aimTarget.
 	/// </summary>
-	/// <param name="aimVector">The target to aim at.</param>
-	public void UpdateAim(Vector3 aimVector)
+	/// <param name="aimTarget">The target to aim at.</param>
+	public void UpdateAim(Vector3 aimTarget)
 	{
-		// no idea what this math is.
-		//float angle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
-		//Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-		//// if we cross from 360 - 0 or the other way around, handle it
-		//bool crossedZeroDown = rotation.eulerAngles.y > 180 && transform.rotation.eulerAngles.y < 90;
-		//bool crossedZeroUp = rotation.eulerAngles.y < 90 && transform.rotation.eulerAngles.y > 180;
-
-		//if (Mathf.Abs(rotation.eulerAngles.y - transform.rotation.eulerAngles.y) < 10)
-		//{
-		//	GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-		//	GetComponent<Rigidbody>().MoveRotation(rotation);
-		//	state[State.BodyRotationFinished] = true;
-		//	return;
-		//}
-		//else if (!crossedZeroDown && rotation.eulerAngles.y > transform.rotation.eulerAngles.y || crossedZeroUp)
-		//{
-		//	GetComponent<Rigidbody>().AddTorque(Vector3.up * data.rotationTorque);
-		//}
-		//else
-		//{
-		//	GetComponent<Rigidbody>().AddTorque(Vector3.up * -data.rotationTorque);
-		//}
-
-		transform.LookAt(aimVector);
-
-		state[State.BodyRotationFinished] = false;
+		transform.LookAt(aimTarget);
 	}
 
 	/// <summary>
@@ -334,8 +319,9 @@ public class Actor : MonoBehaviour
 	/// <summary>
 	/// Move laterally in moveVector direction. Move force can be found in the ActorData Scriptable Object.
 	/// </summary>
-	/// <param name="moveVector">Direction of movement.</param>
-	public void Move(Vector3 moveVector)
+	/// <param name="useNavMesh">Should this actor use NavMesh? Affects how moveVector is interpeted.</param>
+	/// <param name="moveVector">If not useNavMesh, direction of movement. If useNavMesh, the destination of the agent.</param>
+	public void Move(Vector3 moveVector, bool useNavMesh = true)
     {
 
 		// commented because haven't refactored for topdown yet
@@ -352,7 +338,21 @@ public class Actor : MonoBehaviour
 
 		if (moveVector != Vector3.zero)
 		{
-			rigidBody.AddForce(moveVector * moveForce);
+			if (useNavMesh)
+			{
+				if(navAgent == null)
+                {
+					Debug.LogWarning("No NavMeshAgent attatched to actor " + gameObject.name + ", but attempted to use it.");
+                }
+				else if (navAgent.destination != moveVector)
+				{
+					navAgent.destination = moveVector;
+				}
+			}
+			else
+			{
+				rigidBody.AddForce(moveVector * moveForce);
+			}
 
 			// if actor tries to move, exit cover
 			//if (state[State.InCover])
@@ -379,6 +379,12 @@ public class Actor : MonoBehaviour
 	/// </summary>
 	private void Die()
 	{
-		;
+		// disable components
+		navAgent.enabled = false;
+
+		// have actor handle it's own inevitable destruction. It's ok buddy.
+		OnDeath.Invoke();
+
+		this.enabled = false;
 	}
 }
