@@ -53,11 +53,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4bea2ea1740f3408c95ad64b62686f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
   data: {fileID: 11400000, guid: 088ef8621086b774c99c9174844e7740, type: 2}
   weapon: {fileID: 2062017164814779945}
-  modelGO: {fileID: 4613967237021160972}
+  modelRenderer: {fileID: 0}
   originalMaterial: {fileID: 0}
   coverMaterial: {fileID: 0}
+  isInvincible: 0
 --- !u!136 &1143217580977220765
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -108,7 +112,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &8142715800505872954
 MonoBehaviour:
@@ -370,11 +374,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.99999994
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.56
+      value: 0.5599999
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalRotation.w

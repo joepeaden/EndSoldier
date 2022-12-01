@@ -25,10 +25,17 @@ public class Weapon : MonoBehaviour
     // has to do with weapon recoil - honestly confused how it works but right now it has to be class var
     private float t = 0.0f;
 
-    public void Start()
+    private void Start()
     {
         ammoInWeapon = data.ammoCapacity;
         attackAudioSource.clip = data.attackSound;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        readyToAttack = true;
+        reloading = false;
     }
 
     public bool InitiateAttack(float actorRecoilControl)

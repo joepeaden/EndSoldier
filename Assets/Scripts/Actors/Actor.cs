@@ -26,14 +26,18 @@ public class Actor : MonoBehaviour
 
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
-	
+	public bool IsAlive { get; private set; } = true;
+
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
-	[SerializeField] private GameObject modelGO;
+	[SerializeField] private MeshRenderer modelRenderer;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	[SerializeField] private Material originalMaterial;
 	[SerializeField] private Material coverMaterial;
+
+	[Header("Debug Options")]
+	[SerializeField] private bool isInvincible;
 
 	private ActorCoverSensor coverSensor;
 	private CapsuleCollider mainCollider;
@@ -79,6 +83,14 @@ public class Actor : MonoBehaviour
     {
 		OnDeath.RemoveAllListeners();
     }
+
+	public void SetVisibility(bool visible)
+    {
+		for (int i = 0; i < transform.childCount; i++)
+		{
+			transform.GetChild(i).gameObject.SetActive(visible);
+		}
+	}
 
     // Either this method needs to be done away with or it needs to be only internal... I don't think
     // that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
@@ -219,7 +231,7 @@ public class Actor : MonoBehaviour
 		
 		if (cover && !state[State.InCover] && !coverCoroutineRunning)
 		{
-			modelGO.GetComponent<MeshRenderer>().material = coverMaterial;
+			modelRenderer.material = coverMaterial;
 
 			// set to InCover layer, ignores collisions with bullets
 			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
@@ -255,7 +267,7 @@ public class Actor : MonoBehaviour
 
 		if (!coverCoroutineRunning)
 		{
-			modelGO.GetComponent<MeshRenderer>().material = originalMaterial;
+			modelRenderer.material = originalMaterial;
 
 			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
 
@@ -368,6 +380,11 @@ public class Actor : MonoBehaviour
 	/// <param name="damage">Damage to deal to this actor.</param>
 	public void GetHit(int damage)
 	{
+		if (isInvincible)
+        {
+			return;
+        }
+
 		hitPoints -= damage;
 
 		if (hitPoints <= 0)
@@ -379,6 +396,8 @@ public class Actor : MonoBehaviour
 	/// </summary>
 	private void Die()
 	{
+		IsAlive = false;
+
 		// disable components
 		navAgent.enabled = false;
 

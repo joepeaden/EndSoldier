@@ -8,7 +8,11 @@ using UnityEngine.AI;
 /// <summary>
 /// Base class for enemy actors.
 /// </summary>
-public class Enemy : MonoBehaviour
+/// <remarks>
+/// It probably will be worth it to have an AIActor subclass and take some of the functionality from here.
+/// Stuff like the NavMesh and "perception"
+/// </remarks>
+public class Enemy : MonoBehaviour, ISetActive
 {
 	private Actor actor;
 	private GameObject target;
@@ -21,38 +25,70 @@ public class Enemy : MonoBehaviour
 
     private void Start()
 	{
-		// required settings for 2D navmesh to work correctly
-		//navAgent = GetComponent<NavMeshAgent>();
-		//navAgent.updateRotation = false;
-		//navAgent.updateUpAxis = false;
-
-		// temporary
-		target = GameManager.Instance.GetPlayerGO();
-
 		actor.AddCoverListener(ActorHasPotentialCover);
 		actor.OnDeath.AddListener(HandleEnemyDeath);
 	}
 
     private void Update()
     {
-		actor.Move(target.transform.position);
-		actor.UpdateAim(target.transform.position);
+		if (target != null)
+		{
+			// just disabling chasing for now
+			//actor.Move(target.transform.position);
 
-        if (actor.GetEquippedWeaponAmmo() <= 0)
-        {
-            actor.AttemptReload();
-        }
-        else if (!pauseFiring)//(actor.state[Actor.State.BodyRotationFinished] && !pauseFiring)
-        {
-            int numToFire = Random.Range(1, 7);
+			actor.UpdateAim(target.transform.position);
 
-			StartCoroutine(FireBurst(numToFire));
-        }
+			if (actor.GetEquippedWeaponAmmo() <= 0)
+			{
+				actor.AttemptReload();
+			}
+			else if (!pauseFiring)
+			{
+				int numToFire = Random.Range(1, 4);
+
+				StartCoroutine(FireBurst(numToFire));
+			}
+		}
     }
 
+	public void Activate()
+    {
+		if (actor.IsAlive)
+		{
+			pauseFiring = false;
+			actor.SetVisibility(true);
+
+			StartCoroutine(LookForTarget());
+		}
+	}
+
+	public void DeActivate()
+	{
+		if (actor.IsAlive)
+		{
+			pauseFiring = true;
+			target = null;
+			StopAllCoroutines();
+
+			actor.SetVisibility(false);
+
+			// if remove this move order, the actor goes to last player position. Might want it to be like that down the line. Just something to consider.
+			actor.Move(transform.position);
+		}
+	}
+
+	private IEnumerator LookForTarget()
+    {
+		// for now. Just pause for a moment and then find player.
+		// eventually, can use a sphere collider for awareness trigger then raycast to see if target is not visible (hits wall instead)
+		yield return new WaitForSeconds(1f);
+		target = GameManager.Instance.GetPlayerGO();
+		yield return null;
+	}
+
 	/// <summary>
-    /// For now, just rotates the actor 90 degrees to look ded.
-    /// </summary>
+	/// For now, just rotates the actor 90 degrees to look ded.
+	/// </summary>
 	private void HandleEnemyDeath()
     {
 		// for now just make him look ded.
@@ -84,7 +120,7 @@ public class Enemy : MonoBehaviour
         }
 
 
-		yield return new WaitForSeconds(.5f);
+		yield return new WaitForSeconds(1f);
 
 		pauseFiring = false;
 	}

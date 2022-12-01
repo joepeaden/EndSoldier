@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// For any decoration, object, or furniture in a room that needs to be toggled when the room is entered or exited.
 /// </summary>
-public class RoomContent : MonoBehaviour
+public class RoomContent : MonoBehaviour, ISetActive
 {
     [SerializeField] private Material transparentMaterial;
 
@@ -17,30 +17,27 @@ public class RoomContent : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         defaultMaterials = meshRenderer.materials;
 
-        SetTransparency(true);
+        DeActivate();
     }
 
     /// <summary>
     /// Set all the materials for the MeshRenderer to the transparent material, or the opposite.
     /// </summary>
-    /// <param name="shouldBeTransparent"></param>
-    public void SetTransparency(bool shouldBeTransparent)
+    public void Activate()
     {
-        if (shouldBeTransparent)
-        {
-            int len = meshRenderer.materials.Length;
-            Material[] newMat = new Material[len];
-            
-            for (int i = 0; i < len; i++)
-            {
-                newMat[i] = transparentMaterial;
-            }
+        meshRenderer.materials = defaultMaterials;
+    }
 
-            meshRenderer.materials = newMat;
-        }
-        else
+    public void DeActivate()
+    {
+        int len = meshRenderer.materials.Length;
+        Material[] newMat = new Material[len];
+
+        for (int i = 0; i < len; i++)
         {
-            meshRenderer.materials = defaultMaterials;
+            newMat[i] = transparentMaterial;
         }
+
+        meshRenderer.materials = newMat;
     }
 }

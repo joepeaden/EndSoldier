@@ -51,7 +51,7 @@ MonoBehaviour:
   impact: 75
   range: 0
   damage: 1
-  is_explosive: 0
+  isExplosive: 0
 --- !u!65 &5477406972381997941
 BoxCollider:
   m_ObjectHideFlags: 0
