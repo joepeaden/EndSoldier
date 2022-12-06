@@ -38,17 +38,22 @@ public class Weapon : MonoBehaviour
         reloading = false;
     }
 
-    public bool InitiateAttack(float actorRecoilControl)
+    public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
     {
         // wait for gun to cycle (fire rate)
-        if(readyToAttack)
+        if (readyToAttack)
+        {
             LaunchAttack(actorRecoilControl);
-
+            return true;
+        }
         // returning false to indicate to player out of ammo
-        if(ammoInWeapon == 0)
-           return false;
+        else if (triggerPull && ammoInWeapon <= 0)
+        {
+            attackAudioSource.clip = data.emptyWeaponSound;
+            attackAudioSource.Play();
+        }
 
-        return true;
+        return false;
     }
 
     private void LaunchAttack(float actorRecoilControl)
@@ -67,6 +72,7 @@ public class Weapon : MonoBehaviour
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
+        attackAudioSource.clip = data.attackSound;
         attackAudioSource.Play();
 
         StopCoroutine(ApplyRecoil(actorRecoilControl));

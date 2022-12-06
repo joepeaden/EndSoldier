@@ -113,7 +113,8 @@ public class Enemy : MonoBehaviour, ISetActive
 
 		while (initialWeaponAmmo - currentWeaponAmmo < numToFire && currentWeaponAmmo > 0)
         {
-            actor.AttemptAttack();
+			// if it's the first shot, make sure to pass triggerpull param correctly.
+            actor.AttemptAttack(initialWeaponAmmo == currentWeaponAmmo);
 			currentWeaponAmmo = actor.GetEquippedWeaponAmmo();
 
 			yield return null;

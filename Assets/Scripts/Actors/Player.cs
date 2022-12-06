@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
 	private Actor actor;
 	private Transform reticle;
+	private bool triggerPull;
 
 	private void Awake()
     {
@@ -54,10 +55,18 @@ public class Player : MonoBehaviour
 			actor.SetState(Actor.State.Walking);
 		}
 
-		if (Input.GetButton("Fire1") && !actor.state[Actor.State.Sprinting])
+		if (Input.GetButtonDown("Fire1"))
+        {
+			triggerPull = true;
+        }
+		else
+        {
+			triggerPull = false;
+        }		
 
+		if (Input.GetButton("Fire1") && !actor.state[Actor.State.Sprinting])
 		{
-			actor.AttemptAttack();
+			actor.AttemptAttack(triggerPull);
         }
 
 		if (Input.GetKeyDown(KeyCode.R))
@@ -72,7 +81,7 @@ public class Player : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Space))
         {
-			actor.AttemptDuckInCover();
+			actor.AttemptInteraction();
         }
 	}
 

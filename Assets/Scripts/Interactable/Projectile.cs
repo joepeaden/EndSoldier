@@ -14,11 +14,6 @@ public class Projectile : MonoBehaviour
     protected int damage;
     [SerializeField]
     protected bool isExplosive;
- 
-    void Start()
-    {
-        // Instantiate();
-    }
 
     void Update()
     {
@@ -28,14 +23,14 @@ public class Projectile : MonoBehaviour
             Debug.LogWarning("Projectile force for " + gameObject.name + " is not set");
 
         // record distance travelled, delete if outside range
+        // or just have boundary collidr?
     }
 
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter (Collider other)
     {
     	Actor actor = other.gameObject.GetComponent<Actor>();
     	if(actor != null)
 	    {
-            //actor.GetComponent<Rigidbody>().AddForce(transform.right * impact);
             actor.GetHit(damage);
 
             if(isExplosive)
@@ -43,16 +38,17 @@ public class Projectile : MonoBehaviour
                 // implement method per projectile types
                 CreateExplosion();
             }
-
         }
 
-        Destroy(gameObject);
+        // only destroy projectiles if they hit something solid
+        if (!other.isTrigger)
+        {
+            Destroy(gameObject);
+        }
     }
 
     protected void CreateExplosion()
     {
         Debug.Log("Boom");
     }
-
-    // protected abstract void Instantiate();
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cover : MonoBehaviour
+public class Cover : Interactable
 {
     public enum CoverType
     {
@@ -21,6 +21,14 @@ public class Cover : MonoBehaviour
         {
             targetPosGO.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// Will implement later. Maybe use this to implement some visual or audio feedback
+    /// </summary>
+    public override void Interact()
+    {
+        ;
     }
 
     public Vector3 GetActorCoverPosition(Vector3 actorPos)

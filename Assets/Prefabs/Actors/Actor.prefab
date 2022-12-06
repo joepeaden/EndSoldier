@@ -58,7 +58,7 @@ MonoBehaviour:
       m_Calls: []
   data: {fileID: 11400000, guid: 088ef8621086b774c99c9174844e7740, type: 2}
   weapon: {fileID: 2062017164814779945}
-  modelRenderer: {fileID: 0}
+  modelRenderer: {fileID: 872553116337195829}
   originalMaterial: {fileID: 0}
   coverMaterial: {fileID: 0}
   isInvincible: 0
@@ -273,7 +273,7 @@ GameObject:
   - component: {fileID: 1967178396162605942}
   - component: {fileID: 6702234233228226363}
   m_Layer: 0
-  m_Name: CoverSensor
+  m_Name: InteractSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3452b96aa8895c408513e8059acca3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnCoverNearby:
+  OnInteractableNearby:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &1967178396162605942

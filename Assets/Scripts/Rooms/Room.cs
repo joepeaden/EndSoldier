@@ -25,9 +25,12 @@ public class Room : MonoBehaviour
         // fill list of stuff in the room, set them all to inactive initially.
         foreach (GameObject go in setActiveGameObjects)
         {
-            ISetActive setActive = go.GetComponent<ISetActive>();
-            setActives.Add(setActive);
-            setActive.DeActivate();
+            if (go.activeInHierarchy)
+            {
+                ISetActive setActive = go.GetComponent<ISetActive>();
+                setActives.Add(setActive);
+                setActive.DeActivate();
+            }
         }
 
         RoomTrigger trigger = GetComponentInChildren<RoomTrigger>();

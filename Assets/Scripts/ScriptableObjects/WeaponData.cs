@@ -11,4 +11,5 @@ public class WeaponData : ScriptableObject
 	public float attackInterval;
 	public int ammoCapacity;
 	public AudioClip attackSound;
+	public AudioClip emptyWeaponSound;
 }

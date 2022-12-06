@@ -18,3 +18,4 @@ MonoBehaviour:
   attackInterval: 0.1
   ammoCapacity: 30
   attackSound: {fileID: 8300000, guid: 6356ef45281155d45b57df688e338dc4, type: 3}
+  emptyWeaponSound: {fileID: 8300000, guid: e83d62266de674b14adb11ab74aa7ac3, type: 3}

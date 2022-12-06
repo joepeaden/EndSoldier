@@ -39,7 +39,7 @@ public class Actor : MonoBehaviour
 	[Header("Debug Options")]
 	[SerializeField] private bool isInvincible;
 
-	private ActorCoverSensor coverSensor;
+	private ActorInteractSensor interactSensor;
 	private CapsuleCollider mainCollider;
     private Rigidbody rigidBody;
 	private NavMeshAgent navAgent;
@@ -69,7 +69,7 @@ public class Actor : MonoBehaviour
 		};
 
 		mainCollider = GetComponent<CapsuleCollider>();
-		coverSensor = GetComponentInChildren<ActorCoverSensor>();
+		interactSensor = GetComponentInChildren<ActorInteractSensor>();
 
 		rigidBody = GetComponent<Rigidbody>();
 		hitPoints = data.hitPoints;
@@ -144,13 +144,12 @@ public class Actor : MonoBehaviour
 	/// Attempt an attack with equipped weapon.
 	/// </summary>
 	/// <returns>Whether the attack was made or not.</returns>
-	public bool AttemptAttack()
+    /// <param name="triggerPull">Is this attack the result of an initial trigger pull, as opposed to holding down the trigger?</param>
+	public bool AttemptAttack(bool triggerPull)
     {
-		if (weapon && weapon.HasAmmo())
+		if (weapon)
         {
-			weapon.InitiateAttack(data.recoilControl);
-			
-			return true;
+			return weapon.InitiateAttack(data.recoilControl, triggerPull);
         }
 
 		return false;
@@ -218,16 +217,36 @@ public class Actor : MonoBehaviour
 	/// <param name="listener">The method to trigger when nearby cover is detected</param>
 	public void AddCoverListener(UnityAction listener)
     {
-		coverSensor.OnCoverNearby.AddListener(listener);
+		interactSensor.OnInteractableNearby.AddListener(listener);
 	}
+
+	public bool AttemptInteraction()
+    {
+		Interactable interactable = interactSensor.GetInteractable();
+		if (interactable)
+		{
+			interactable.Interact();
+
+			switch (interactable.interactType)
+            {
+				case Interactable.InteractableType.Cover:
+					return AttemptDuckInCover(interactable.GetComponent<Cover>());
+            }
+        }
+
+		return false;
+    }
 
 	/// <summary>
 	/// Attempt to move the actor to the actorTargetPosition of a cover object, as well as change the collisions layer and visuals for the actor.
 	/// </summary>
 	/// <returns>Whether or not the attempt was successful.</returns>
-	public bool AttemptDuckInCover()
+	private bool AttemptDuckInCover(Cover cover)
     {
-		Cover cover = coverSensor.GetCover();
+		if (!cover)
+        {
+			return false;
+        }
 		
 		if (cover && !state[State.InCover] && !coverCoroutineRunning)
 		{
@@ -259,7 +278,7 @@ public class Actor : MonoBehaviour
 	/// <returns>Whether or not the attempt was successful.</returns>
 	public bool AttemptExitCover()
 	{
-		if (!coverSensor.GetCover() || !state[State.InCover])
+		if (!interactSensor.GetInteractable() || !state[State.InCover])
         {
 			Debug.LogWarning("AttemptExitCover was called, but no cover or actor not in cover state");
 			return false;
@@ -286,7 +305,8 @@ public class Actor : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator EnterOrExitCover(bool enteringCover)
 	{
-		if (!coverSensor.GetCover())
+		Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
+		if (!cover)
 		{
 			Debug.LogWarning("StartDuckInCover is called but no cover is set in the sensor.");
 			yield return null;
@@ -297,7 +317,7 @@ public class Actor : MonoBehaviour
 
 			rigidBody.velocity = Vector3.zero;
 
-			Vector3 targetPos = enteringCover ? coverSensor.GetCover().GetActorCoverPosition(transform.position) : posBeforeCover;
+			Vector3 targetPos = enteringCover ? cover.GetActorCoverPosition(transform.position) : posBeforeCover;
 			targetPos.y = transform.position.y;
 
 			do
@@ -316,13 +336,15 @@ public class Actor : MonoBehaviour
 
 	private bool AttemptVaultOverCover()
     {
-		Cover cover = coverSensor.GetCover();
+		Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
 		if (cover && cover.coverType == Cover.CoverType.Floor)
         {
 			// when implementing animations, will have a vault over animation here. for now, just move through.
 			cover.GetComponent<Collider>().enabled = false;
 
 			cover.GetActorFlipPosition(transform.position);
+
+			return true;
         }
 
 		return false;

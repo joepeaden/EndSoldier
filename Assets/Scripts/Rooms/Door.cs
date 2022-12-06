@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Door : Interactable
 {
+    public float openForce;
+
+    private bool isOpen;
+
     public override void Interact()
     {
-        gameObject.SetActive(false);
+        //eventually really should replace this with an animation. It's probably not very good for performance to use physics for something unnecessary like this.
+        GetComponent<Rigidbody>().AddForce(isOpen ? openForce * -transform.right : openForce * transform.right);
+        isOpen = !isOpen;
+        //gameObject.SetActive(false);
         //StartCoroutine("OpenAnimation");
     }
 
