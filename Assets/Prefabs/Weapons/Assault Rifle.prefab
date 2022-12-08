@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 7ee812632c51d344bbebe9005dbf8a6e, type: 2}
   weaponFlash: {fileID: 2019896158219873858}
-  attackAudioSource: {fileID: 8359071329918530664}
+  audioSource: {fileID: 8359071329918530664}
   infiniteAmmo: 0
 --- !u!82 &8359071329918530664
 AudioSource:

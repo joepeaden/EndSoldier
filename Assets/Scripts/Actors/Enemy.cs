@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour, ISetActive
 
     private void Update()
     {
-		if (target != null)
+		if (actor.IsAlive && target != null)
 		{
 			// just disabling chasing for now
 			//actor.Move(target.transform.position);
@@ -95,8 +95,6 @@ public class Enemy : MonoBehaviour, ISetActive
 		Quaternion q = new Quaternion();
 		q.eulerAngles = new Vector3(0, 0, 90);
 		transform.rotation = q;
-
-		this.enabled = false;
 	}
 
 	private void ActorHasPotentialCover()

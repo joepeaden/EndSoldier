@@ -27,6 +27,7 @@ public class Actor : MonoBehaviour
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
 	public bool IsAlive { get; private set; } = true;
+	public bool isPlayer { get; private set; }
 
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
@@ -39,13 +40,16 @@ public class Actor : MonoBehaviour
 	[Header("Debug Options")]
 	[SerializeField] private bool isInvincible;
 
-	private ActorInteractSensor interactSensor;
+    #region Components
+    private ActorInteractSensor interactSensor;
 	private CapsuleCollider mainCollider;
     private Rigidbody rigidBody;
 	private NavMeshAgent navAgent;
+	private AudioSource audioSource;
+    #endregion
 
-	// values
-	private float moveForce;
+    // values
+    private float moveForce;
     private int hitPoints;
 	// position before actor enters cover (for returning to correct position)
 	private Vector3 posBeforeCover;
@@ -77,6 +81,10 @@ public class Actor : MonoBehaviour
 		originalDimensions = transform.localScale;
 
 		navAgent = GetComponent<NavMeshAgent>();
+
+		isPlayer = GetComponent<Player>() != null;
+
+		audioSource = GetComponent<AudioSource>();
 	}
 
     private void OnDestroy()
@@ -402,12 +410,15 @@ public class Actor : MonoBehaviour
 	/// <param name="damage">Damage to deal to this actor.</param>
 	public void GetHit(int damage)
 	{
-		if (isInvincible)
+		if (!IsAlive || isInvincible)
         {
 			return;
         }
 
 		hitPoints -= damage;
+
+		audioSource.clip = data.woundSound2;
+		audioSource.Play();
 
 		if (hitPoints <= 0)
 			Die();
@@ -423,9 +434,10 @@ public class Actor : MonoBehaviour
 		// disable components
 		navAgent.enabled = false;
 
+		audioSource.clip = data.deathSound2;
+		audioSource.Play();
+
 		// have actor handle it's own inevitable destruction. It's ok buddy.
 		OnDeath.Invoke();
-
-		this.enabled = false;
 	}
 }

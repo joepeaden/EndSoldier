@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "MyScriptables/WeaponData")]
 public class WeaponData : ScriptableObject
@@ -12,4 +10,6 @@ public class WeaponData : ScriptableObject
 	public int ammoCapacity;
 	public AudioClip attackSound;
 	public AudioClip emptyWeaponSound;
+	public AudioClip reloadSound;
+	public float reloadTime;
 }

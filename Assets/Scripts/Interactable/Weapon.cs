@@ -12,10 +12,14 @@ public class Weapon : MonoBehaviour
     // components & child objects
     [SerializeField] private WeaponData data;
     [SerializeField] private GameObject weaponFlash;
-    [SerializeField] private AudioSource attackAudioSource;
+    [SerializeField] private AudioSource audioSource;
 
+    // debug options
     [SerializeField] private bool infiniteAmmo;
 
+    // the actor who is using this weapon
+    private Actor actorOperator;
+    
     private int ammoInWeapon;
 
     // states
@@ -28,7 +32,9 @@ public class Weapon : MonoBehaviour
     private void Start()
     {
         ammoInWeapon = data.ammoCapacity;
-        attackAudioSource.clip = data.attackSound;
+        audioSource.clip = data.attackSound;
+
+        actorOperator = transform.GetComponentInParent<Actor>();
     }
 
     private void OnDisable()
@@ -40,17 +46,19 @@ public class Weapon : MonoBehaviour
 
     public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
     {
-        // wait for gun to cycle (fire rate)
-        if (readyToAttack)
+        if (!reloading)
         {
-            LaunchAttack(actorRecoilControl);
-            return true;
-        }
-        // returning false to indicate to player out of ammo
-        else if (triggerPull && ammoInWeapon <= 0)
-        {
-            attackAudioSource.clip = data.emptyWeaponSound;
-            attackAudioSource.Play();
+            // wait for gun to cycle (fire rate)
+            if (readyToAttack)
+            {
+                LaunchAttack(actorRecoilControl);
+                return true;
+            }
+            // returning false to indicate to player out of ammo
+            else if (triggerPull && ammoInWeapon <= 0)
+            {
+                PlayAudioClip(data.emptyWeaponSound);
+            }
         }
 
         return false;
@@ -72,8 +80,7 @@ public class Weapon : MonoBehaviour
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
-        attackAudioSource.clip = data.attackSound;
-        attackAudioSource.Play();
+        PlayAudioClip(data.attackSound);
 
         StopCoroutine(ApplyRecoil(actorRecoilControl));
         StartCoroutine(ApplyRecoil(actorRecoilControl));
@@ -156,7 +163,16 @@ public class Weapon : MonoBehaviour
 
     private IEnumerator Reload()
     {
-        yield return new WaitForSeconds(2);
+        PlayAudioClip(data.reloadSound, 12f);
+
+        if (actorOperator.isPlayer)
+        {
+            GameplayUI.Instance.StartReloadBarAnimation(data.reloadTime);
+        }
+
+        yield return new WaitForSeconds(data.reloadTime);
+
+        audioSource.Stop();
 
         ammoInWeapon = data.ammoCapacity;
         readyToAttack = true;
@@ -182,5 +198,12 @@ public class Weapon : MonoBehaviour
     public string GetName()
     {
         return data.displayName;
+    }
+
+    private void PlayAudioClip(AudioClip clip, float timeToPlayAt = 0)
+    {
+        audioSource.clip = clip;
+        audioSource.time = 0;
+        audioSource.Play();
     }
 }
