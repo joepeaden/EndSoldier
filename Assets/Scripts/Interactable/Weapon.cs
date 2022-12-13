@@ -165,7 +165,7 @@ public class Weapon : MonoBehaviour
     {
         PlayAudioClip(data.reloadSound, 12f);
 
-        if (actorOperator.isPlayer)
+        if (actorOperator.IsPlayer)
         {
             GameplayUI.Instance.StartReloadBarAnimation(data.reloadTime);
         }

@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private void Start()
 	{
 		actor.OnDeath.AddListener(HandlePlayerDeath);
+		actor.OnGetHit.AddListener(HandleGetHit);
 
 		reticle = GameManager.Instance.GetReticleGO().transform;
     }
@@ -128,4 +129,9 @@ public class Player : MonoBehaviour
 
 		SceneLoader.Instance.LoadScene(SceneLoader.SceneList.FailMenu, true);
 	}
+
+	private void HandleGetHit()
+    {
+		CameraManager.Instance.SetVignette(1f - ((float) actor.HitPoints) / ((float) actor.MaxHitPoints));
+    }
 }

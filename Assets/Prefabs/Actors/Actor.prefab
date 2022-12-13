@@ -457,6 +457,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1310252469257724913}
     m_Modifications:
+    - target: {fileID: 2019896158219873857, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2019896158219873857, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0000009536744
+      objectReference: {fileID: 0}
+    - target: {fileID: 2019896158219873857, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.39999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 2019896158219873858, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3087498210380485242, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_Name
       value: Assault Rifle
@@ -471,7 +487,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.99999994
+      value: 1.352941
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalPosition.z

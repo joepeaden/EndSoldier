@@ -12,6 +12,7 @@ using UnityEngine.AI;
 public class Actor : MonoBehaviour
 {
 	public UnityEvent OnDeath = new UnityEvent();
+	public UnityEvent OnGetHit = new UnityEvent();
 
 	public enum State
 	{
@@ -27,7 +28,9 @@ public class Actor : MonoBehaviour
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
 	public bool IsAlive { get; private set; } = true;
-	public bool isPlayer { get; private set; }
+	public bool IsPlayer { get; private set; }
+	public int HitPoints { get; private set; }
+	public int MaxHitPoints { get { return data.hitPoints; } }
 
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
@@ -46,11 +49,9 @@ public class Actor : MonoBehaviour
     private Rigidbody rigidBody;
 	private NavMeshAgent navAgent;
 	private AudioSource audioSource;
-    #endregion
+	#endregion
 
-    // values
-    private float moveForce;
-    private int hitPoints;
+	private float moveForce;
 	// position before actor enters cover (for returning to correct position)
 	private Vector3 posBeforeCover;
 	// is the EnterExitCover coroutine running?
@@ -76,13 +77,13 @@ public class Actor : MonoBehaviour
 		interactSensor = GetComponentInChildren<ActorInteractSensor>();
 
 		rigidBody = GetComponent<Rigidbody>();
-		hitPoints = data.hitPoints;
+		HitPoints = data.hitPoints;
 
 		originalDimensions = transform.localScale;
 
 		navAgent = GetComponent<NavMeshAgent>();
 
-		isPlayer = GetComponent<Player>() != null;
+		IsPlayer = GetComponent<Player>() != null;
 
 		audioSource = GetComponent<AudioSource>();
 	}
@@ -415,12 +416,14 @@ public class Actor : MonoBehaviour
 			return;
         }
 
-		hitPoints -= damage;
+		HitPoints -= damage;
 
 		audioSource.clip = data.woundSound2;
 		audioSource.Play();
 
-		if (hitPoints <= 0)
+		OnGetHit.Invoke();
+
+		if (HitPoints <= 0)
 			Die();
 	}
 
