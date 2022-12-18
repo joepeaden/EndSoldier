@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe920899fe8f244a8a1bef5229bb84e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootPauseTimeMax: 4
+  shootPauseTimeMin: 2
+  maxBurst: 1
+  minBurst: 4
+  maxTimeToFindPlayer: 3
+  minTimeToFindPlayer: 1
 --- !u!1001 &3383025682066104725
 PrefabInstance:
   m_ObjectHideFlags: 0

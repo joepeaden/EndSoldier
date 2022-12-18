@@ -20,3 +20,13 @@ MonoBehaviour:
   rotationTorque: 30
   moveToCoverSpeed: 10
   coverSensorDistance: 1.25
+  crouchDogeChance: 0.25
+  woundSound1: {fileID: 0}
+  woundSound2: {fileID: 0}
+  woundSound3: {fileID: 0}
+  woundSound4: {fileID: 0}
+  woundSound5: {fileID: 0}
+  woundSound6: {fileID: 0}
+  deathSound1: {fileID: 0}
+  deathSound2: {fileID: 0}
+  deathSound3: {fileID: 0}

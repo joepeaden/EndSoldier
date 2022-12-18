@@ -11,17 +11,6 @@ public class Cover : Interactable
     }
 
     public CoverType coverType;
-    // where the actor should move to when going into this cover
-    [SerializeField] private List<GameObject> actorTargetPositionGOList = new List<GameObject>();
-
-    public void Awake()
-    {
-        // disable actor target position mesh during play
-        foreach (GameObject targetPosGO in actorTargetPositionGOList)
-        {
-            targetPosGO.SetActive(false);
-        }
-    }
 
     /// <summary>
     /// Will implement later. Maybe use this to implement some visual or audio feedback
@@ -33,22 +22,19 @@ public class Cover : Interactable
 
     public Vector3 GetActorCoverPosition(Vector3 actorPos)
     {
-        // get closest target position, that's where actor will go
-        Vector3 targetPos = actorPos;
-        float minDist = int.MaxValue;
-        foreach (GameObject targetPosGo in actorTargetPositionGOList)
-        {
-            float dist = Mathf.Abs((targetPosGo.transform.position - actorPos).magnitude);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                targetPos = targetPosGo.transform.position;
-            }
-        }
+        // Collider[] colliders = GetComponents<Collider>();
+        // Vector3 closestPoint = actorPos;
+        // foreach(Collider c in colliders)
+        // {
+        //     Vector3 closestForThisCollider = c.ClosestPointOnBounds(actorPos);
 
-        // nullify Y value (don't want actor moving up)
-        targetPos.y = 0f;
-
+        //     if (closestForThisCollider.magnitude < closestPoint.magnitude)
+        //     {
+        //         closestPoint = closestForThisCollider;
+        //     }
+        // } 
+        Vector3 targetPos = GetComponent<Collider>().ClosestPointOnBounds(actorPos);
+     
         return targetPos;
     }
 
@@ -59,21 +45,23 @@ public class Cover : Interactable
     /// <returns>Position for the actor to transfer to.</returns>
     public Vector3 GetActorFlipPosition(Vector3 actorPos)
     {
+        // not implemented rn. need to adjust because I got rid of the actor cover positions
+
         // get furthest target position, that's where actor will go
         Vector3 targetPos = actorPos;
-        float minDist = int.MaxValue;
-        foreach (GameObject targetPosGo in actorTargetPositionGOList)
-        {
-            float dist = Mathf.Abs((targetPosGo.transform.position - actorPos).magnitude);
-            if (dist > minDist)
-            {
-                minDist = dist;
-                targetPos = targetPosGo.transform.position;
-            }
-        }
+        //float minDist = int.MaxValue;
+        //foreach (GameObject targetPosGo in actorTargetPositionGOList)
+        //{
+        //    float dist = Mathf.Abs((targetPosGo.transform.position - actorPos).magnitude);
+        //    if (dist > minDist)
+        //    {
+        //        minDist = dist;
+        //        targetPos = targetPosGo.transform.position;
+        //    }
+        //}
 
-        // nullify Y value (don't want actor moving up)
-        targetPos.y = 0f;
+        //// nullify Y value (don't want actor moving up)
+        //targetPos.y = 0f;
 
         return targetPos;
     }

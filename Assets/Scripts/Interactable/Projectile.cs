@@ -29,9 +29,12 @@ public class Projectile : MonoBehaviour
     void OnTriggerEnter (Collider other)
     {
     	Actor actor = other.gameObject.GetComponent<Actor>();
-    	if(actor != null)
+
+        bool shouldDestroy = !other.isTrigger;
+        if (actor != null)
 	    {
-            actor.GetHit(damage);
+            // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
+            shouldDestroy = actor.GetHit(damage);
 
             if(isExplosive)
             {
@@ -41,7 +44,7 @@ public class Projectile : MonoBehaviour
         }
 
         // only destroy projectiles if they hit something solid
-        if (!other.isTrigger)
+        if (shouldDestroy)
         {
             Destroy(gameObject);
         }

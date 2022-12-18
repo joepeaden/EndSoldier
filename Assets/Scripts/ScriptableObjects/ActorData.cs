@@ -16,6 +16,7 @@ public class ActorData : ScriptableObject
 	public float rotationTorque;
 	public int moveToCoverSpeed;
 	public float coverSensorDistance;
+	public float crouchDogeChance;
 	public AudioClip woundSound1;
 	public AudioClip woundSound2;
 	public AudioClip woundSound3;

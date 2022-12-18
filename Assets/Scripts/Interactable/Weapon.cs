@@ -82,8 +82,9 @@ public class Weapon : MonoBehaviour
 
         PlayAudioClip(data.attackSound);
 
-        StopCoroutine(ApplyRecoil(actorRecoilControl));
-        StartCoroutine(ApplyRecoil(actorRecoilControl));
+        // never really worked. jsut comment out for now BRO.
+        //StopCoroutine(ApplyRecoil(actorRecoilControl));
+        //StartCoroutine(ApplyRecoil(actorRecoilControl));
         
         if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");

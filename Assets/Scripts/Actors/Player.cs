@@ -75,12 +75,13 @@ public class Player : MonoBehaviour
 			actor.AttemptReload();
         }
 
-		if (Input.GetKeyDown(KeyCode.C))
-        {
-			actor.ToggleCrouch();
-        }
+		// disable for now.
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    actor.ToggleCrouch();
+        //}
 
-		if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.E))
         {
 			actor.AttemptInteraction();
         }
@@ -97,19 +98,19 @@ public class Player : MonoBehaviour
 		// Movement inputs
 		if (Input.GetKey(KeyCode.W))
 		{
-			actor.Move(Vector3.forward, false);
+			actor.Move(Vector3.forward + Vector3.right, false);
 		}
 		if (Input.GetKey(KeyCode.S))
 		{
-			actor.Move(-Vector3.forward, false);
+			actor.Move(-Vector3.forward - Vector3.right, false);
 		}
 		if (Input.GetKey(KeyCode.A))
 		{
-			actor.Move(-Vector3.right, false);
+			actor.Move(-Vector3.right + Vector3.forward, false);
 		}
 		if (Input.GetKey(KeyCode.D))
 		{
-			actor.Move(Vector3.right, false);
+			actor.Move(Vector3.right - Vector3.forward, false);
 		}
 	}
 

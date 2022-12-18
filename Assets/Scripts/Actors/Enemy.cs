@@ -14,6 +14,12 @@ using UnityEngine.AI;
 /// </remarks>
 public class Enemy : MonoBehaviour, ISetActive
 {
+	public float shootPauseTimeMax;
+	public float shootPauseTimeMin;
+	public float maxBurst;
+	public float minBurst;
+	public float maxTimeToFindPlayer; 
+	public float minTimeToFindPlayer;
 	private Actor actor;
 	private GameObject target;
 	private bool pauseFiring;
@@ -44,7 +50,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			}
 			else if (!pauseFiring)
 			{
-				int numToFire = Random.Range(1, 4);
+				int numToFire = (int) Random.Range(minBurst, maxBurst);
 
 				StartCoroutine(FireBurst(numToFire));
 			}
@@ -53,24 +59,24 @@ public class Enemy : MonoBehaviour, ISetActive
 
 	public void Activate()
     {
+		actor.SetVisibility(true);
+
 		if (actor.IsAlive)
 		{
 			pauseFiring = false;
-			actor.SetVisibility(true);
-
 			StartCoroutine(LookForTarget());
 		}
 	}
 
 	public void DeActivate()
 	{
+		actor.SetVisibility(false);
+
 		if (actor.IsAlive)
 		{
 			pauseFiring = true;
 			target = null;
 			StopAllCoroutines();
-
-			actor.SetVisibility(false);
 
 			// if remove this move order, the actor goes to last player position. Might want it to be like that down the line. Just something to consider.
 			actor.Move(transform.position);
@@ -81,7 +87,7 @@ public class Enemy : MonoBehaviour, ISetActive
     {
 		// for now. Just pause for a moment and then find player.
 		// eventually, can use a sphere collider for awareness trigger then raycast to see if target is not visible (hits wall instead)
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds((int) Random.Range(minTimeToFindPlayer, maxTimeToFindPlayer));
 		target = GameManager.Instance.GetPlayerGO();
 		yield return null;
 	}
@@ -95,6 +101,10 @@ public class Enemy : MonoBehaviour, ISetActive
 		Quaternion q = new Quaternion();
 		q.eulerAngles = new Vector3(0, 0, 90);
 		transform.rotation = q;
+
+		// remove collider and set rigidbody to no grav so no collisions
+		GetComponent<Rigidbody>().useGravity = false;
+		GetComponent<Collider>().enabled = false;
 	}
 
 	private void ActorHasPotentialCover()
@@ -118,8 +128,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			yield return null;
         }
 
-
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(Random.Range(shootPauseTimeMin, shootPauseTimeMax));
 
 		pauseFiring = false;
 	}

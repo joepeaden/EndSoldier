@@ -57,9 +57,10 @@ public class Actor : MonoBehaviour
 	// is the EnterExitCover coroutine running?
 	private bool coverCoroutineRunning;
 	// original dimensions of actor object
-	private Vector3 originalDimensions;
-	// for flipping the coverSensor's position when going different directions
-	private int previousXMoveDirection;
+	private Vector3 originalModelDimensions;
+
+	private bool movingToCover;
+	private Cover targetCover;
 
 	private void Awake()
     {
@@ -79,7 +80,7 @@ public class Actor : MonoBehaviour
 		rigidBody = GetComponent<Rigidbody>();
 		HitPoints = data.hitPoints;
 
-		originalDimensions = transform.localScale;
+		originalModelDimensions = modelRenderer.transform.localScale;
 
 		navAgent = GetComponent<NavMeshAgent>();
 
@@ -93,7 +94,17 @@ public class Actor : MonoBehaviour
 		OnDeath.RemoveAllListeners();
     }
 
-	public void SetVisibility(bool visible)
+    private void OnCollisionEnter(Collision collision)
+    {
+		Cover collisionCover = collision.gameObject.GetComponent<Cover>();
+
+		if (collisionCover && collisionCover == targetCover)
+        {
+			movingToCover = false;
+        }
+    }
+
+    public void SetVisibility(bool visible)
     {
 		for (int i = 0; i < transform.childCount; i++)
 		{
@@ -147,6 +158,10 @@ public class Actor : MonoBehaviour
 	public void UpdateAim(Vector3 aimTarget)
 	{
 		transform.LookAt(aimTarget);
+		//Vector3 yRotation = new Vector3(0, aimTarget.y);
+		//Vector3 xRotation = new Vector3(aimTarget.x, 0);
+		//transform.LookAt(xRotation);
+		//weapon.GetComponent<Transform>().LookAt(yRotation);
 	}
 
 	/// <summary>
@@ -209,11 +224,13 @@ public class Actor : MonoBehaviour
 	{
 		if (shouldCrouch)
 		{
-			transform.localScale = new Vector3(1f, .5f, 1f);
+			modelRenderer.transform.localScale = new Vector3(1f, .5f, 1f);
+			modelRenderer.transform.localPosition = new Vector3(0f, 0f, 0f);
 		}
 		else
 		{
-			transform.localScale = originalDimensions;
+			modelRenderer.transform.localScale = originalModelDimensions;
+			modelRenderer.transform.localPosition = new Vector3(0f, 0.5f, 0f);
 		}
 
 		state[State.Crouching] = shouldCrouch;
@@ -264,16 +281,9 @@ public class Actor : MonoBehaviour
 			// set to InCover layer, ignores collisions with bullets
 			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
 
-			if (cover.coverType == Cover.CoverType.Floor)
-			{
-				SetCrouch(true);
-			}
-
 			StartCoroutine(EnterOrExitCover(true));
 
 			posBeforeCover = transform.position;
-			// ensure that the original pos goes back to the zero z position
-			posBeforeCover.z = 0f;
 
 			return true;
 		}
@@ -324,18 +334,29 @@ public class Actor : MonoBehaviour
 		{
 			coverCoroutineRunning = true;
 
+			if (cover.coverType == Cover.CoverType.Floor)
+			{
+				ToggleCrouch();
+			}
+
 			rigidBody.velocity = Vector3.zero;
 
-			Vector3 targetPos = enteringCover ? cover.GetActorCoverPosition(transform.position) : posBeforeCover;
+			//Collider c = interactSensor.GetComponent<Collider>();
+			Vector3 closestPoint = interactSensor.GetInteractableCollider().ClosestPointOnBounds(interactSensor.transform.position);
+
+
+			Vector3 targetPos = enteringCover ? closestPoint : posBeforeCover;
 			targetPos.y = transform.position.y;
 
+			targetCover = cover;
+			movingToCover = true;
 			do
 			{
 				var step = data.moveToCoverSpeed * Time.deltaTime;
 				transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
 
 				yield return null;
-			} while (transform.position != targetPos);	
+			} while (enteringCover ? movingToCover : transform.position != targetPos);	
 
 			state[State.InCover] = enteringCover;
 
@@ -366,19 +387,6 @@ public class Actor : MonoBehaviour
 	/// <param name="moveVector">If not useNavMesh, direction of movement. If useNavMesh, the destination of the agent.</param>
 	public void Move(Vector3 moveVector, bool useNavMesh = true)
     {
-
-		// commented because haven't refactored for topdown yet
-
-		// if we're moving right, move cover sensor to face that direction. Otherwise, the opposite.
-		//int currentXMoveDirection = rigidBody.velocity.x > 0 ? 1 : -1;
-		//if (currentXMoveDirection != previousXMoveDirection)
-		//{
-		//	Vector3 newCoverSensorPos = coverSensor.transform.localPosition;
-		//	newCoverSensorPos.x = -1 * newCoverSensorPos.x;
-		//	coverSensor.transform.localPosition = newCoverSensorPos;
-		//	previousXMoveDirection = currentXMoveDirection;
-		//}
-
 		if (moveVector != Vector3.zero)
 		{
 			if (useNavMesh)
@@ -397,34 +405,52 @@ public class Actor : MonoBehaviour
 				rigidBody.AddForce(moveVector * moveForce);
 			}
 
-			// if actor tries to move, exit cover
-			//if (state[State.InCover])
-   //         {
-			//	AttemptExitCover();
-   //         }
-		}
+            // if actor tries to move, exit cover
+            if (state[State.InCover])
+            {
+                AttemptExitCover();
+            }
+        }
 	}
 
 	/// <summary>
 	/// Take a specified amount of damage.
 	/// </summary>
 	/// <param name="damage">Damage to deal to this actor.</param>
-	public void GetHit(int damage)
+    /// <returns>If the projectile should </returns>
+	public bool GetHit(int damage)
 	{
+		bool gotHit = true;
 		if (!IsAlive || isInvincible)
         {
-			return;
+			return gotHit;
         }
 
-		HitPoints -= damage;
+		if (state[State.Crouching])
+		{
+			float dogeRoll = Random.Range(0f, 1f);
 
-		audioSource.clip = data.woundSound2;
-		audioSource.Play();
+			Debug.Log("Chance: " + data.crouchDogeChance + "Rolled: " + dogeRoll);
 
-		OnGetHit.Invoke();
+			gotHit = dogeRoll > data.crouchDogeChance;
+		}
 
-		if (HitPoints <= 0)
-			Die();
+		if (gotHit)
+		{
+			HitPoints -= damage;
+
+			audioSource.clip = data.woundSound2;
+			audioSource.Play();
+
+			OnGetHit.Invoke();
+
+			if (HitPoints <= 0)
+			{
+				Die();
+			}
+		}
+
+		return gotHit;
 	}
 
 	/// <summary>

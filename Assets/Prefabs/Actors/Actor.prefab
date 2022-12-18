@@ -57,6 +57,9 @@ MonoBehaviour:
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
+  OnGetHit:
+    m_PersistentCalls:
+      m_Calls: []
   data: {fileID: 11400000, guid: 088ef8621086b774c99c9174844e7740, type: 2}
   weapon: {fileID: 2062017164814779945}
   modelRenderer: {fileID: 872553116337195829}
@@ -384,8 +387,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6904973392823136998}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.5, z: 1}
-  m_LocalScale: {x: 1, y: 1.75, z: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 1.5}
+  m_LocalScale: {x: 1.75, y: 1.75, z: 1.25}
   m_Children: []
   m_Father: {fileID: 1310252469257724913}
   m_RootOrder: 1
@@ -491,7 +494,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.5599999
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalRotation.w
@@ -520,6 +523,14 @@ PrefabInstance:
     - target: {fileID: 6513622479495757041, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359071329918530664, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359071329918530664, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}

@@ -14,11 +14,16 @@ public class FollowMouse3D : MonoBehaviour
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, mask))
+        RaycastHit[] rayCast = Physics.RaycastAll(ray, mask);
+
+        foreach (RaycastHit hit in rayCast)
         {
-            if (hit.transform.gameObject == raycastPlane)
+            if (rayCast.Length != 0)
             {
-                transform.position = hit.point;
+                if (hit.transform.gameObject == raycastPlane)
+                {
+                    transform.position = hit.point;
+                }
             }
         }
     }
