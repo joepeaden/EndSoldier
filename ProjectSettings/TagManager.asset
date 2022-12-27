@@ -11,18 +11,19 @@ TagManager:
   - WeaponText
   - Pickup
   - HealthBar
+  - HitBox
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Actors
   - Water
   - UI
   - MouseOnly
   - InCover
   - Projectiles
   - HouseAndFurniture
-  - 
+  - DoorsWhenOpen
   - 
   - 
   - 

@@ -9,9 +9,6 @@ using UnityEngine.Events;
 /// </summary>
 public class Player : MonoBehaviour
 {
-	public static UnityAction OnPlayerBeginAim;
-	public static UnityAction OnPlayerEndAim;
-
 	private Actor actor;
 	private Transform reticle;
 	private bool triggerPull;
@@ -43,14 +40,14 @@ public class Player : MonoBehaviour
 			if (!actor.state[Actor.State.Aiming])
 			{
 				actor.SetState(Actor.State.Aiming);
-				OnPlayerBeginAim.Invoke();
+				actor.OnActorBeginAim.Invoke();
 			}
 		}
 		else if (!actor.state[Actor.State.Walking])
 		{
 			if (actor.state[Actor.State.Aiming])
 			{
-				OnPlayerEndAim.Invoke();
+				actor.OnActorEndAim.Invoke();
 			}
 
 			actor.SetState(Actor.State.Walking);
@@ -75,13 +72,12 @@ public class Player : MonoBehaviour
 			actor.AttemptReload();
         }
 
-		// disable for now.
-        //if (Input.GetKeyDown(KeyCode.C))
-        //{
-        //    actor.ToggleCrouch();
-        //}
+		if (Input.GetKeyDown(KeyCode.C))
+			{
+				actor.ToggleCrouch();
+			}
 
-        if (Input.GetKeyDown(KeyCode.E))
+		if (Input.GetKeyDown(KeyCode.E))
         {
 			actor.AttemptInteraction();
         }

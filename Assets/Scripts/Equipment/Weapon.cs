@@ -13,6 +13,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] private WeaponData data;
     [SerializeField] private GameObject weaponFlash;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private GameObject aimGlow;
+    [SerializeField] private LineRenderer line;
 
     // debug options
     [SerializeField] private bool infiniteAmmo;
@@ -35,6 +37,9 @@ public class Weapon : MonoBehaviour
         audioSource.clip = data.attackSound;
 
         actorOperator = transform.GetComponentInParent<Actor>();
+        actorOperator.OnActorBeginAim += BeginAim;
+        actorOperator.OnActorEndAim += EndAim;
+        
     }
 
     private void OnDisable()
@@ -42,6 +47,44 @@ public class Weapon : MonoBehaviour
         StopAllCoroutines();
         readyToAttack = true;
         reloading = false;
+    }
+
+    private void BeginAim()
+    {
+        StartCoroutine(ProjectRayCastAndMoveAimGlowToFirstCollision());
+    }
+    
+    private void EndAim()
+    {
+        line.enabled = false;
+        StopCoroutine(ProjectRayCastAndMoveAimGlowToFirstCollision());
+    }
+
+    /// <summary>
+    /// Cßoroutine that projects a raycast from the weapon's position in the direction it is facing, and moves the aim light to the first collision point.
+    /// </summary>
+    private IEnumerator ProjectRayCastAndMoveAimGlowToFirstCollision()
+    {
+        while (true)
+        {
+            RaycastHit hit;
+            Ray ray = new Ray(transform.position, transform.forward);
+
+            // get opposite of projectile layer mask
+            // int layerMask = ~LayerMask.GetMask("Projectiles");
+            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString());
+            
+            if (Physics.Raycast(ray, out hit, 1000, layerMask))//, .GetMask("tiles").Projec))
+            {
+                aimGlow.transform.position = hit.point;
+         
+                line.enabled = true;
+                line.SetPosition(0, transform.position);
+                line.SetPosition(1, hit.point);
+            }
+
+            yield return null;
+        }
     }
 
     public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
@@ -75,7 +118,8 @@ public class Weapon : MonoBehaviour
         Vector3 projectileSpawnPosition = transform.position;
         projectileSpawnPosition += transform.forward * 1.5f;
 
-        Instantiate(data.projectile, projectileSpawnPosition, transform.rotation);
+        GameObject projectile = Instantiate(data.projectile, projectileSpawnPosition, transform.rotation);
+        projectile.GetComponent<Projectile>().SetOwningActor(actorOperator);
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());

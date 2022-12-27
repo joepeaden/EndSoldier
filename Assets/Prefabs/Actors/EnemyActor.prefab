@@ -81,6 +81,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyActor
       objectReference: {fileID: 0}
+    - target: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4404756533418901247, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: data
       value: 
@@ -96,6 +100,14 @@ PrefabInstance:
     - target: {fileID: 7227493840991707178, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994928161989725152, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006862664705304791, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9090046079473091608, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive

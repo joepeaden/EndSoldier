@@ -11,6 +11,9 @@ using UnityEngine.AI;
 /// </summary>
 public class Actor : MonoBehaviour
 {
+
+	public UnityAction OnActorBeginAim;
+	public UnityAction OnActorEndAim;
 	public UnityEvent OnDeath = new UnityEvent();
 	public UnityEvent OnGetHit = new UnityEvent();
 
@@ -307,7 +310,7 @@ public class Actor : MonoBehaviour
 		{
 			modelRenderer.material = originalMaterial;
 
-			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
+			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Actors;
 
 			StartCoroutine(EnterOrExitCover(false));
 			

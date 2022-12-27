@@ -14,6 +14,8 @@ public class Projectile : MonoBehaviour
     protected int damage;
     [SerializeField]
     protected bool isExplosive;
+    [SerializeField]
+    protected Actor owningActor;
 
     void Update()
     {
@@ -28,9 +30,13 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter (Collider other)
     {
-    	Actor actor = other.gameObject.GetComponent<Actor>();
+    	Actor actor = other.gameObject.GetComponentInParent<Actor>();
 
-        bool shouldDestroy = !other.isTrigger;
+        // please don't kill yo self
+        if (actor == owningActor)
+            return;
+
+        bool shouldDestroy = other.CompareTag("HitBox") || !other.isTrigger;
         if (actor != null)
 	    {
             // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
@@ -48,6 +54,12 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void SetOwningActor(Actor actor)
+    {
+        // set the actor who fired this projectile
+        owningActor = actor;
     }
 
     protected void CreateExplosion()

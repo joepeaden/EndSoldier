@@ -12,7 +12,10 @@ public class IgnoreLayerCollisions : MonoBehaviour
     public enum CollisionLayers
     {
         Default = 0,
+        Actors = 3,
         InCover = 7,
-        Projectiles = 8
+        Projectiles = 8,
+        HouseAndFurniture = 9,
+        DoorsWhenOpen = 10
     }
 }

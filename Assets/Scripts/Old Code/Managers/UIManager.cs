@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     private Text waveText;
     private Text pointsText; 
     private Text weaponText;
-    private SimpleHealthBar healthBar;
+    // private SimpleHealthBar healthBar;
 
 
     void Start()
@@ -49,22 +49,22 @@ public class UIManager : MonoBehaviour
         weaponText.text = weaponName + ": " + ammo; 
     } 
 
-    public void UpdateHealthBar(int currentHP, int maxHP)
-    {
-        if(healthBar == null)
-        {
-            healthBar = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<SimpleHealthBar>();
-        }
+    // public void UpdateHealthBar(int currentHP, int maxHP)
+    // {
+    //     if(healthBar == null)
+    //     {
+    //         healthBar = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<SimpleHealthBar>();
+    //     }
 
-        healthBar.UpdateBar(currentHP, maxHP); 
+    //     healthBar.UpdateBar(currentHP, maxHP); 
         
-        float healthPercentage = (float)currentHP/(float)maxHP;
+    //     float healthPercentage = (float)currentHP/(float)maxHP;
 
-        if (healthPercentage >= .66)
-            healthBar.UpdateColor(Color.green);
-        else if (healthPercentage >= .33)
-            healthBar.UpdateColor(Color.yellow);
-        else
-            healthBar.UpdateColor(Color.red);
-    }
+    //     if (healthPercentage >= .66)
+    //         healthBar.UpdateColor(Color.green);
+    //     else if (healthPercentage >= .33)
+    //         healthBar.UpdateColor(Color.yellow);
+    //     else
+    //         healthBar.UpdateColor(Color.red);
+    // }
 }
