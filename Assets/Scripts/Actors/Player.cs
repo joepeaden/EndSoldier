@@ -30,26 +30,16 @@ public class Player : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
-			if (!actor.state[Actor.State.Sprinting])
-			{
-				actor.SetState(Actor.State.Sprinting);
-			}
+			actor.SetState(Actor.State.Sprinting);
 		}
 		else if (Input.GetButton("Fire2"))
 		{
-			if (!actor.state[Actor.State.Aiming])
-			{
-				actor.SetState(Actor.State.Aiming);
-				actor.OnActorBeginAim.Invoke();
-			}
+			actor.SetState(Actor.State.Aiming);
+			actor.OnActorBeginAim.Invoke();
 		}
-		else if (!actor.state[Actor.State.Walking])
+		else
 		{
-			if (actor.state[Actor.State.Aiming])
-			{
-				actor.OnActorEndAim.Invoke();
-			}
-
+			actor.OnActorEndAim.Invoke();
 			actor.SetState(Actor.State.Walking);
 		}
 
@@ -89,7 +79,7 @@ public class Player : MonoBehaviour
 		//Vector2 aimVector = (reticle.position - transform.position).normalized;
 		Vector3 retPos = reticle.position;
 		retPos.y = transform.position.y;
-		actor.UpdateAim(retPos);
+		actor.UpdateActorRotation(retPos);
 
 		// Movement inputs
 		if (Input.GetKey(KeyCode.W))

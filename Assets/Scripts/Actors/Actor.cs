@@ -155,16 +155,12 @@ public class Actor : MonoBehaviour
 	} 
 	
 	/// <summary>
-	/// Rotate the actor's aim to point at aimTarget.
+	/// Rotate the actor to look at lookTarget.
 	/// </summary>
-	/// <param name="aimTarget">The target to aim at.</param>
-	public void UpdateAim(Vector3 aimTarget)
+	/// <param name="lookTarget">The target to look at.</param>
+	public void UpdateActorRotation(Vector3 lookTarget)
 	{
-		transform.LookAt(aimTarget);
-		//Vector3 yRotation = new Vector3(0, aimTarget.y);
-		//Vector3 xRotation = new Vector3(aimTarget.x, 0);
-		//transform.LookAt(xRotation);
-		//weapon.GetComponent<Transform>().LookAt(yRotation);
+		transform.LookAt(lookTarget);
 	}
 
 	/// <summary>

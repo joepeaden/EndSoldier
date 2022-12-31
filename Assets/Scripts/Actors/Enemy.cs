@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			// just disabling chasing for now
 			//actor.Move(target.transform.position);
 
-			actor.UpdateAim(target.transform.position);
+			actor.UpdateActorRotation(target.transform.position);
 
 			if (actor.GetEquippedWeaponAmmo() <= 0)
 			{

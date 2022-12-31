@@ -41,9 +41,6 @@ public class GameManager : MonoBehaviour
         }
 
         player = playerGO.GetComponent<Player>();
-
-        // Player.OnPlayerBeginAim += delegate { SetReticleActive(true); };
-        // Player.OnPlayerEndAim += delegate { SetReticleActive(false); };
     }
 
     public Player GetPlayerScript()
@@ -59,10 +56,5 @@ public class GameManager : MonoBehaviour
     public GameObject GetReticleGO()
     {
         return reticleGO;
-    }    
-
-    // public void SetReticleActive(bool isActive)
-    // {
-    //     reticleGO.GetComponent<MeshRenderer>().enabled = isActive;
-    // }
+    }
 }

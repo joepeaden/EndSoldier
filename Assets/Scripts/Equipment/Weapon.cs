@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour
     private int ammoInWeapon;
 
     // states
+    private bool aiming;
     private bool readyToAttack = true;
     private bool reloading;
 
@@ -51,12 +52,16 @@ public class Weapon : MonoBehaviour
 
     private void BeginAim()
     {
+        aiming = true;
+        aimGlow.SetActive(true);
         StartCoroutine(ProjectRayCastAndMoveAimGlowToFirstCollision());
     }
     
     private void EndAim()
     {
+        aiming = false;
         line.enabled = false;
+        aimGlow.SetActive(false);
         StopCoroutine(ProjectRayCastAndMoveAimGlowToFirstCollision());
     }
 
@@ -65,7 +70,7 @@ public class Weapon : MonoBehaviour
     /// </summary>
     private IEnumerator ProjectRayCastAndMoveAimGlowToFirstCollision()
     {
-        while (true)
+        while (aiming)
         {
             RaycastHit hit;
             Ray ray = new Ray(transform.position, transform.forward);
