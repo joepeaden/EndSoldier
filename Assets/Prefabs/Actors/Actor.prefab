@@ -13,10 +13,6 @@ GameObject:
   - component: {fileID: 1143217580977220765}
   - component: {fileID: 3177180349973180707}
   - component: {fileID: 3880547155541323028}
-  - component: {fileID: 8142715800505872954}
-  - component: {fileID: 1399039989261216261}
-  - component: {fileID: 1621431021509763812}
-  - component: {fileID: 1758409763086779682}
   - component: {fileID: 8905177908027167111}
   m_Layer: 3
   m_Name: Actor
@@ -119,70 +115,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &8142715800505872954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-  position: 0
-  direction: 0
-  tooltip: 
---- !u!114 &1399039989261216261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 4324838011611431935, guid: 0000000000000000d000000000000000, type: 0}
-  position: 1
-  direction: 0
-  tooltip: 
---- !u!114 &1621431021509763812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 3897814842762760142, guid: 0000000000000000d000000000000000, type: 0}
-  position: 2
-  direction: 0
-  tooltip: 
---- !u!114 &1758409763086779682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 8723023343561652918, guid: 0000000000000000d000000000000000, type: 0}
-  position: 3
-  direction: 0
-  tooltip: 
 --- !u!82 &8905177908027167111
 AudioSource:
   m_ObjectHideFlags: 0

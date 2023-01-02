@@ -66,7 +66,7 @@ public class Weapon : MonoBehaviour
     }
 
     /// <summary>
-    /// Cßoroutine that projects a raycast from the weapon's position in the direction it is facing, and moves the aim light to the first collision point.
+    /// Coroutine that projects a raycast from the weapon's position in the direction it is facing, and moves the aim light to the first collision point.
     /// </summary>
     private IEnumerator ProjectRayCastAndMoveAimGlowToFirstCollision()
     {
@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour
 
             // get opposite of projectile layer mask
             // int layerMask = ~LayerMask.GetMask("Projectiles");
-            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString());
+            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.SightBlocking.ToString(), IgnoreLayerCollisions.CollisionLayers.Furniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString());
             
             if (Physics.Raycast(ray, out hit, 1000, layerMask))//, .GetMask("tiles").Projec))
             {

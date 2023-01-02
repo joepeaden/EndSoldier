@@ -14,10 +14,10 @@ public class RoomContent : MonoBehaviour, ISetActive
 
     private void Awake()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
-        defaultMaterials = meshRenderer.materials;
+        //meshRenderer = GetComponent<MeshRenderer>();
+        //defaultMaterials = meshRenderer.materials;
 
-        DeActivate();
+        //DeActivate();
     }
 
     /// <summary>

@@ -15,7 +15,8 @@ public class IgnoreLayerCollisions : MonoBehaviour
         Actors = 3,
         InCover = 7,
         Projectiles = 8,
-        HouseAndFurniture = 9,
-        DoorsWhenOpen = 10
+        Furniture = 9,
+        DoorsWhenOpen = 10,
+        SightBlocking = 11
     }
 }

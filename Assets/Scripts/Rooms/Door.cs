@@ -47,7 +47,7 @@ public class Door : Interactable
         rb.freezeRotation = true;
         rb.velocity = Vector3.zero;
 
-        col.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
+        col.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.SightBlocking;
     }
 
 }

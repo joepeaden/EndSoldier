@@ -23,15 +23,15 @@ public class Room : MonoBehaviour
     private void Start()
     {
         // fill list of stuff in the room, set them all to inactive initially.
-        foreach (GameObject go in setActiveGameObjects)
-        {
-            if (go.activeInHierarchy)
-            {
-                ISetActive setActive = go.GetComponent<ISetActive>();
-                setActives.Add(setActive);
-                setActive.DeActivate();
-            }
-        }
+        // foreach (GameObject go in setActiveGameObjects)
+        // {
+        //     if (go.activeInHierarchy)
+        //     {
+        //         ISetActive setActive = go.GetComponent<ISetActive>();
+        //         setActives.Add(setActive);
+        //         setActive.DeActivate();
+        //     }
+        // }
 
         RoomTrigger trigger = GetComponentInChildren<RoomTrigger>();
         trigger.OnRoomExit.AddListener(UpdateRoomState);
@@ -48,14 +48,14 @@ public class Room : MonoBehaviour
 
         foreach (ISetActive a in setActives)
         {
-            if (playerIsEntering)
-            {
-                a.Activate();
-            }
-            else
-            {
-                a.DeActivate();
-            }
+        //     if (playerIsEntering)
+        //     {
+               if (GetComponent<Enemy>()) a.Activate();
+        //     }
+        //     else
+        //     {
+        //         a.DeActivate();
+        //     }
         }
 
         walls.SetActive(!walls.activeInHierarchy);

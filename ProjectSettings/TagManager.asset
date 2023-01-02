@@ -22,11 +22,11 @@ TagManager:
   - MouseOnly
   - InCover
   - Projectiles
-  - HouseAndFurniture
+  - Furniture
   - DoorsWhenOpen
-  - 
-  - 
-  - 
+  - SightBlocking
+  - Stencil1
+  - Stencil2
   - 
   - 
   - 
