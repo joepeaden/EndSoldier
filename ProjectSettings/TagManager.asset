@@ -25,8 +25,8 @@ TagManager:
   - Furniture
   - DoorsWhenOpen
   - SightBlocking
-  - Stencil1
-  - Stencil2
+  - LOS
+  - OutsideLOS
   - 
   - 
   - 

@@ -21,24 +21,80 @@ public class FieldOfView : MonoBehaviour
     public List<Transform> visibleThings = new List<Transform>();
 
     public MeshFilter viewMeshFilter;
+    public MeshFilter viewMeshFilter2;
+    public MeshFilter squareMeshFilter1;
+    public MeshFilter squareMeshFilter2;
     private Mesh viewMesh;
+    private Mesh squareMesh1;
+    private Mesh squareMesh2;
+    private Mesh viewMesh2;
     public float edgeDstThreshold;
 
+
+    public float upwardsValue;
+    public float mesh2Height;
 
     void Start()
     {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
+        viewMesh2 = new Mesh();
+        viewMesh2.name = "View Mesh2";
+        viewMeshFilter2.mesh = viewMesh2;
 
-        StartCoroutine("FindTargetsWithDelay", .2f);
+        squareMesh1 = new Mesh();
+        squareMesh1.name = "Square Mesh1";
+        squareMeshFilter1.mesh = squareMesh1;
+
+        squareMesh2 = new Mesh();
+        squareMesh2.name = "Square Mesh2";
+        squareMeshFilter2.mesh = squareMesh2;
+
+        // This will be useful for AI target finding.
+        //StartCoroutine("FindTargetsWithDelay", .2f);
     }
 
     void LateUpdate() 
     {
-        DrawFieldOfView();
+        DrawFieldOfView(viewMesh, 0);
+        DrawFieldOfView(viewMesh2, mesh2Height);
+
+        // squares that cover sides of the view mesh and connect viewMesh to viewMesh2
+        Vector3[] verts = 
+        {
+            viewMesh.vertices[0], viewMesh.vertices[1], viewMesh2.vertices[0], viewMesh2.vertices[1]
+        };
+
+        // make triangles for square mesh
+        int[] tris = 
+        {
+            0, 1, 2, 2, 1, 3
+        };
+
+        squareMesh1.Clear();
+        squareMesh1.vertices = verts;
+        squareMesh1.triangles = tris;
+        squareMesh1.RecalculateNormals();
+
+        // make verts for second square mesh on other side of viewMesh
+        verts = new Vector3[]
+        {
+            viewMesh.vertices[0], viewMesh.vertices[viewMesh.vertices.Length - 1], viewMesh2.vertices[0], viewMesh2.vertices[viewMesh2.vertices.Length - 1]
+        };
+        // flipped tris
+        tris = new int[]
+        {
+            0, 2, 1, 2, 3, 1
+        };
+        // assign
+        squareMesh2.Clear();
+        squareMesh2.vertices = verts;
+        squareMesh2.triangles = tris;
+        squareMesh2.RecalculateNormals();
     }
 
+    // This will be useful for AI target finding.
     IEnumerator FindTargetsWithDelay(float delay)
     {
         while (true)
@@ -64,7 +120,7 @@ public class FieldOfView : MonoBehaviour
         }
     }
 
-    void DrawFieldOfView() 
+    void DrawFieldOfView(Mesh mesh, float ypos) 
     {
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         float stepAngleSize = viewAngle / stepCount;
@@ -74,7 +130,7 @@ public class FieldOfView : MonoBehaviour
         for (int i = 0; i <= stepCount; i++)
         {
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
-            ViewCastInfo newViewCast = ViewCast(angle);
+            ViewCastInfo newViewCast = ViewCast(angle, ypos);
 
             if (i < 0)
             {
@@ -101,7 +157,7 @@ public class FieldOfView : MonoBehaviour
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[(vertexCount - 2) * 3];
 
-        vertices[0] = Vector3.zero;
+        vertices[0] = new Vector3(0, ypos, 0);
         for (int i = 0; i < vertexCount - 1; i++)
         {
             vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
@@ -114,10 +170,10 @@ public class FieldOfView : MonoBehaviour
             }
         }
 
-        viewMesh.Clear();
-        viewMesh.vertices = vertices;
-        viewMesh.triangles = triangles;
-        viewMesh.RecalculateNormals();
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
     }
 
     EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo maxViewCast)
@@ -148,18 +204,29 @@ public class FieldOfView : MonoBehaviour
         return new EdgeInfo(minPoint, maxPoint);
     }
 
-    ViewCastInfo ViewCast(float globalAngle)
+    ViewCastInfo ViewCast(float globalAngle, float ypos = 0f)
     {
+        Vector3 castOrigin = transform.position;
+        if (ypos != 0f)
+        {
+            castOrigin.y = ypos;
+        }
+
         Vector3 dir = DirFromAngle(globalAngle, true);
+        if (ypos != 0)
+        {
+            dir.y += upwardsValue;
+        }
+
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, dir, out hit, viewRadius, obstacleMask))
+        if (Physics.Raycast(castOrigin, dir, out hit, viewRadius, obstacleMask))
         {
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
         }
         else
         {
-            return new ViewCastInfo(false, transform.position + dir * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, castOrigin + dir * viewRadius, viewRadius, globalAngle);
         }
     }
 
