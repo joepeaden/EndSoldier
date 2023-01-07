@@ -52,7 +52,7 @@ public class FieldOfView : MonoBehaviour
         squareMeshFilter2.mesh = squareMesh2;
 
         // This will be useful for AI target finding.
-        //StartCoroutine("FindTargetsWithDelay", .2f);
+        StartCoroutine("FindTargetsWithDelay", .2f);
     }
 
     void LateUpdate() 
@@ -106,15 +106,19 @@ public class FieldOfView : MonoBehaviour
             {
                 if (!visibleThings.Contains(thing))
                 {
-                    if (thing.GetComponent<MeshRenderer>() != null)
+                    if (thing.GetComponent<Actor>() != null)
                     {
-                        thing.GetComponent<MeshRenderer>().material.SetInt("_IsVisible", 0);
-                    } 
-
-                    foreach (MeshRenderer mr in thing.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        mr.material.SetInt("_IsVisible", 0);
+                        thing.GetComponent<Actor>().SetVisibility(false);
                     }
+                    // if (thing.GetComponent<MeshRenderer>() != null)
+                    // {
+                    //     thing.GetComponent<MeshRenderer>().material.SetInt("_IsVisible", 0);
+                    // } 
+
+                    // foreach (MeshRenderer mr in thing.GetComponentsInChildren<MeshRenderer>())
+                    // {
+                    //     mr.material.SetInt("_IsVisible", 0);
+                    // }
                 }
             }
         }
@@ -250,15 +254,20 @@ public class FieldOfView : MonoBehaviour
 
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
-                    if (target.GetComponent<MeshRenderer>() != null)
+                    if (target.GetComponent<Actor>() != null)
                     {
-                        target.GetComponent<MeshRenderer>().materials[0].SetInt("_IsVisible", 1);
+                        target.GetComponent<Actor>().SetVisibility(true);
                     }
 
-                    foreach (MeshRenderer mr in target.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        mr.material.SetInt("_IsVisible", 1);
-                    }
+                    // if (target.GetComponent<MeshRenderer>() != null)
+                    // {
+                    //     target.GetComponent<MeshRenderer>().materials[0].SetInt("_IsVisible", 1);
+                    // }
+
+                    // foreach (MeshRenderer mr in target.GetComponentsInChildren<MeshRenderer>())
+                    // {
+                    //     mr.material.SetInt("_IsVisible", 1);
+                    // }
                     
                     visibleThings.Add(target);
                 }

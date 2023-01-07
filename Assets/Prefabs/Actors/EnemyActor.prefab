@@ -81,6 +81,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyActor
       objectReference: {fileID: 0}
+    - target: {fileID: 1573151009045309171, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive
       value: 1

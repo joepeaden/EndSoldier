@@ -38,6 +38,7 @@ public class Actor : MonoBehaviour
 	[SerializeField] private ActorData data;
 	[SerializeField] private Weapon weapon;
 	[SerializeField] private MeshRenderer modelRenderer;
+	[SerializeField] private GameObject stencilMesh;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	[SerializeField] private Material originalMaterial;
@@ -109,10 +110,11 @@ public class Actor : MonoBehaviour
 
     public void SetVisibility(bool visible)
     {
-		for (int i = 0; i < transform.childCount; i++)
-		{
-			transform.GetChild(i).gameObject.SetActive(visible);
-		}
+		stencilMesh.SetActive(visible);
+		// for (int i = 0; i < transform.childCount; i++)
+		// {
+		// 	transform.GetChild(i).gameObject.SetActive(visible);
+		// }
 	}
 
     // Either this method needs to be done away with or it needs to be only internal... I don't think
