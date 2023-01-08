@@ -19,6 +19,8 @@ public class Room : MonoBehaviour
     /// Collection of stuff inside the room that needs to be activated or deactivated based on if the player is present. Things like Actors, traps, etc.
     /// </summary>
     private List<ISetActive> setActives = new List<ISetActive>();
+    private Door[] doors;
+
 
     private void Start()
     {
@@ -34,31 +36,27 @@ public class Room : MonoBehaviour
         }
 
         RoomTrigger trigger = GetComponentInChildren<RoomTrigger>();
-        trigger.OnRoomExit.AddListener(UpdateRoomState);
-        trigger.OnRoomEnter.AddListener(UpdateRoomState);
+        trigger.OnRoomExit.AddListener(delegate { UpdateRoomState(false); } );
+        trigger.OnRoomEnter.AddListener(delegate { UpdateRoomState(true); } );
+
+        doors = GetComponentsInChildren<Door>();
+        foreach (Door door in doors) 
+        {
+            door.OnDoorOpen.AddListener(delegate { UpdateRoomState(true); } );
+        }
     }
 
     /// <summary>
     /// Set cut away walls active and hide furniture, activate actors.
     /// </summary>
-    private void UpdateRoomState()
+    private void UpdateRoomState(bool playerIsEntering)
     {
-        // if the walls are currently active, the player is now entering the room
-        bool playerIsEntering = walls.activeInHierarchy;
-
         foreach (ISetActive a in setActives)
         {
-            if (playerIsEntering)
-            {
                 a.Activate();
-            }
-            else
-            {
-                a.DeActivate();
-            }
         }
 
-        walls.SetActive(!walls.activeInHierarchy);
-        wallsCut.SetActive(!wallsCut.activeInHierarchy);
+        walls.SetActive(!playerIsEntering);
+        wallsCut.SetActive(playerIsEntering);
     }
 }

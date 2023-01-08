@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Interactable doors.
 /// </summary>
 public class Door : Interactable
 {
+    public UnityEvent OnDoorOpen = new UnityEvent();
+    public bool firstOpen = true;
     public float openForce;
 
     private bool isOpening;
@@ -28,6 +31,12 @@ public class Door : Interactable
         isOpening = !isOpening;
 
         StartCoroutine(ToggleCollisionAfterSwing());
+
+        if (firstOpen)
+        {
+            OnDoorOpen.Invoke();
+            firstOpen = false;
+        }
     }
 
     /// <summary>
