@@ -58,40 +58,40 @@ public class FieldOfView : MonoBehaviour
     void LateUpdate() 
     {
         DrawFieldOfView(viewMesh, 0);
-        DrawFieldOfView(viewMesh2, mesh2Height);
+        // DrawFieldOfView(viewMesh2, mesh2Height);
 
-        // squares that cover sides of the view mesh and connect viewMesh to viewMesh2
-        Vector3[] verts = 
-        {
-            viewMesh.vertices[0], viewMesh.vertices[1], viewMesh2.vertices[0], viewMesh2.vertices[1]
-        };
+        // // squares that cover sides of the view mesh and connect viewMesh to viewMesh2
+        // Vector3[] verts = 
+        // {
+        //     viewMesh.vertices[0], viewMesh.vertices[1], viewMesh2.vertices[0], viewMesh2.vertices[1]
+        // };
 
-        // make triangles for square mesh
-        int[] tris = 
-        {
-            0, 1, 2, 2, 1, 3
-        };
+        // // make triangles for square mesh
+        // int[] tris = 
+        // {
+        //     0, 1, 2, 2, 1, 3
+        // };
 
-        squareMesh1.Clear();
-        squareMesh1.vertices = verts;
-        squareMesh1.triangles = tris;
-        squareMesh1.RecalculateNormals();
+        // squareMesh1.Clear();
+        // squareMesh1.vertices = verts;
+        // squareMesh1.triangles = tris;
+        // squareMesh1.RecalculateNormals();
 
-        // make verts for second square mesh on other side of viewMesh
-        verts = new Vector3[]
-        {
-            viewMesh.vertices[0], viewMesh.vertices[viewMesh.vertices.Length - 1], viewMesh2.vertices[0], viewMesh2.vertices[viewMesh2.vertices.Length - 1]
-        };
-        // flipped tris
-        tris = new int[]
-        {
-            0, 2, 1, 2, 3, 1
-        };
-        // assign
-        squareMesh2.Clear();
-        squareMesh2.vertices = verts;
-        squareMesh2.triangles = tris;
-        squareMesh2.RecalculateNormals();
+        // // make verts for second square mesh on other side of viewMesh
+        // verts = new Vector3[]
+        // {
+        //     viewMesh.vertices[0], viewMesh.vertices[viewMesh.vertices.Length - 1], viewMesh2.vertices[0], viewMesh2.vertices[viewMesh2.vertices.Length - 1]
+        // };
+        // // flipped tris
+        // tris = new int[]
+        // {
+        //     0, 2, 1, 2, 3, 1
+        // };
+        // // assign
+        // squareMesh2.Clear();
+        // squareMesh2.vertices = verts;
+        // squareMesh2.triangles = tris;
+        // squareMesh2.RecalculateNormals();
     }
 
     // This will be useful for AI target finding.
@@ -109,6 +109,10 @@ public class FieldOfView : MonoBehaviour
                     if (thing.GetComponent<Actor>() != null)
                     {
                         thing.GetComponent<Actor>().SetVisibility(false);
+                    }
+                    else if (thing.GetComponent<RevealOnLOS>() != null)
+                    {
+                        thing.GetComponent<RevealOnLOS>().Hide();
                     }
                     // if (thing.GetComponent<MeshRenderer>() != null)
                     // {
@@ -257,6 +261,11 @@ public class FieldOfView : MonoBehaviour
                     if (target.GetComponent<Actor>() != null)
                     {
                         target.GetComponent<Actor>().SetVisibility(true);
+                    }
+
+                    if (target.GetComponent<RevealOnLOS>() != null)
+                    {
+                        target.GetComponent<RevealOnLOS>().Reveal();
                     }
 
                     // if (target.GetComponent<MeshRenderer>() != null)

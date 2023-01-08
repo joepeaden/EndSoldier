@@ -25,19 +25,19 @@ public class RoomContent : MonoBehaviour, ISetActive
     /// </summary>
     public void Activate()
     {
-        meshRenderer.materials = defaultMaterials;
+       // meshRenderer.materials = defaultMaterials;
     }
 
     public void DeActivate()
     {
-        int len = meshRenderer.materials.Length;
-        Material[] newMat = new Material[len];
+        //int len = meshRenderer.materials.Length;
+        //Material[] newMat = new Material[len];
 
-        for (int i = 0; i < len; i++)
-        {
-            newMat[i] = transparentMaterial;
-        }
+        //for (int i = 0; i < len; i++)
+        //{
+        //    newMat[i] = transparentMaterial;
+        //}
 
-        meshRenderer.materials = newMat;
+        //meshRenderer.materials = newMat;
     }
 }
