@@ -5,6 +5,10 @@ using UnityEngine;
 /// </summary>
 public abstract class Interactable : MonoBehaviour
 {
+    // class needs to be cleaned up, do we eve nneed this enum? Can this now be just an interface to loosen up inheritance restrictions?
+
+    public Actor interactingActor;
+
     public enum InteractableType
     {
         Cover,
@@ -13,7 +17,10 @@ public abstract class Interactable : MonoBehaviour
 
     public InteractableType interactType;
 
-    public abstract void Interact();
+    public virtual void Interact(Actor a)
+    {
+        interactingActor = a;
+    }
 
     //public void PromptForInteraction(Actor a, bool canInteract)
     //{

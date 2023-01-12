@@ -16,6 +16,7 @@ public class IgnoreLayerCollisions : MonoBehaviour
         InCover = 7,
         Projectiles = 8,
         HouseAndFurniture = 9,
-        DoorsWhenOpen = 10
+        IgnoreActorsAndFurniture = 10,
+        IgnoreFurniture = 11
     }
 }

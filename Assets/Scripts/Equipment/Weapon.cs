@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour
 
             // get opposite of projectile layer mask
             // int layerMask = ~LayerMask.GetMask("Projectiles");
-            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString());
+            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString(), IgnoreLayerCollisions.CollisionLayers.IgnoreFurniture.ToString());
             
             if (Physics.Raycast(ray, out hit, 1000, layerMask))//, .GetMask("tiles").Projec))
             {
