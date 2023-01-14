@@ -56,7 +56,7 @@ public class Room : MonoBehaviour
                 a.Activate();
         }
 
-        walls.SetActive(!playerIsEntering);
-        wallsCut.SetActive(playerIsEntering);
+        // walls.SetActive(!playerIsEntering);
+        // wallsCut.SetActive(playerIsEntering);
     }
 }
