@@ -20,7 +20,7 @@ public class Room : MonoBehaviour
     /// </summary>
     private List<ISetActive> setActives = new List<ISetActive>();
     private Door[] doors;
-
+    private Shatter[] breakableWalls;
 
     private void Start()
     {
@@ -44,6 +44,13 @@ public class Room : MonoBehaviour
         {
             door.OnDoorOpen.AddListener(delegate { UpdateRoomState(true); } );
         }
+        
+        breakableWalls = GetComponentsInChildren<Shatter>();
+        foreach (Shatter shatter in breakableWalls) 
+        {
+            shatter.OnShatter.AddListener(delegate { UpdateRoomState(true); } );
+        }
+
     }
 
     /// <summary>

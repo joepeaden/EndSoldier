@@ -252,6 +252,8 @@ public class Weapon : MonoBehaviour
 
     private void PlayAudioClip(AudioClip clip, float timeToPlayAt = 0)
     {
+        // don't need to set this slomo every time can just do it in an event once.
+        audioSource.pitch = GameManager.isSlowMotion ? GameManager.slowMotionSpeed : 1f;
         audioSource.clip = clip;
         audioSource.time = 0;
         audioSource.Play();

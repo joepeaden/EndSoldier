@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
+    public static bool isSlowMotion;
+    // should be in SO probably
+    public static float slowMotionSpeed = .5f;
 
     [SerializeField] private GameObject playerGO;
     private Player player;

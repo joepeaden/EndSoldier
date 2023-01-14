@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2345039802422252537}
   - component: {fileID: 2345039802422252540}
   - component: {fileID: 3246085954357399472}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8600c8080a484515bd9c1b512755c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionRadius: 10
-  explosionPower: 1000
+  explosionRadius: 2
+  explosionPower: 500
   upwardsForce: 0
   explosionPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
 --- !u!82 &3246085954357399472

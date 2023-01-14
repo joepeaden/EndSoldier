@@ -11,6 +11,7 @@ public class PlasticExplosive : MonoBehaviour
 
     private AudioSource audioSource;
 
+    // public float slowMotionSpeed;
     private void Start() {
         audioSource = GetComponent<AudioSource>();
 
@@ -52,7 +53,17 @@ public class PlasticExplosive : MonoBehaviour
 
     // wait 3 seconds before destroying object
     private IEnumerator DestroyObject() {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(.25f);
+
+        GameManager.isSlowMotion = true;
+        Time.timeScale = GameManager.slowMotionSpeed;
+        audioSource.pitch = GameManager.slowMotionSpeed;
+
+        yield return new WaitForSeconds(4.75f);
+
+        GameManager.isSlowMotion = false;
+        Time.timeScale = 1f;
+        audioSource.pitch = 1f;
 
         Destroy(gameObject);
     }
