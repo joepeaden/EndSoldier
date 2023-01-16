@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FailMenu.unity
     guid: 2ee4d263f7b5e49e2846a4517a363cdb
+  - enabled: 1
+    path: Assets/Scenes/Apartment Prototype/Apartment.unity
+    guid: c2d024289eaca4980a3eb33911e1992c
   m_configObjects: {}

@@ -60,4 +60,24 @@ public class GameManager : MonoBehaviour
     {
         return reticleGO;
     }
+
+    public void StartSlowMotion(float secondsToWait)
+    {
+        StartCoroutine(StartSlowMotionRoutine(secondsToWait));
+    }
+
+    private IEnumerator StartSlowMotionRoutine(float secondsToWait)
+    {
+        yield return new WaitForSeconds(secondsToWait);
+
+        isSlowMotion = true;
+        Time.timeScale = slowMotionSpeed;
+        //audioSource.pitch = slowMotionSpeed;
+
+        yield return new WaitForSeconds(2.75f);
+
+        isSlowMotion = false;
+        Time.timeScale = 1f;
+        //audioSource.pitch = 1f;
+    }
 }

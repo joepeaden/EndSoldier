@@ -15,6 +15,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject aimGlow;
     [SerializeField] private LineRenderer line;
+    [SerializeField] private Transform gunModelParent;
 
     // debug options
     [SerializeField] private bool infiniteAmmo;
@@ -40,7 +41,8 @@ public class Weapon : MonoBehaviour
         actorOperator = transform.GetComponentInParent<Actor>();
         actorOperator.OnActorBeginAim += BeginAim;
         actorOperator.OnActorEndAim += EndAim;
-        
+
+        Instantiate(data.modelPrefab, gunModelParent);
     }
 
     private void OnDisable()
@@ -94,7 +96,7 @@ public class Weapon : MonoBehaviour
 
     public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
     {
-        if (!reloading)
+        if (!reloading && (triggerPull || data.isAutomatic))
         {
             // wait for gun to cycle (fire rate)
             if (readyToAttack)

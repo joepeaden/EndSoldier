@@ -130,6 +130,7 @@ MonoBehaviour:
   explosionPower: 500
   upwardsForce: 0
   explosionPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+  data: {fileID: 11400000, guid: dc9183bd948694ccd807c8aa73cc74e7, type: 2}
 --- !u!82 &3246085954357399472
 AudioSource:
   m_ObjectHideFlags: 0

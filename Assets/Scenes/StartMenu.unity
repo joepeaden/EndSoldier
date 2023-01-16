@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3427c1bff0e6d4da8917f4d1a41bfbec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: 1
+  sceneToLoad: 3
   loadSceneAdditive: 0
 --- !u!1 &129636185
 GameObject:
@@ -1427,7 +1427,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 622783682}
-  - component: {fileID: 622783681}
   - component: {fileID: 622783680}
   m_Layer: 0
   m_Name: Music Player
@@ -1532,18 +1531,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &622783681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622783679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef31727004c203c41b1cc78a6cfbe80f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &622783682
 Transform:
   m_ObjectHideFlags: 0
