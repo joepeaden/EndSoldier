@@ -12,7 +12,8 @@ public class SceneLoader : MonoBehaviour
     {
         StartMenu,
         House,
-        FailMenu
+        FailMenu,
+        Apartment
     }
 
     private void Awake()

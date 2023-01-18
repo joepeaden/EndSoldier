@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 		actor.OnDeath.AddListener(HandlePlayerDeath);
 		actor.OnGetHit.AddListener(HandleGetHit);
 
-		reticle = GameManager.Instance.GetReticleGO().transform;
+		reticle = GameManager.Instance.GetReticleGO()?.transform;
     }
 
     private void Update()

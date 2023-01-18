@@ -12,6 +12,7 @@ TagManager:
   - Pickup
   - HealthBar
   - HitBox
+  - Walls
   layers:
   - Default
   - TransparentFX
@@ -23,10 +24,10 @@ TagManager:
   - InCover
   - Projectiles
   - HouseAndFurniture
-  - DoorsWhenOpen
-  - 
-  - 
-  - 
+  - IgnoreActorsAndFurniture
+  - IgnoreFurniture
+  - Floor
+  - IgnoreActors
   - 
   - 
   - 

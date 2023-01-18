@@ -12,4 +12,6 @@ public class WeaponData : ScriptableObject
 	public AudioClip emptyWeaponSound;
 	public AudioClip reloadSound;
 	public float reloadTime;
+	public bool isAutomatic;
+	public GameObject modelPrefab;
 }

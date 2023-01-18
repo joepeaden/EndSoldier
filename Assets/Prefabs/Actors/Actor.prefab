@@ -117,7 +117,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &8142715800505872954
 MonoBehaviour:
@@ -528,7 +528,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3087498210380485242, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_Name
-      value: Assault Rifle
+      value: Weapon
       objectReference: {fileID: 0}
     - target: {fileID: 3087498210380485242, guid: 4f69ae54a9147ed4a8d1d2af8e681815, type: 3}
       propertyPath: m_Layer

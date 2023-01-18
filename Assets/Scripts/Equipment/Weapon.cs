@@ -15,6 +15,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject aimGlow;
     [SerializeField] private LineRenderer line;
+    [SerializeField] private Transform gunModelParent;
 
     // debug options
     [SerializeField] private bool infiniteAmmo;
@@ -40,7 +41,8 @@ public class Weapon : MonoBehaviour
         actorOperator = transform.GetComponentInParent<Actor>();
         actorOperator.OnActorBeginAim += BeginAim;
         actorOperator.OnActorEndAim += EndAim;
-        
+
+        Instantiate(data.modelPrefab, gunModelParent);
     }
 
     private void OnDisable()
@@ -77,7 +79,7 @@ public class Weapon : MonoBehaviour
 
             // get opposite of projectile layer mask
             // int layerMask = ~LayerMask.GetMask("Projectiles");
-            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString());
+            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString(), IgnoreLayerCollisions.CollisionLayers.IgnoreFurniture.ToString());
             
             if (Physics.Raycast(ray, out hit, 1000, layerMask))//, .GetMask("tiles").Projec))
             {
@@ -94,7 +96,7 @@ public class Weapon : MonoBehaviour
 
     public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
     {
-        if (!reloading)
+        if (!reloading && (triggerPull || data.isAutomatic))
         {
             // wait for gun to cycle (fire rate)
             if (readyToAttack)
@@ -252,6 +254,8 @@ public class Weapon : MonoBehaviour
 
     private void PlayAudioClip(AudioClip clip, float timeToPlayAt = 0)
     {
+        // don't need to set this slomo every time can just do it in an event once.
+        audioSource.pitch = GameManager.isSlowMotion ? GameManager.slowMotionSpeed : 1f;
         audioSource.clip = clip;
         audioSource.time = 0;
         audioSource.Play();

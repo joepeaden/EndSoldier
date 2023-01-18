@@ -250,12 +250,12 @@ public class Actor : MonoBehaviour
 		Interactable interactable = interactSensor.GetInteractable();
 		if (interactable)
 		{
-			interactable.Interact();
+			interactable.Interact(this);
 
 			switch (interactable.interactType)
             {
-				case Interactable.InteractableType.Cover:
-					return AttemptDuckInCover(interactable.GetComponent<Cover>());
+				// case Interactable.InteractableType.Cover:
+				// 	return AttemptDuckInCover(interactable.GetComponent<Cover>());
             }
         }
 

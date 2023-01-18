@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
+    public static bool isSlowMotion;
+    // should be in SO probably
+    public static float slowMotionSpeed = .5f;
 
     [SerializeField] private GameObject playerGO;
     private Player player;
@@ -56,5 +59,25 @@ public class GameManager : MonoBehaviour
     public GameObject GetReticleGO()
     {
         return reticleGO;
+    }
+
+    public void StartSlowMotion(float secondsToWait)
+    {
+        StartCoroutine(StartSlowMotionRoutine(secondsToWait));
+    }
+
+    private IEnumerator StartSlowMotionRoutine(float secondsToWait)
+    {
+        yield return new WaitForSeconds(secondsToWait);
+
+        isSlowMotion = true;
+        Time.timeScale = slowMotionSpeed;
+        //audioSource.pitch = slowMotionSpeed;
+
+        yield return new WaitForSeconds(2.75f);
+
+        isSlowMotion = false;
+        Time.timeScale = 1f;
+        //audioSource.pitch = 1f;
     }
 }
