@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RootMotion.FinalIK;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +14,9 @@ public class Player : MonoBehaviour
 	private Transform reticle;
 	private bool triggerPull;
 
+	[SerializeField]
+	private AimIK aimIK;
+
 	private void Awake()
     {
 		actor = GetComponent<Actor>();
@@ -24,6 +28,8 @@ public class Player : MonoBehaviour
 		actor.OnGetHit.AddListener(HandleGetHit);
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
+
+		aimIK.solver.target = reticle;
     }
 
     private void Update()
@@ -81,23 +87,28 @@ public class Player : MonoBehaviour
 		retPos.y = transform.position.y;
 		actor.UpdateActorRotation(retPos);
 
+		var moveVector = Vector3.zero;
+
 		// Movement inputs
 		if (Input.GetKey(KeyCode.W))
 		{
-			actor.Move(Vector3.forward + Vector3.right, false);
+			moveVector = Vector3.forward + Vector3.right;
 		}
 		if (Input.GetKey(KeyCode.S))
 		{
-			actor.Move(-Vector3.forward - Vector3.right, false);
+			moveVector = - Vector3.forward - Vector3.right;
 		}
 		if (Input.GetKey(KeyCode.A))
 		{
-			actor.Move(-Vector3.right + Vector3.forward, false);
+			moveVector = -Vector3.right + Vector3.forward;
 		}
 		if (Input.GetKey(KeyCode.D))
 		{
-			actor.Move(Vector3.right - Vector3.forward, false);
+			moveVector = Vector3.right - Vector3.forward;
 		}
+
+		actor.Move(moveVector, false);
+		actor.UpdateAnimator(moveVector);
 	}
 
     private void OnDestroy()

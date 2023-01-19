@@ -17,6 +17,7 @@ public class Actor : MonoBehaviour
 	public UnityEvent OnDeath = new UnityEvent();
 	public UnityEvent OnGetHit = new UnityEvent();
 
+
 	public enum State
 	{
 		Walking,
@@ -42,6 +43,9 @@ public class Actor : MonoBehaviour
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	[SerializeField] private Material originalMaterial;
 	[SerializeField] private Material coverMaterial;
+
+	[Header("Animations")]
+	[SerializeField] private Animator animator = null;
 
 	[Header("Debug Options")]
 	[SerializeField] private bool isInvincible;
@@ -160,7 +164,10 @@ public class Actor : MonoBehaviour
 	/// <param name="lookTarget">The target to look at.</param>
 	public void UpdateActorRotation(Vector3 lookTarget)
 	{
-		transform.LookAt(lookTarget);
+		Vector3 relativePos = lookTarget - transform.position;
+		Quaternion toRotation = Quaternion.LookRotation(relativePos);
+		transform.rotation = Quaternion.Lerp(transform.rotation, toRotation, 10 * Time.deltaTime);
+
 	}
 
 	/// <summary>
@@ -379,21 +386,23 @@ public class Actor : MonoBehaviour
 		return false;
     }
 
+
+
 	/// <summary>
 	/// Move laterally in moveVector direction. Move force can be found in the ActorData Scriptable Object.
 	/// </summary>
 	/// <param name="useNavMesh">Should this actor use NavMesh? Affects how moveVector is interpeted.</param>
 	/// <param name="moveVector">If not useNavMesh, direction of movement. If useNavMesh, the destination of the agent.</param>
 	public void Move(Vector3 moveVector, bool useNavMesh = true)
-    {
+	{
 		if (moveVector != Vector3.zero)
 		{
 			if (useNavMesh)
 			{
-				if(navAgent == null)
-                {
+				if (navAgent == null)
+				{
 					Debug.LogWarning("No NavMeshAgent attatched to actor " + gameObject.name + ", but attempted to use it.");
-                }
+				}
 				else if (navAgent.destination != moveVector)
 				{
 					navAgent.destination = moveVector;
@@ -404,19 +413,40 @@ public class Actor : MonoBehaviour
 				rigidBody.AddForce(moveVector * moveForce);
 			}
 
-            // if actor tries to move, exit cover
-            if (state[State.InCover])
-            {
-                AttemptExitCover();
-            }
-        }
+			// if actor tries to move, exit cover
+			if (state[State.InCover])
+			{
+				AttemptExitCover();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Updates the Animator Parameters based on MoveVector.
+	/// </summary>
+	/// <param name="moveVector">Direction of movement.</param>
+	public void UpdateAnimator(Vector3 moveVector)
+	{
+		moveVector = Vector3.ClampMagnitude(moveVector, 1);
+
+		float angle = Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.y-45); // the angle of rotation in radians
+		float x = moveVector.x; // the x-coordinate of the vector
+		float y = moveVector.z; // the y-coordinate of the vector
+
+		float newX = x * Mathf.Cos(angle) - y * Mathf.Sin(angle);
+		float newY = x * Mathf.Sin(angle) + y * Mathf.Cos(angle);
+
+
+		animator.SetFloat("X", newX);
+		animator.SetFloat("Y", newY);
+		
 	}
 
 	/// <summary>
 	/// Take a specified amount of damage.
 	/// </summary>
 	/// <param name="damage">Damage to deal to this actor.</param>
-    /// <returns>If the projectile should </returns>
+	/// <returns>If the projectile should </returns>
 	public bool GetHit(int damage)
 	{
 		bool gotHit = true;
