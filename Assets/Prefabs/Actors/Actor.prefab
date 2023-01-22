@@ -10,13 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1310252469257724913}
   - component: {fileID: 4404756533418901247}
+  - component: {fileID: 4796819403604366461}
   - component: {fileID: 1143217580977220765}
   - component: {fileID: 3177180349973180707}
   - component: {fileID: 3880547155541323028}
-  - component: {fileID: 8142715800505872954}
-  - component: {fileID: 1399039989261216261}
-  - component: {fileID: 1621431021509763812}
-  - component: {fileID: 1758409763086779682}
   - component: {fileID: 8905177908027167111}
   m_Layer: 3
   m_Name: Actor
@@ -62,11 +59,24 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   data: {fileID: 11400000, guid: 088ef8621086b774c99c9174844e7740, type: 2}
-  weapon: {fileID: 2062017164814779945}
   modelRenderer: {fileID: 872553116337195829}
   originalMaterial: {fileID: 0}
   coverMaterial: {fileID: 0}
   isInvincible: 0
+--- !u!114 &4796819403604366461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310252469257724915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92bf1c7815b32a44eb63bca1fc64af5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataStorage: {fileID: 8100413924085744880, guid: 9641dce66f7be442cb3b438f138cfd0b, type: 3}
+  weaponInstance: {fileID: 2062017164814779945}
 --- !u!136 &1143217580977220765
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -119,70 +129,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &8142715800505872954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
-  position: 0
-  direction: 0
-  tooltip: 
---- !u!114 &1399039989261216261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 4324838011611431935, guid: 0000000000000000d000000000000000, type: 0}
-  position: 1
-  direction: 0
-  tooltip: 
---- !u!114 &1621431021509763812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 3897814842762760142, guid: 0000000000000000d000000000000000, type: 0}
-  position: 2
-  direction: 0
-  tooltip: 
---- !u!114 &1758409763086779682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fc219dcbba90e84b86e2ecf840e0266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  icon: {fileID: 8723023343561652918, guid: 0000000000000000d000000000000000, type: 0}
-  position: 3
-  direction: 0
-  tooltip: 
 --- !u!82 &8905177908027167111
 AudioSource:
   m_ObjectHideFlags: 0

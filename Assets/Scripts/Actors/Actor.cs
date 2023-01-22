@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.AI;
 
-// Author: Joseph Peaden
+[RequireComponent(typeof(Inventory))]
 
 /// <summary>
 /// Superclass for any actor (player, enemy, etc.)
@@ -35,8 +35,7 @@ public class Actor : MonoBehaviour
 	public int HitPoints { get; private set; }
 	public int MaxHitPoints { get { return data.hitPoints; } }
 
-	[SerializeField] private ActorData data;
-	[SerializeField] private Weapon weapon;
+	public ActorData data;
 	[SerializeField] private MeshRenderer modelRenderer;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
@@ -52,6 +51,7 @@ public class Actor : MonoBehaviour
     private Rigidbody rigidBody;
 	private NavMeshAgent navAgent;
 	private AudioSource audioSource;
+	private Inventory inventory;
 	#endregion
 
 	private float moveForce;
@@ -79,22 +79,19 @@ public class Actor : MonoBehaviour
 
 		mainCollider = GetComponent<CapsuleCollider>();
 		interactSensor = GetComponentInChildren<ActorInteractSensor>();
-
 		rigidBody = GetComponent<Rigidbody>();
-		HitPoints = data.hitPoints;
-
-		originalModelDimensions = modelRenderer.transform.localScale;
-
 		navAgent = GetComponent<NavMeshAgent>();
-
-		IsPlayer = GetComponent<Player>() != null;
-
 		audioSource = GetComponent<AudioSource>();
+		inventory = GetComponent<Inventory>();
+		IsPlayer = GetComponent<Player>() != null;
+		HitPoints = data.hitPoints;
+		originalModelDimensions = modelRenderer.transform.localScale;
 	}
 
     private void OnDestroy()
     {
 		OnDeath.RemoveAllListeners();
+		OnGetHit.RemoveAllListeners();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -163,6 +160,16 @@ public class Actor : MonoBehaviour
 		transform.LookAt(lookTarget);
 	}
 
+	public bool AttemptSwitchWeapons()
+    {
+		if (inventory != null)
+        {
+			inventory.AttemptSwitchWeapons();
+        }
+
+		return false;
+    }
+
 	/// <summary>
 	/// Attempt an attack with equipped weapon.
 	/// </summary>
@@ -170,10 +177,10 @@ public class Actor : MonoBehaviour
     /// <param name="triggerPull">Is this attack the result of an initial trigger pull, as opposed to holding down the trigger?</param>
 	public bool AttemptAttack(bool triggerPull)
     {
-		if (weapon)
-        {
-			return weapon.InitiateAttack(data.recoilControl, triggerPull);
-        }
+		if (inventory != null)
+		{
+			return inventory.AttemptUseWeapon(triggerPull);
+		}
 
 		return false;
     }
@@ -187,7 +194,10 @@ public class Actor : MonoBehaviour
     {
 		// need to add feedback sound to indicate they're out of ammo
 
-		weapon.StartReload();
+		if (inventory != null)
+		{
+			inventory.AttemptStartReload();
+		}
 
 		return true;
 	}
@@ -197,9 +207,14 @@ public class Actor : MonoBehaviour
 	/// </summary>
 	/// <returns>Amount of ammo in weapon.</returns>
 	public int GetEquippedWeaponAmmo()
-    {
-		return weapon.GetAmmo();
-    }
+	{
+		if (inventory != null)
+		{
+			return inventory.GetEquippedWeaponAmmo();
+		}
+
+		return 0;
+	}
 
 	/// <summary>
 	/// Toggle the actor crouch.
@@ -251,12 +266,6 @@ public class Actor : MonoBehaviour
 		if (interactable)
 		{
 			interactable.Interact(this);
-
-			switch (interactable.interactType)
-            {
-				// case Interactable.InteractableType.Cover:
-				// 	return AttemptDuckInCover(interactable.GetComponent<Cover>());
-            }
         }
 
 		return false;
@@ -377,6 +386,21 @@ public class Actor : MonoBehaviour
         }
 
 		return false;
+    }
+
+	public bool AttemptUseEquipment()
+    {
+		if (inventory != null)
+		{
+			return inventory.AttemptUseEquipment();
+		}
+
+		return false;
+	}
+
+	public void PickupLoot(Loot loot)
+    {
+		inventory.AttemptAddItem(loot.item);
     }
 
 	/// <summary>

@@ -16,3 +16,5 @@ MonoBehaviour:
   explosionPower: 500
   upwardsForce: 0
   explosionPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+  instancePrefab: {fileID: 2345039802422252422, guid: 79ffa8f559da349acbb3fd814ea03a5c, type: 3}
+  totalAmount: 3

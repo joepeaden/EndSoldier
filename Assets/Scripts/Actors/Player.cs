@@ -2,10 +2,8 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-// Author: Joseph Peaden
-
 /// <summary>
-/// Main player script.
+/// Controller for the player, also handles a few player specific things like death.
 /// </summary>
 public class Player : MonoBehaviour
 {
@@ -70,6 +68,16 @@ public class Player : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.E))
         {
 			actor.AttemptInteraction();
+        }
+
+		if (Input.GetKeyDown(KeyCode.Q))
+        {
+			actor.AttemptUseEquipment();
+        }
+
+		if (Input.GetKeyDown(KeyCode.Space))
+        {
+			actor.AttemptSwitchWeapons();
         }
 	}
 

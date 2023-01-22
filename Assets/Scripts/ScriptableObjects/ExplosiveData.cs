@@ -7,4 +7,9 @@ public class ExplosiveData : ScriptableObject
     public float explosionPower;
     public float upwardsForce;
     public GameObject explosionPrefab;
+    public GameObject instancePrefab;
+    /// <summary>
+    /// Total charges of use.
+    /// </summary>
+    public int totalAmount;
 }

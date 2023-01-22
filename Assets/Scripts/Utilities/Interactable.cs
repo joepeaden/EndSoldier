@@ -7,15 +7,8 @@ public abstract class Interactable : MonoBehaviour
 {
     // class needs to be cleaned up, do we eve nneed this enum? Can this now be just an interface to loosen up inheritance restrictions?
 
+    [HideInInspector]
     public Actor interactingActor;
-
-    public enum InteractableType
-    {
-        Cover,
-        Door
-    }
-
-    public InteractableType interactType;
 
     public virtual void Interact(Actor a)
     {

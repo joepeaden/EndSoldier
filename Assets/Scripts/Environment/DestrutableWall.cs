@@ -1,22 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[RequireComponent(typeof(Shatter))]
-public class DestrutableWall : Interactable
+public class DestrutableWall : Shatter
 {
-    private Shatter shatter;
-    public GameObject bomb;
-
-    private void Start() {
-        shatter = GetComponent<Shatter>();
-    }
-
-    public override void Interact(Actor a)
+    private void OnDestroy()
     {
-        base.Interact(a);
-        
-        Vector3 actorPos = interactingActor.transform.position;
-        Instantiate(bomb, actorPos, Quaternion.identity);
+        GameManager.Instance.StartSlowMotion(.25f);
     }
 }
