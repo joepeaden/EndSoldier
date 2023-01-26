@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    // move this stuff into a Scriptable.
+
     [SerializeField]
-	protected float force;
+	protected float velocity;
     [SerializeField]
     public float impact;
     [SerializeField]
@@ -17,15 +19,28 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     protected Actor owningActor;
 
-    void Update()
+    private Vector3 lastPoint;
+
+    private void Awake()
     {
-        if (force != 0)
-            GetComponent<Rigidbody>().AddForce(force * transform.forward);
+        lastPoint = transform.position;
+    }
+
+    private void FixedUpdate()
+    {
+        if (velocity != 0)
+
+            GetComponent<Rigidbody>().velocity = velocity * transform.forward;
         else
             Debug.LogWarning("Projectile force for " + gameObject.name + " is not set");
 
-        // record distance travelled, delete if outside range
-        // or just have boundary collidr?
+        Vector3 movementSinceLastFrame = (transform.position - lastPoint);
+        Physics.Raycast(lastPoint, movementSinceLastFrame.normalized, out RaycastHit hitInfo, movementSinceLastFrame.magnitude);
+        if (hitInfo.collider != null)
+        {
+            OnTriggerEnter(hitInfo.collider);
+        }
+        lastPoint = transform.position;
     }
 
     void OnTriggerEnter (Collider other)
@@ -36,8 +51,11 @@ public class Projectile : MonoBehaviour
         if (actor == owningActor)
             return;
 
-        bool shouldDestroy = other.CompareTag("HitBox") || !other.isTrigger;
-        if (actor != null)
+        // don't destroy if hit actor's collider (only do so on hit box)
+        bool shouldDestroy = other.CompareTag("HitBox") || (!other.isTrigger && actor == null);
+
+        // only hit an actor if it's the actor's hit box
+        if (actor != null && other.gameObject.GetComponent<HitBox>())
 	    {
             // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
             shouldDestroy = actor.GetHit(damage);

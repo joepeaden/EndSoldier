@@ -16,8 +16,8 @@ public class Enemy : MonoBehaviour, ISetActive
 {
 	public float shootPauseTimeMax;
 	public float shootPauseTimeMin;
-	public float maxBurst;
-	public float minBurst;
+	public float maxBurstFrames;
+	public float minBurstFrames;
 	public float maxTimeToFindPlayer; 
 	public float minTimeToFindPlayer;
 	private Actor actor;
@@ -50,7 +50,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			}
 			else if (!pauseFiring)
 			{
-				int numToFire = (int) Random.Range(minBurst, maxBurst);
+				int numToFire = (int) Random.Range(minBurstFrames, maxBurstFrames);
 
 				StartCoroutine(FireBurst(numToFire));
 			}
@@ -97,6 +97,8 @@ public class Enemy : MonoBehaviour, ISetActive
 	/// </summary>
 	private void HandleEnemyDeath()
     {
+		StopAllCoroutines();
+
 		// for now just make him look ded.
 		Quaternion q = new Quaternion();
 		q.eulerAngles = new Vector3(0, 0, 90);
@@ -119,14 +121,24 @@ public class Enemy : MonoBehaviour, ISetActive
 		int initialWeaponAmmo = actor.GetEquippedWeaponAmmo();
 		int currentWeaponAmmo = initialWeaponAmmo;
 
-		while (initialWeaponAmmo - currentWeaponAmmo < numToFire && currentWeaponAmmo > 0)
+		while (numToFire > 0 && currentWeaponAmmo > 0)
         {
 			// if it's the first shot, make sure to pass triggerpull param correctly.
-            actor.AttemptAttack(initialWeaponAmmo == currentWeaponAmmo);
+            actor.AttemptAttack(true);
 			currentWeaponAmmo = actor.GetEquippedWeaponAmmo();
 
-			yield return null;
-        }
+			numToFire--;
+
+			InventoryWeapon weapon = actor.GetEquippedWeapon();
+			if (!weapon.data.isAutomatic)
+			{
+				yield return new WaitForSeconds(Random.Range(actor.data.minSemiAutoFireRate, actor.data.maxSemiAutoFireRate));
+			}
+            else
+            {
+				yield return null;
+			}
+		}
 
 		yield return new WaitForSeconds(Random.Range(shootPauseTimeMin, shootPauseTimeMax));
 

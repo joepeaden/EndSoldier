@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootPauseTimeMax: 4
   shootPauseTimeMin: 2
-  maxBurst: 1
-  minBurst: 4
+  maxBurstFrames: 60
+  minBurstFrames: 1
   maxTimeToFindPlayer: 3
   minTimeToFindPlayer: 1
 --- !u!1001 &3383025682066104725
@@ -83,6 +83,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062017164814779945, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: infiniteBackupAmmo
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4404756533418901247, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}

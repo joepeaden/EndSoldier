@@ -30,3 +30,5 @@ MonoBehaviour:
   deathSound1: {fileID: 0}
   deathSound2: {fileID: 0}
   deathSound3: {fileID: 0}
+  minSemiAutoFireRate: 0.1
+  maxSemiAutoFireRate: 1

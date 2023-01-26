@@ -16,6 +16,8 @@ public class Actor : MonoBehaviour
 	public UnityAction OnActorEndAim;
 	public UnityEvent OnDeath = new UnityEvent();
 	public UnityEvent OnGetHit = new UnityEvent();
+	public UnityEvent OnCrouch = new UnityEvent();
+	public UnityEvent OnStand = new UnityEvent();
 
 	public enum State
 	{
@@ -216,6 +218,16 @@ public class Actor : MonoBehaviour
 		return 0;
 	}
 
+	public InventoryWeapon GetEquippedWeapon()
+    {
+		if (inventory != null)
+        {
+			return inventory.GetEquippedWeapon();
+        }
+
+		return null;
+    }
+
 	/// <summary>
 	/// Toggle the actor crouch.
 	/// </summary>
@@ -238,13 +250,11 @@ public class Actor : MonoBehaviour
 	{
 		if (shouldCrouch)
 		{
-			modelRenderer.transform.localScale = new Vector3(1f, .5f, 1f);
-			modelRenderer.transform.localPosition = new Vector3(0f, 0f, 0f);
+			OnCrouch.Invoke();
 		}
 		else
 		{
-			modelRenderer.transform.localScale = originalModelDimensions;
-			modelRenderer.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+			OnStand.Invoke();
 		}
 
 		state[State.Crouching] = shouldCrouch;

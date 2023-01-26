@@ -26,4 +26,6 @@ public class ActorData : ScriptableObject
 	public AudioClip deathSound1;
 	public AudioClip deathSound2;
 	public AudioClip deathSound3;
+	public float minSemiAutoFireRate;
+	public float maxSemiAutoFireRate;
 }

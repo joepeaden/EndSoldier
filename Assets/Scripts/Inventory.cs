@@ -6,6 +6,9 @@ public class Inventory : MonoBehaviour
 {
     [SerializeField] InventoryItemDataStorage dataStorage;
     [SerializeField] WeaponInstance weaponInstance;
+    // temporary. eventually replace with dropdown for StartingWeapon
+    [SerializeField] private bool hasRifle;
+    [SerializeField] private int startingAmmo;
 
     private Equipment equipment;
     private List<InventoryWeapon> weapons = new List<InventoryWeapon>();
@@ -16,8 +19,22 @@ public class Inventory : MonoBehaviour
     {
         actor = GetComponent<Actor>();
 
-        InventoryWeapon inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
-        inventoryWeapon.itemType = "PISTOL";
+        InventoryWeapon inventoryWeapon;
+        if (hasRifle)
+        {
+            inventoryWeapon = new InventoryWeapon(dataStorage.assaultRifle);
+            inventoryWeapon.itemType = "RIFLE";
+        }
+        else
+        {
+            inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
+            inventoryWeapon.itemType = "PISTOL";
+        }
+
+        if (startingAmmo != 0)
+        {
+            inventoryWeapon.amount = startingAmmo;
+        }
         AttemptAddItem(inventoryWeapon);
     }
 
@@ -79,7 +96,7 @@ public class Inventory : MonoBehaviour
     public bool AttemptStartReload()
     {
         // non-players for now have no backup ammo limit.
-        if (weaponInstance != null && (!actor.IsPlayer || weaponInstance.inventoryWeapon.amount > 0))
+        if (weaponInstance != null && weaponInstance.inventoryWeapon.amount > 0)
         {
             weaponInstance.StartReload();
         }
@@ -113,5 +130,15 @@ public class Inventory : MonoBehaviour
         }
 
         return 0;
+    }
+
+    public InventoryWeapon GetEquippedWeapon()
+    {
+        if (weaponInstance != null)
+        {
+            return weaponInstance.inventoryWeapon;
+        }
+
+        return null;
     }
 }

@@ -15,6 +15,7 @@ public class WeaponInstance : MonoBehaviour
     [SerializeField] private GameObject aimGlow;
     [SerializeField] private LineRenderer line;
     [SerializeField] private Transform gunModelParent;
+    [SerializeField] private bool infiniteBackupAmmo;
 
     // debug options
     [SerializeField] private bool infiniteAmmo;
@@ -24,6 +25,7 @@ public class WeaponInstance : MonoBehaviour
 
     public InventoryWeapon inventoryWeapon;
     private int ammoInWeapon;
+    private Vector3 originalLocalPosition;
 
     // states
     private bool aiming;
@@ -38,6 +40,15 @@ public class WeaponInstance : MonoBehaviour
         actorOperator = transform.GetComponentInParent<Actor>();
         actorOperator.OnActorBeginAim += BeginAim;
         actorOperator.OnActorEndAim += EndAim;
+        actorOperator.OnCrouch.AddListener(HandleCrouch);
+        actorOperator.OnStand.AddListener(HandleStand);
+
+        originalLocalPosition = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        
     }
 
     private void OnDisable()
@@ -146,8 +157,8 @@ public class WeaponInstance : MonoBehaviour
         Vector3 projectileSpawnPosition = transform.position;
         projectileSpawnPosition += transform.forward * 1.5f;
 
-        GameObject projectile = Instantiate(inventoryWeapon.data.projectile, projectileSpawnPosition, transform.rotation);
-        projectile.GetComponent<Projectile>().SetOwningActor(actorOperator);
+        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, projectileSpawnPosition, transform.rotation).GetComponent<Projectile>();
+        projectile.SetOwningActor(actorOperator);
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());
@@ -248,10 +259,13 @@ public class WeaponInstance : MonoBehaviour
         audioSource.Stop();
 
         bool fullLoad = (inventoryWeapon.amount - inventoryWeapon.data.ammoCapacity) >= 0;
-        if (fullLoad)
+        if (fullLoad || infiniteBackupAmmo)
         {
             ammoInWeapon = inventoryWeapon.data.ammoCapacity;
-            inventoryWeapon.amount -= inventoryWeapon.data.ammoCapacity;
+            if (!infiniteBackupAmmo)
+            {
+                inventoryWeapon.amount -= inventoryWeapon.data.ammoCapacity;
+            }
         }
         else
         {
@@ -261,6 +275,27 @@ public class WeaponInstance : MonoBehaviour
 
         readyToAttack = true;
         reloading = false;
+    }
+
+    private Vector3 originalDimensions;
+
+    private void HandleCrouch()
+    {
+        transform.localPosition = new Vector3(originalLocalPosition.x, 0.5f, originalLocalPosition.z);
+    }
+
+    private void HandleStand()
+    {
+        transform.localPosition = originalLocalPosition;
+    }
+
+    private void PlayAudioClip(AudioClip clip, float timeToPlayAt = 0)
+    {
+        // don't need to set this slomo every time can just do it in an event once.
+        audioSource.pitch = GameManager.isSlowMotion ? GameManager.slowMotionSpeed : 1f;
+        audioSource.clip = clip;
+        audioSource.time = 0;
+        audioSource.Play();
     }
 
     public void AddAmmo(int ammo)
@@ -282,15 +317,6 @@ public class WeaponInstance : MonoBehaviour
     public string GetName()
     {
         return inventoryWeapon.data.displayName;
-    }
-
-    private void PlayAudioClip(AudioClip clip, float timeToPlayAt = 0)
-    {
-        // don't need to set this slomo every time can just do it in an event once.
-        audioSource.pitch = GameManager.isSlowMotion ? GameManager.slowMotionSpeed : 1f;
-        audioSource.clip = clip;
-        audioSource.time = 0;
-        audioSource.Play();
     }
 
     private void OnDestroy()
