@@ -18,4 +18,5 @@ public class WeaponData : ScriptableObject
 	public float reloadTime;
 	public bool isAutomatic;
 	public GameObject modelPrefab;
+	public Vector3 muzzlePosition;
 }

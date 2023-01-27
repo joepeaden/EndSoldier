@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, ISetActive
 	public bool activateOnStart;
 
 	private Actor actor;
-	private GameObject target;
+	public GameObject target;
 	private bool pauseFiring;
 
     private void Awake()
@@ -98,6 +98,7 @@ public class Enemy : MonoBehaviour, ISetActive
 		// eventually, can use a sphere collider for awareness trigger then raycast to see if target is not visible (hits wall instead)
 		yield return new WaitForSeconds((int) Random.Range(minTimeToFindPlayer, maxTimeToFindPlayer));
 		target = GameManager.Instance.GetPlayerGO();
+		actor.target = target.GetComponent<Actor>().GetShootAtMeTransform();
 		yield return null;
 	}
 

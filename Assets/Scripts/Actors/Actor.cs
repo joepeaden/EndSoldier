@@ -39,10 +39,11 @@ public class Actor : MonoBehaviour
 
 	public ActorData data;
 	[SerializeField] private MeshRenderer modelRenderer;
+	[SerializeField] private Transform TargetSpot;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
-	[SerializeField] private Material originalMaterial;
-	[SerializeField] private Material coverMaterial;
+	//[SerializeField] private Material originalMaterial;
+	//[SerializeField] private Material coverMaterial;
 
 	[Header("Debug Options")]
 	[SerializeField] private bool isInvincible;
@@ -68,6 +69,10 @@ public class Actor : MonoBehaviour
 	private Cover targetCover;
 
 	public Vector3 lookTarget;
+	/// <summary>
+    /// Not sure if it's really the actor's target, but a guess.
+    /// </summary>
+	public Transform target;
 
 	private void Awake()
     {
@@ -153,8 +158,13 @@ public class Actor : MonoBehaviour
 			default:
 				break;
 		}
-	} 
-	
+	}
+
+	public Transform GetShootAtMeTransform()
+    {
+		return TargetSpot;
+    }
+
 	/// <summary>
 	/// Rotate the actor to look at lookTarget.
 	/// </summary>
@@ -162,6 +172,7 @@ public class Actor : MonoBehaviour
 	public void UpdateActorRotation(Vector3 newLookTarget)
 	{
 		lookTarget = newLookTarget;
+		lookTarget.y = 0f;
 		transform.LookAt(lookTarget);
 
 		//inventory.
@@ -292,24 +303,24 @@ public class Actor : MonoBehaviour
 	/// <returns>Whether or not the attempt was successful.</returns>
 	private bool AttemptDuckInCover(Cover cover)
     {
-		if (!cover)
-        {
-			return false;
-        }
+		//if (!cover)
+  //      {
+		//	return false;
+  //      }
 		
-		if (cover && !state[State.InCover] && !coverCoroutineRunning)
-		{
-			modelRenderer.material = coverMaterial;
+		//if (cover && !state[State.InCover] && !coverCoroutineRunning)
+		//{
+		//	modelRenderer.material = coverMaterial;
 
-			// set to InCover layer, ignores collisions with bullets
-			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
+		//	// set to InCover layer, ignores collisions with bullets
+		//	mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.InCover;
 
-			StartCoroutine(EnterOrExitCover(true));
+		//	StartCoroutine(EnterOrExitCover(true));
 
-			posBeforeCover = transform.position;
+		//	posBeforeCover = transform.position;
 
-			return true;
-		}
+		//	return true;
+		//}
 
 		return false;
     }
@@ -320,22 +331,22 @@ public class Actor : MonoBehaviour
 	/// <returns>Whether or not the attempt was successful.</returns>
 	public bool AttemptExitCover()
 	{
-		if (!interactSensor.GetInteractable() || !state[State.InCover])
-        {
-			Debug.LogWarning("AttemptExitCover was called, but no cover or actor not in cover state");
-			return false;
-        }
+		//if (!interactSensor.GetInteractable() || !state[State.InCover])
+  //      {
+		//	Debug.LogWarning("AttemptExitCover was called, but no cover or actor not in cover state");
+		//	return false;
+  //      }
 
-		if (!coverCoroutineRunning)
-		{
-			modelRenderer.material = originalMaterial;
+		//if (!coverCoroutineRunning)
+		//{
+		//	modelRenderer.material = originalMaterial;
 
-			mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Actors;
+		//	mainCollider.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Actors;
 
-			StartCoroutine(EnterOrExitCover(false));
+		//	StartCoroutine(EnterOrExitCover(false));
 			
-			return true;
-		}
+		//	return true;
+		//}
 
 		return false;
 	}
@@ -347,58 +358,58 @@ public class Actor : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator EnterOrExitCover(bool enteringCover)
 	{
-		Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
-		if (!cover)
-		{
-			Debug.LogWarning("StartDuckInCover is called but no cover is set in the sensor.");
-			yield return null;
-		}
-		else
-		{
-			coverCoroutineRunning = true;
+		//Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
+		//if (!cover)
+		//{
+		//	Debug.LogWarning("StartDuckInCover is called but no cover is set in the sensor.");
+		//	yield return null;
+		//}
+		//else
+		//{
+		//	coverCoroutineRunning = true;
 
-			if (cover.coverType == Cover.CoverType.Floor)
-			{
-				ToggleCrouch();
-			}
+		//	if (cover.coverType == Cover.CoverType.Floor)
+		//	{
+		//		ToggleCrouch();
+		//	}
 
-			rigidBody.velocity = Vector3.zero;
+		//	rigidBody.velocity = Vector3.zero;
 
-			//Collider c = interactSensor.GetComponent<Collider>();
-			Vector3 closestPoint = interactSensor.GetInteractableCollider().ClosestPointOnBounds(interactSensor.transform.position);
+		//	//Collider c = interactSensor.GetComponent<Collider>();
+		//	Vector3 closestPoint = interactSensor.GetInteractableCollider().ClosestPointOnBounds(interactSensor.transform.position);
 
 
-			Vector3 targetPos = enteringCover ? closestPoint : posBeforeCover;
-			targetPos.y = transform.position.y;
+		//	Vector3 targetPos = enteringCover ? closestPoint : posBeforeCover;
+		//	targetPos.y = transform.position.y;
 
-			targetCover = cover;
-			movingToCover = true;
-			do
-			{
-				var step = data.moveToCoverSpeed * Time.deltaTime;
-				transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
+		//	targetCover = cover;
+		//	movingToCover = true;
+		//	do
+		//	{
+		//		var step = data.moveToCoverSpeed * Time.deltaTime;
+		//		transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
 
 				yield return null;
-			} while (enteringCover ? movingToCover : transform.position != targetPos);	
+		//	} while (enteringCover ? movingToCover : transform.position != targetPos);	
 
-			state[State.InCover] = enteringCover;
+		//	state[State.InCover] = enteringCover;
 
-			coverCoroutineRunning = false;
-		}
+		//	coverCoroutineRunning = false;
+		//}
 	}
 
 	private bool AttemptVaultOverCover()
     {
-		Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
-		if (cover && cover.coverType == Cover.CoverType.Floor)
-        {
-			// when implementing animations, will have a vault over animation here. for now, just move through.
-			cover.GetComponent<Collider>().enabled = false;
+		//Cover cover = interactSensor.GetInteractable().GetComponent<Cover>();
+		//if (cover && cover.coverType == Cover.CoverType.Floor)
+  //      {
+		//	// when implementing animations, will have a vault over animation here. for now, just move through.
+		//	cover.GetComponent<Collider>().enabled = false;
 
-			cover.GetActorFlipPosition(transform.position);
+		//	cover.GetActorFlipPosition(transform.position);
 
-			return true;
-        }
+		//	return true;
+  //      }
 
 		return false;
     }

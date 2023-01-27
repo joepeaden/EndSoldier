@@ -16,6 +16,7 @@ public class WeaponInstance : MonoBehaviour
     [SerializeField] private LineRenderer line;
     [SerializeField] private Transform gunModelParent;
     [SerializeField] private bool infiniteBackupAmmo;
+    [SerializeField] private Transform muzzle;
 
     // debug options
     [SerializeField] private bool infiniteAmmo;
@@ -48,13 +49,15 @@ public class WeaponInstance : MonoBehaviour
 
     private void LateUpdate()
     {
-        //Vector3 target = actorOperator.transform.forward;
+        //Vector3 target = actorOperator.target;//Vector3.right;//transform.worldToLocalMatrix.MultiplyVector(transform.forward);
         //target.y = actorOperator.lookTarget.y;
-        //transform.LookAt(target);
-
+        if (actorOperator.target != null)
+        {
+            transform.LookAt(actorOperator.target);
+        }
         //Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1000f);
-        
-            //transform.Rotate(Vector3.right, 1);
+
+        //transform.Rotate(Vector3.right, 1);
     }
 
     private void OnDisable()
@@ -100,6 +103,8 @@ public class WeaponInstance : MonoBehaviour
             Destroy(gunModelParent.GetChild(i).gameObject);
         }
         Instantiate(weapon.data.modelPrefab, gunModelParent);
+
+        muzzle.localPosition = weapon.data.muzzlePosition;
 
         inventoryWeapon = weapon;
     }
@@ -160,10 +165,10 @@ public class WeaponInstance : MonoBehaviour
         readyToAttack = false;
 
         // need to put bullet at end of gun barrel so it doesn't hit player
-        Vector3 projectileSpawnPosition = transform.position;
-        projectileSpawnPosition += transform.forward * 1.5f;
+        //Vector3 projectileSpawnPosition = transform.position;
+        //projectileSpawnPosition += transform.forward * 1.5f;
 
-        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, projectileSpawnPosition, transform.rotation).GetComponent<Projectile>();
+        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, transform.rotation).GetComponent<Projectile>();
         projectile.SetOwningActor(actorOperator);
 
         StopCoroutine(Flash());
