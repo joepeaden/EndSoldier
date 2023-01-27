@@ -46,9 +46,15 @@ public class WeaponInstance : MonoBehaviour
         originalLocalPosition = transform.localPosition;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
+        //Vector3 target = actorOperator.transform.forward;
+        //target.y = actorOperator.lookTarget.y;
+        //transform.LookAt(target);
+
+        //Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1000f);
         
+            //transform.Rotate(Vector3.right, 1);
     }
 
     private void OnDisable()

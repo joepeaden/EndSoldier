@@ -2870,7 +2870,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 363933094}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 18.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 836416572}
@@ -5414,8 +5414,9 @@ MonoBehaviour:
   - {fileID: 366408122}
   - {fileID: 2132424742}
   - {fileID: 331126097}
-  walls: {fileID: 1944703518}
-  wallsCut: {fileID: 1985580978}
+  doors: []
+  breakableWalls: []
+  roof: {fileID: 0}
 --- !u!1001 &512619256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5843,6 +5844,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4722735434902771429, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
+      propertyPath: activateOnStart
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
 --- !u!4 &587636538 stripped
@@ -6130,8 +6135,9 @@ MonoBehaviour:
   - {fileID: 811772322}
   - {fileID: 841787241}
   - {fileID: 2046383928}
-  walls: {fileID: 1740423536}
-  wallsCut: {fileID: 19483465}
+  doors: []
+  breakableWalls: []
+  roof: {fileID: 0}
 --- !u!1 &640297885
 GameObject:
   m_ObjectHideFlags: 0
@@ -7243,6 +7249,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4722735434902771429, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
+      propertyPath: activateOnStart
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
 --- !u!4 &835748259 stripped
@@ -7307,6 +7317,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4385406812283568742, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4722735434902771429, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
+      propertyPath: activateOnStart
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -7830,7 +7844,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh133886
+  m_Name: pb_Mesh153790
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -8121,7 +8135,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh134092
+  m_Name: pb_Mesh153998
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9404,8 +9418,9 @@ MonoBehaviour:
   - {fileID: 816097182}
   - {fileID: 2121904543}
   - {fileID: 1740399902}
-  walls: {fileID: 684718330}
-  wallsCut: {fileID: 2057437647}
+  doors: []
+  breakableWalls: []
+  roof: {fileID: 0}
 --- !u!1 &1287660261 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0342e8ba08489e248beb594388c842f9, type: 3}
@@ -13267,7 +13282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1195520878132369631, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: isInvincible
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1760336046116457268, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: m_Constraints

@@ -67,6 +67,8 @@ public class Actor : MonoBehaviour
 	private bool movingToCover;
 	private Cover targetCover;
 
+	public Vector3 lookTarget;
+
 	private void Awake()
     {
 		state = new Dictionary<State, bool>()
@@ -157,9 +159,12 @@ public class Actor : MonoBehaviour
 	/// Rotate the actor to look at lookTarget.
 	/// </summary>
 	/// <param name="lookTarget">The target to look at.</param>
-	public void UpdateActorRotation(Vector3 lookTarget)
+	public void UpdateActorRotation(Vector3 newLookTarget)
 	{
+		lookTarget = newLookTarget;
 		transform.LookAt(lookTarget);
+
+		//inventory.
 	}
 
 	public bool AttemptSwitchWeapons()

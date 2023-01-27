@@ -274,12 +274,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d02c79f0aceb34a895e5fe96533e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
   weaponFlash: {fileID: 3902819768679926484}
   audioSource: {fileID: 8359071329918530664}
   aimGlow: {fileID: 611309595630413101}
   line: {fileID: 5453574301023143258}
   gunModelParent: {fileID: 2447878165081293698}
+  infiniteBackupAmmo: 0
   infiniteAmmo: 0
 --- !u!82 &8359071329918530664
 AudioSource:

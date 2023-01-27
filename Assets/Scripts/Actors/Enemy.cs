@@ -14,12 +14,16 @@ using UnityEngine.AI;
 /// </remarks>
 public class Enemy : MonoBehaviour, ISetActive
 {
+	// scriptable object time...
 	public float shootPauseTimeMax;
 	public float shootPauseTimeMin;
 	public float maxBurstFrames;
 	public float minBurstFrames;
 	public float maxTimeToFindPlayer; 
 	public float minTimeToFindPlayer;
+
+	public bool activateOnStart;
+
 	private Actor actor;
 	private GameObject target;
 	private bool pauseFiring;
@@ -33,6 +37,11 @@ public class Enemy : MonoBehaviour, ISetActive
 	{
 		actor.AddCoverListener(ActorHasPotentialCover);
 		actor.OnDeath.AddListener(HandleEnemyDeath);
+
+		if (activateOnStart)
+        {
+			Activate();
+        }
 	}
 
     private void Update()
