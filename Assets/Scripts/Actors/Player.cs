@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 	private void Awake()
     {
 		actor = GetComponent<Actor>();
+		actor.team = Actor.ActorTeam.Friendly;
     }
 
     private void Start()

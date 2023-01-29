@@ -51,7 +51,7 @@ public class WeaponInstance : MonoBehaviour
     {
         //Vector3 target = actorOperator.target;//Vector3.right;//transform.worldToLocalMatrix.MultiplyVector(transform.forward);
         //target.y = actorOperator.lookTarget.y;
-        if (actorOperator.target != null)
+        if (actorOperator.target != null && actorOperator.IsAlive)
         {
             transform.LookAt(actorOperator.target);
         }

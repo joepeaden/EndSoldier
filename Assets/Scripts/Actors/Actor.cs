@@ -30,6 +30,12 @@ public class Actor : MonoBehaviour
 		InCover
 	}
 
+	public enum ActorTeam
+    {
+		Enemy,
+		Friendly
+    }
+
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
 	public bool IsAlive { get; private set; } = true;
@@ -73,6 +79,8 @@ public class Actor : MonoBehaviour
     /// Not sure if it's really the actor's target, but a guess.
     /// </summary>
 	public Transform target;
+
+	public ActorTeam team;
 
 	private void Awake()
     {

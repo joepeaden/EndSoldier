@@ -47,8 +47,8 @@ public class Projectile : MonoBehaviour
     {
     	Actor actor = other.gameObject.GetComponentInParent<Actor>();
 
-        // please don't kill yo self
-        if (actor == owningActor)
+        // please don't kill yo self or teammates
+        if (actor != null && actor.team == owningActor.team)
             return;
 
         // don't destroy if hit actor's collider (only do so on hit box)

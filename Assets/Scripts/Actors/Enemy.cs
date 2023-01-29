@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour, ISetActive
     private void Awake()
     {
 		actor = GetComponent<Actor>();
+		actor.team = Actor.ActorTeam.Enemy;
     }
 
     private void Start()
