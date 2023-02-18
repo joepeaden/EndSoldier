@@ -9,7 +9,7 @@
 public class ActorData : ScriptableObject
 {
 	public int hitPoints;
-	public float recoilControl; 
+	public float recoilControl;
 	public float slowWalkMoveForce;
 	public float fastWalkMoveForce;
 	public float sprintMoveForce;
@@ -28,4 +28,9 @@ public class ActorData : ScriptableObject
 	public AudioClip deathSound3;
 	public float minSemiAutoFireRate;
 	public float maxSemiAutoFireRate;
+	/// <summary>
+	/// The velocity threshold for the actor to be considered "Moving" for animations
+	/// </summary>
+	public float velocityMoveAnimThreshold;
 }
+

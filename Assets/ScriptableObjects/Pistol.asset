@@ -18,10 +18,10 @@ MonoBehaviour:
   attackInterval: 0.1
   ammoCapacity: 10
   totalAmount: 20
-  attackSound: {fileID: 8300000, guid: fc96116dc3c141440aabb5605744fea2, type: 3}
+  attackSound: {fileID: 8300000, guid: 9a7d54770be339e478fc73a7609c5753, type: 3}
   emptyWeaponSound: {fileID: 8300000, guid: e83d62266de674b14adb11ab74aa7ac3, type: 3}
   reloadSound: {fileID: 8300000, guid: ac0199642ab4840dfb70a850b9cd79a4, type: 3}
   reloadTime: 1
   isAutomatic: 0
-  modelPrefab: {fileID: 2738520558268228719, guid: 748d19574625db444877ca05561b6aea, type: 3}
+  modelPrefab: {fileID: 100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
   muzzlePosition: {x: 0, y: -0.169, z: 0.482}

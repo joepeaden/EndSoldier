@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			StopAllCoroutines();
 
 			// if remove this move order, the actor goes to last player position. Might want it to be like that down the line. Just something to consider.
-			actor.Move(transform.position);
+			//actor.Move(transform.position);
 		}
 	}
 

@@ -46,6 +46,7 @@ public class Actor : MonoBehaviour
 	public ActorData data;
 	[SerializeField] private MeshRenderer modelRenderer;
 	[SerializeField] private Transform TargetSpot;
+	[SerializeField] private Animator anim;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	//[SerializeField] private Material originalMaterial;
@@ -65,11 +66,11 @@ public class Actor : MonoBehaviour
 
 	private float moveForce;
 	// position before actor enters cover (for returning to correct position)
-	private Vector3 posBeforeCover;
+	//private Vector3 posBeforeCover;
 	// is the EnterExitCover coroutine running?
-	private bool coverCoroutineRunning;
+	//private bool coverCoroutineRunning;
 	// original dimensions of actor object
-	private Vector3 originalModelDimensions;
+	//private Vector3 originalModelDimensions;
 
 	private bool movingToCover;
 	private Cover targetCover;
@@ -102,13 +103,19 @@ public class Actor : MonoBehaviour
 		inventory = GetComponent<Inventory>();
 		IsPlayer = GetComponent<Player>() != null;
 		HitPoints = data.hitPoints;
-		originalModelDimensions = modelRenderer.transform.localScale;
 	}
 
     private void OnDestroy()
     {
 		OnDeath.RemoveAllListeners();
 		OnGetHit.RemoveAllListeners();
+    }
+
+	private void LateUpdate()
+	{
+        Vector3 velocity = rigidBody.velocity;
+        anim.SetFloat("VerticalAxis", Vector3.Dot(velocity, transform.forward));
+		anim.SetFloat("HorizontalAxis", Vector3.Dot(velocity, transform.right));
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -462,8 +469,8 @@ public class Actor : MonoBehaviour
 				rigidBody.AddForce(moveVector * moveForce);
 			}
 
-            // if actor tries to move, exit cover
-            if (state[State.InCover])
+			// if actor tries to move, exit cover
+			if (state[State.InCover])
             {
                 AttemptExitCover();
             }

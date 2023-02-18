@@ -9,21 +9,21 @@ public class ActorModel : MonoBehaviour
 
     void Start()
     {
-        originalDimensions = transform.localScale;
-        actor = GetComponentInParent<Actor>();
-        actor.OnCrouch.AddListener(HandleCrouch);
-        actor.OnStand.AddListener(HandleStand);
+        //originalDimensions = transform.localScale;
+        //actor = GetComponentInParent<Actor>();
+        //actor.OnCrouch.AddListener(HandleCrouch);
+        //actor.OnStand.AddListener(HandleStand);
     }
 
     private void HandleCrouch()
     {
-        transform.localScale = new Vector3(1f, .5f, 1f);
-        transform.localPosition = new Vector3(0f, 0f, 0f);
+        //transform.localScale = new Vector3(1f, .5f, 1f);
+        //transform.localPosition = new Vector3(0f, 0f, 0f);
     }
 
     private void HandleStand()
     {
-        transform.localScale = originalDimensions;
-        transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        //transform.localScale = originalDimensions;
+        //transform.localPosition = new Vector3(0f, 0.5f, 0f);
     }
 }
