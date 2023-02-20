@@ -111,13 +111,13 @@ public class Enemy : MonoBehaviour, ISetActive
 		StopAllCoroutines();
 
 		// for now just make him look ded.
-		Quaternion q = new Quaternion();
-		q.eulerAngles = new Vector3(0, 0, 90);
-		transform.rotation = q;
+		//Quaternion q = new Quaternion();
+		//q.eulerAngles = new Vector3(0, 0, 90);
+		//transform.rotation = q;
 
 		// remove collider and set rigidbody to no grav so no collisions
-		GetComponent<Rigidbody>().useGravity = false;
-		GetComponent<Collider>().enabled = false;
+		//GetComponent<Rigidbody>().useGravity = false;
+		//GetComponent<Collider>().enabled = false;
 	}
 
 	private void ActorHasPotentialCover()

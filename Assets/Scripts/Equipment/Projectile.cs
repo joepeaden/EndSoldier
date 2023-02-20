@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour
 
             GetComponent<Rigidbody>().velocity = velocity * transform.forward;
         else
-            Debug.LogWarning("Projectile force for " + gameObject.name + " is not set");
+            Debug.LogWarning("Projectile velocity for " + gameObject.name + " is not set");
 
         Vector3 movementSinceLastFrame = (transform.position - lastPoint);
         Physics.Raycast(lastPoint, movementSinceLastFrame.normalized, out RaycastHit hitInfo, movementSinceLastFrame.magnitude);

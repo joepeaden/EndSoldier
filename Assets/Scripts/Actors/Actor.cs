@@ -46,7 +46,7 @@ public class Actor : MonoBehaviour
 	public ActorData data;
 	[SerializeField] private MeshRenderer modelRenderer;
 	[SerializeField] private Transform TargetSpot;
-	[SerializeField] private Animator anim;
+	[SerializeField] private ActorModel actorModel;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	//[SerializeField] private Material originalMaterial;
@@ -113,9 +113,7 @@ public class Actor : MonoBehaviour
 
 	private void LateUpdate()
 	{
-        Vector3 velocity = rigidBody.velocity;
-        anim.SetFloat("VerticalAxis", Vector3.Dot(velocity, transform.forward));
-		anim.SetFloat("HorizontalAxis", Vector3.Dot(velocity, transform.right));
+		actorModel.UpdateVelocityBasedAnimations(rigidBody.velocity);
     }
 
     private void OnCollisionEnter(Collision collision)
