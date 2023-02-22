@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class ActorModel : MonoBehaviour
 {
+    [SerializeField]
     private Actor actor;
-    private Vector3 originalDimensions;
-
     [SerializeField]
     private GameObject ragdoll;
-    [SerializeField]
-    private GameObject model;
-    [SerializeField]
-    private Animator modelAnim;
     [SerializeField]
     private Animator ragAnim;
 
@@ -21,8 +16,6 @@ public class ActorModel : MonoBehaviour
 
     void Start()
     {
-        //originalDimensions = transform.localScale;
-        actor = GetComponentInParent<Actor>();
         //actor.OnCrouch.AddListener(HandleCrouch);
         //actor.OnStand.AddListener(HandleStand);
         actor.OnDeath.AddListener(SwapToRagdoll);
@@ -38,8 +31,12 @@ public class ActorModel : MonoBehaviour
 
     public void UpdateVelocityBasedAnimations(Vector3 velocity)
     {
-        ragAnim.SetFloat("VerticalAxis", Vector3.Dot(velocity, transform.forward));
-        ragAnim.SetFloat("HorizontalAxis", Vector3.Dot(velocity, transform.right));
+        float vert = Vector3.Dot(velocity, transform.forward);
+        float horiz = Vector3.Dot(velocity, transform.right);
+
+        ragAnim.SetFloat("Velocity", velocity.magnitude);
+        ragAnim.SetFloat("VerticalAxis", vert);
+        ragAnim.SetFloat("HorizontalAxis", horiz);
     }
 
     private void SwapToRagdoll()

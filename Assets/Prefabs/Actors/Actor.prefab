@@ -997,9 +997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2c82d76dae24ba28e00f81f744d601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 4404756533418901247}
   ragdoll: {fileID: 98250561036065362}
-  model: {fileID: 0}
-  modelAnim: {fileID: 0}
   ragAnim: {fileID: 2304735100738089291}
 --- !u!1 &6904973392823136998
 GameObject:

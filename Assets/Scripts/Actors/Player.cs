@@ -90,23 +90,38 @@ public class Player : MonoBehaviour
 		retPos.y = transform.position.y;
 		actor.UpdateActorRotation(retPos);
 
-		// Movement inputs
-		if (Input.GetKey(KeyCode.W))
+		if (actor.state[Actor.State.Sprinting])
 		{
-			actor.Move(Vector3.forward + Vector3.right, false);
+			// only go forward if sprinting
+			actor.Move(transform.forward, false);
 		}
-		if (Input.GetKey(KeyCode.S))
+		else
 		{
-			actor.Move(-Vector3.forward - Vector3.right, false);
+			Vector3 moveDir = Vector3.zero;
+			// Movement inputs
+			if (Input.GetKey(KeyCode.W))
+			{
+				moveDir += Vector3.forward + Vector3.right;
+			}
+			if (Input.GetKey(KeyCode.S))
+			{
+				moveDir += -Vector3.forward - Vector3.right;
+			}
+			if (Input.GetKey(KeyCode.A))
+			{
+				moveDir += -Vector3.right + Vector3.forward;
+			}
+			if (Input.GetKey(KeyCode.D))
+			{
+				moveDir += Vector3.right - Vector3.forward;
+			}
+
+			moveDir = Vector3.ClampMagnitude(moveDir, 1f);
+
+			actor.Move(moveDir, false);
 		}
-		if (Input.GetKey(KeyCode.A))
-		{
-			actor.Move(-Vector3.right + Vector3.forward, false);
-		}
-		if (Input.GetKey(KeyCode.D))
-		{
-			actor.Move(Vector3.right - Vector3.forward, false);
-		}
+
+		Debug.Log(GetComponent<Rigidbody>().velocity.magnitude);
 	}
 
     private void OnDestroy()

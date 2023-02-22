@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitPoints: 15
   recoilControl: 10
-  slowWalkMoveForce: 8
-  fastWalkMoveForce: 15
-  sprintMoveForce: 24
+  slowWalkMoveForce: 16
+  fastWalkMoveForce: 30
+  sprintMoveForce: 48
   rotationTorque: 30
   moveToCoverSpeed: 10
   coverSensorDistance: 1.25
