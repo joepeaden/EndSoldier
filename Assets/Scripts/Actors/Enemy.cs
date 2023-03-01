@@ -1,7 +1,7 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using System.Linq;
 
 // Author: Joseph Peaden
 
@@ -49,23 +49,73 @@ public class Enemy : MonoBehaviour, ISetActive
     {
 		if (actor.IsAlive && target != null)
 		{
-			// just disabling chasing for now
-			//actor.Move(target.transform.position);
-
-			actor.UpdateActorRotation(target.transform.position);
-
-			if (actor.GetEquippedWeaponAmmo() <= 0)
+			if (TargetInRangeAndLOS())
 			{
-				actor.AttemptReload();
+				actor.StopMoving();
+
+				actor.UpdateActorRotation(target.transform.position);
+
+				if (actor.GetEquippedWeaponAmmo() <= 0)
+				{
+					actor.AttemptReload();
+				}
+				else if (!pauseFiring)
+				{
+					int numToFire = (int)Random.Range(minBurstFrames, maxBurstFrames);
+
+					StartCoroutine(FireBurst(numToFire));
+				}
 			}
-			else if (!pauseFiring)
+			else
 			{
-				int numToFire = (int) Random.Range(minBurstFrames, maxBurstFrames);
-
-				StartCoroutine(FireBurst(numToFire));
+				actor.Move(target.transform.position);
 			}
 		}
-    }
+	}
+
+	/// <summary>
+	/// Check if the actor's current target is in range and in LOS
+	/// </summary>
+	/// <returns></returns>
+	private bool TargetInRangeAndLOS()
+    {
+		// how to check target type? Maybe could also use for walking to sounds... in which case range would be 0, the exact position to move to
+		// basically make this more generic
+
+		InventoryWeapon weapon = actor.GetEquippedWeapon();
+
+		// cast overlap sphere with radius = range to see if target is possibly in range
+		Collider[] hitColliders = Physics.OverlapSphere(transform.position, weapon.data.range, LayerMask.GetMask("Actors"), QueryTriggerInteraction.Collide);
+		foreach (Collider c in hitColliders.Where(col => col.GetComponent<HitBox>() != null))
+        {
+			HitBox h = c.GetComponent<HitBox>();
+			// if it's the target, then check if have LOS of target
+			if (h.GetActor().gameObject == target)
+            {
+				Ray r = new Ray(transform.position, (target.transform.position - transform.position));
+				RaycastHit[] hits = Physics.RaycastAll(r, weapon.data.range);
+
+				RaycastHit[] targetHits = hits.Where(hit => hit.collider.GetComponent<HitBox>() != null && hit.collider.GetComponent<HitBox>().GetActor().gameObject == target).ToArray();
+				RaycastHit[] blockHits = hits.Where(hit => hit.collider.gameObject.layer == (int) IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture).ToArray();
+				
+				// should only be one or zero targetHits. Check if any blocking hit is closer than the target, if so, can't shoot 
+				foreach (RaycastHit targetHit in targetHits)
+                {
+					foreach (RaycastHit blockHit in blockHits)
+					{
+						if (blockHit.distance < targetHit.distance)
+						{
+							return false;
+						}
+					}
+				}
+
+				return targetHits.Count() > 0;
+            }
+        }
+
+		return false;
+	}
 
 	public void Activate()
     {

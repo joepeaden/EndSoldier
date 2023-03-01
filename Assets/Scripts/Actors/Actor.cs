@@ -83,6 +83,8 @@ public class Actor : MonoBehaviour
 
 	public ActorTeam team;
 
+	private bool isUsingNavAgent;
+
 	private void Awake()
     {
 		state = new Dictionary<State, bool>()
@@ -113,8 +115,8 @@ public class Actor : MonoBehaviour
 
 	private void LateUpdate()
 	{
-		actorModel.UpdateVelocityBasedAnimations(rigidBody.velocity);
-    }
+		actorModel.UpdateVelocityBasedAnimations(isUsingNavAgent ? navAgent.velocity : rigidBody.velocity);
+	}
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -449,6 +451,8 @@ public class Actor : MonoBehaviour
 	/// <param name="moveVector">If not useNavMesh, direction of movement. If useNavMesh, the destination of the agent.</param>
 	public void Move(Vector3 moveVector, bool useNavMesh = true)
     {
+		isUsingNavAgent = useNavMesh;
+
 		if (moveVector != Vector3.zero)
 		{
 			if (useNavMesh)
@@ -473,14 +477,23 @@ public class Actor : MonoBehaviour
                 AttemptExitCover();
             }
         }
+		else if (useNavMesh)
+        {
+			navAgent.destination = transform.position;
+        }
 	}
 
-	/// <summary>
-	/// Take a specified amount of damage.
-	/// </summary>
-	/// <param name="damage">Damage to deal to this actor.</param>
+    public void StopMoving()
+    {
+		Move(Vector3.zero);
+    }
+
+    /// <summary>
+    /// Take a specified amount of damage.
+    /// </summary>
+    /// <param name="damage">Damage to deal to this actor.</param>
     /// <returns>If the projectile should </returns>
-	public bool GetHit(int damage)
+    public bool GetHit(int damage)
 	{
 		bool gotHit = true;
 		if (!IsAlive || isInvincible)
@@ -524,6 +537,7 @@ public class Actor : MonoBehaviour
 
 		// disable components
 		navAgent.enabled = false;
+		mainCollider.enabled = false;
 
 		audioSource.clip = data.deathSound2;
 		audioSource.Play();

@@ -7,6 +7,7 @@ public class WeaponData : ScriptableObject
 	public GameObject projectile;
 	public float recoil;
 	public float attackInterval;
+	public int range;
 	public int ammoCapacity;
 	/// <summary>
     /// Refers to total amount of ammo
@@ -19,4 +20,5 @@ public class WeaponData : ScriptableObject
 	public bool isAutomatic;
 	public GameObject modelPrefab;
 	public Vector3 muzzlePosition;
+
 }

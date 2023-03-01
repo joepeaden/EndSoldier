@@ -29,4 +29,9 @@ public class HitBox : MonoBehaviour
 	    transform.localScale = originalDimensions;
 	    transform.localPosition = new Vector3(0f, 0.5f, 0f);
 	}
+
+    public Actor GetActor()
+    {
+        return actor;
+    }
 }
