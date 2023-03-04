@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 /// <summary>
 /// Class for UI that is specific to in-level gameplay.
@@ -11,6 +12,9 @@ public class GameplayUI : MonoBehaviour
     private static GameplayUI _instance;
 
     [SerializeField] private RectTransform reloadBarTransform;
+    [SerializeField] private TMP_Text ammoTxt;
+    [SerializeField] private TMP_Text waveTxt;
+    [SerializeField] private TMP_Text pointsTxt;
 
     private void Awake()
     {
@@ -23,6 +27,48 @@ public class GameplayUI : MonoBehaviour
         {
             _instance = this;
         }
+
+        GameManager.OnPrepForNextWave.AddListener(StartNewWaveCoroutine);
+    }
+
+    private void Update()
+    {
+        (int loaded, int total) = GameManager.Instance.GetPlayerScript().GetAmmo();
+        ammoTxt.text = "Ammo: " + loaded + "/" + total;
+    }
+
+    private void StartNewWaveCoroutine()
+    {
+        StartCoroutine(WaveTextFade());
+    }
+
+    private IEnumerator WaveTextFade()
+    {
+        float timePassed = 0f;
+        waveTxt.alpha = 0f;
+        waveTxt.gameObject.SetActive(true);
+
+        while (timePassed <  1f)
+        {
+            float percent = timePassed / 1f;
+            waveTxt.alpha = percent;
+
+            timePassed += Time.deltaTime;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        while (timePassed > 0f)
+        {
+            float percent = timePassed / 1f;
+            waveTxt.alpha = percent;
+
+            timePassed -= Time.deltaTime;
+            yield return null;
+        }
+
+        waveTxt.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -56,5 +102,10 @@ public class GameplayUI : MonoBehaviour
         }
 
         reloadBarTransform.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnPrepForNextWave.RemoveListener(StartNewWaveCoroutine);
     }
 }

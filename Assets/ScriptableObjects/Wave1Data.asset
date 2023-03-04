@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3eb87394f8036b4e802fb4d7c71e66c, type: 3}
+  m_Name: Wave1Data
+  m_EditorClassIdentifier: 
+  pistolEnemies: 0
+  pistolEnemyChance: 0
+  rifleEnemies: 0
+  rifleEnemyChance: 0
+  enemyPrefab: {fileID: 4385406812283568742, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
+  enemyCount: 5
+  minSpawnTime: 5
+  maxSpawnTime: 10

@@ -120,13 +120,16 @@ public class Player : MonoBehaviour
 
 			actor.Move(moveDir, false);
 		}
-
-		Debug.Log(GetComponent<Rigidbody>().velocity.magnitude);
 	}
 
     private void OnDestroy()
     {
 		actor.OnDeath.RemoveListener(HandlePlayerDeath);
+    }
+
+	public (int, int) GetAmmo()
+    {
+		return (actor.GetEquippedWeapon().amountLoaded, actor.GetEquippedWeapon().amount);
     }
 
     private void HandlePlayerDeath()

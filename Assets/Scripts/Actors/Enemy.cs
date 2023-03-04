@@ -34,15 +34,20 @@ public class Enemy : MonoBehaviour, ISetActive
 		actor.team = Actor.ActorTeam.Enemy;
     }
 
-    private void Start()
+	private void Start()
 	{
 		actor.AddCoverListener(ActorHasPotentialCover);
 		actor.OnDeath.AddListener(HandleEnemyDeath);
 
 		if (activateOnStart)
-        {
+		{
 			Activate();
-        }
+		}
+
+		if (actor.IsAlive)
+		{
+			GameManager.totalEnemiesAlive++;
+		}
 	}
 
     private void Update()
@@ -159,6 +164,11 @@ public class Enemy : MonoBehaviour, ISetActive
 	private void HandleEnemyDeath()
     {
 		StopAllCoroutines();
+
+		if (!actor.IsAlive)
+		{
+			GameManager.totalEnemiesAlive--;
+		}
 
 		// for now just make him look ded.
 		//Quaternion q = new Quaternion();
