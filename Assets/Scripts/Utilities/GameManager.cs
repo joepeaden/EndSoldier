@@ -59,6 +59,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // prep first wave
+        StartCoroutine(BeginFirstWave());
+    }
+
+    private IEnumerator BeginFirstWave()
+    {
+        yield return new WaitForSeconds(5f);
         StartCoroutine(WaitForWaveDelay());
     }
 

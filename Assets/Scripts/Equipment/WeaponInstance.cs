@@ -15,11 +15,12 @@ public class WeaponInstance : MonoBehaviour
     [SerializeField] private GameObject aimGlow;
     [SerializeField] private LineRenderer line;
     [SerializeField] private Transform gunModelParent;
-    [SerializeField] private bool infiniteBackupAmmo;
     [SerializeField] private Transform muzzle;
 
-    // debug options
-    [SerializeField] private bool infiniteAmmo;
+    /// <summary>
+    /// Just a debug option.
+    /// </summary>
+    //[SerializeField] private bool infiniteAmmo;
 
     // the actor who is using this weapon
     private Actor actorOperator;
@@ -158,10 +159,7 @@ public class WeaponInstance : MonoBehaviour
 
     private void LaunchAttack(float actorRecoilControl)
     {
-        if (!infiniteAmmo)
-        {
-            ammoInWeapon--;
-        }
+        ammoInWeapon--;
         readyToAttack = false;
 
         // need to put bullet at end of gun barrel so it doesn't hit player
@@ -244,7 +242,6 @@ public class WeaponInstance : MonoBehaviour
     public bool StartReload()
     {
         readyToAttack = false;
-        ammoInWeapon = 0;
 
         if (!reloading)
         {
@@ -269,19 +266,24 @@ public class WeaponInstance : MonoBehaviour
 
         audioSource.Stop();
 
-        bool fullLoad = (inventoryWeapon.amount - inventoryWeapon.data.ammoCapacity) >= 0;
-        if (fullLoad || infiniteBackupAmmo)
+        // just some mafths. first IF is if there's not enough ammo for a full mag left, second is otherwise.
+        int amountNeeded = inventoryWeapon.data.ammoCapacity - ammoInWeapon;
+        inventoryWeapon.amount = inventoryWeapon.amount - amountNeeded;
+        if (inventoryWeapon.amount < 0)
         {
-            ammoInWeapon = inventoryWeapon.data.ammoCapacity;
-            if (!infiniteBackupAmmo)
-            {
-                inventoryWeapon.amount -= inventoryWeapon.data.ammoCapacity;
-            }
+            inventoryWeapon.amount = 0;
+            ammoInWeapon = inventoryWeapon.data.ammoCapacity + inventoryWeapon.amount;
+        
         }
         else
         {
-            ammoInWeapon = inventoryWeapon.amount;
-            inventoryWeapon.amount = 0;
+            ammoInWeapon = inventoryWeapon.data.ammoCapacity;
+        }
+            
+        // if infinite ammo or it's not the player, don't deplete backup ammo.
+        if (inventoryWeapon.data.hasInfiniteBackupAmmo|| !actorOperator.IsPlayer)
+        {
+            inventoryWeapon.amount = inventoryWeapon.data.totalAmount;
         }
 
         readyToAttack = true;

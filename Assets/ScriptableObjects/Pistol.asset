@@ -26,3 +26,4 @@ MonoBehaviour:
   isAutomatic: 0
   modelPrefab: {fileID: 100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
   muzzlePosition: {x: 0, y: -0.169, z: 0.482}
+  hasInfiniteBackupAmmo: 1

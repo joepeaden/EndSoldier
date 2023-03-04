@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Events;
 
 /// <summary>
 /// Controller for the player, also handles a few player specific things like death.
 /// </summary>
 public class Player : MonoBehaviour
 {
+	public UnityEvent<InventoryWeapon> OnSwitchWeapons = new UnityEvent<InventoryWeapon>();
+
 	private Actor actor;
 	private Transform reticle;
 	private bool triggerPull;
@@ -78,8 +81,12 @@ public class Player : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Space))
         {
-			actor.AttemptSwitchWeapons();
-        }
+			bool result = actor.AttemptSwitchWeapons();
+			if (result == true)
+			{
+				OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
+			}
+		}
 	}
 
     private void FixedUpdate()
@@ -127,9 +134,21 @@ public class Player : MonoBehaviour
 		actor.OnDeath.RemoveListener(HandlePlayerDeath);
     }
 
+	public Inventory GetInventory()
+    {
+		return actor.GetInventory();
+    }
+
+	/// <summary>
+	/// Get the ammo and max ammo of the player's weapon
+	/// </summary>
+	/// <returns>2 integers: the weapon's loaded ammo, and the total backup ammo. If infinite backup, backup val will be int.MinValue</returns>
 	public (int, int) GetAmmo()
     {
-		return (actor.GetEquippedWeapon().amountLoaded, actor.GetEquippedWeapon().amount);
+		int totalAmmo = actor.GetEquippedWeapon().data.hasInfiniteBackupAmmo ? int.MinValue : actor.GetEquippedWeapon().amount;
+		int currentAmmo = actor.GetEquippedWeaponAmmo();
+
+		return (currentAmmo, totalAmmo);
     }
 
     private void HandlePlayerDeath()

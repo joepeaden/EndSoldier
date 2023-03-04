@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.Events;
 
 [RequireComponent(typeof(Actor))]
 public class Inventory : MonoBehaviour
 {
+    //public UnityEvent
+
     [SerializeField] InventoryItemDataStorage dataStorage;
     [SerializeField] WeaponInstance weaponInstance;
     // temporary. eventually replace with dropdown for StartingWeapon
@@ -55,11 +58,12 @@ public class Inventory : MonoBehaviour
                     break;
                 case "RIFLE":
                     weapons.Add((InventoryWeapon)item);
-                    weaponInstance.UpdateWeapon((InventoryWeapon)item);
+                    AttemptSwitchWeapons();
+
                     break;
                 case "PISTOL":
                     weapons.Add((InventoryWeapon)item);
-                    weaponInstance.UpdateWeapon((InventoryWeapon)item);
+                    AttemptSwitchWeapons();
                     break;
             }
 
@@ -106,7 +110,7 @@ public class Inventory : MonoBehaviour
 
     public bool AttemptSwitchWeapons()
     {
-        if (weaponInstance != null && weapons.Count > 1)
+        if (weaponInstance != null && weapons.Count >= 1)
         {
             currentWeaponIndex += 1;
             if (currentWeaponIndex >= weapons.Count)

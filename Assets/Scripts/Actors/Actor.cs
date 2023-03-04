@@ -197,7 +197,7 @@ public class Actor : MonoBehaviour
     {
 		if (inventory != null)
         {
-			inventory.AttemptSwitchWeapons();
+			return inventory.AttemptSwitchWeapons();
         }
 
 		return false;
@@ -486,6 +486,11 @@ public class Actor : MonoBehaviour
     public void StopMoving()
     {
 		Move(Vector3.zero);
+    }
+
+    public Inventory GetInventory()
+    {
+        return inventory;
     }
 
     /// <summary>

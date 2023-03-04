@@ -12,9 +12,12 @@ public class GameplayUI : MonoBehaviour
     private static GameplayUI _instance;
 
     [SerializeField] private RectTransform reloadBarTransform;
+    [SerializeField] private TMP_Text curntWpnTxt;
     [SerializeField] private TMP_Text ammoTxt;
     [SerializeField] private TMP_Text waveTxt;
     [SerializeField] private TMP_Text pointsTxt;
+
+    private Player player;
 
     private void Awake()
     {
@@ -31,10 +34,28 @@ public class GameplayUI : MonoBehaviour
         GameManager.OnPrepForNextWave.AddListener(StartNewWaveCoroutine);
     }
 
+    private void Start()
+    {
+        player = GameManager.Instance.GetPlayerScript();
+        player.OnSwitchWeapons.AddListener(UpdateCurrentWeapon);
+
+        // missed the UpdateCurrentWeapon initial event, so just update it.
+        UpdateCurrentWeapon(player.GetInventory().GetEquippedWeapon());
+    }
+
     private void Update()
     {
-        (int loaded, int total) = GameManager.Instance.GetPlayerScript().GetAmmo();
-        ammoTxt.text = "Ammo: " + loaded + "/" + total;
+        (int loaded, int total) = player.GetAmmo();
+
+        // int.MinValue means that the gun has infinite backup ammo (pistol)
+        string totalAmmoString = (total == int.MinValue) ? "INF" : total.ToString();
+        
+        ammoTxt.text = "Ammo: " + loaded + "/" + totalAmmoString;
+    }
+
+    private void UpdateCurrentWeapon(InventoryWeapon weapon)
+    {
+        curntWpnTxt.text = weapon.data.displayName;
     }
 
     private void StartNewWaveCoroutine()
@@ -107,5 +128,6 @@ public class GameplayUI : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.OnPrepForNextWave.RemoveListener(StartNewWaveCoroutine);
+        player.OnSwitchWeapons.RemoveListener(UpdateCurrentWeapon);
     }
 }

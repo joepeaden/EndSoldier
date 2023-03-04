@@ -20,5 +20,5 @@ public class WeaponData : ScriptableObject
 	public bool isAutomatic;
 	public GameObject modelPrefab;
 	public Vector3 muzzlePosition;
-
+	public bool hasInfiniteBackupAmmo;
 }
