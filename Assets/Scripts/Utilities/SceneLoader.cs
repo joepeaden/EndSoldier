@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class SceneLoader : MonoBehaviour
 {
+    //public static UnityEvent OnGameOverSceneLoaded = new UnityEvent();
+
     public static SceneLoader Instance { get { return _instance; } }
     private static SceneLoader _instance;
 
@@ -27,10 +28,25 @@ public class SceneLoader : MonoBehaviour
         }
 
         _instance = this;
+
+        //    SceneManager.sceneLoaded += HandleSceneLoaded;
+        //}
+
+        //private void OnDestroy()
+        //{
+        //    SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
 
     public void LoadScene(SceneList sceneToLoad, bool additive)
     {
         SceneManager.LoadScene(sceneToLoad.ToString(), additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
     }
+
+    //private void HandleSceneLoaded(Scene s, LoadSceneMode m)
+    //{
+    //    if (s.name == "FailMenu")
+    //    {
+    //        OnGameOverSceneLoaded.Invoke();
+    //    }
+    //}
 }

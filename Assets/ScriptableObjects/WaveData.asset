@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3eb87394f8036b4e802fb4d7c71e66c, type: 3}
-  m_Name: Wave2Data
+  m_Name: WaveData
   m_EditorClassIdentifier: 
-  pistolEnemies: 0
-  pistolEnemyChance: 0
-  rifleEnemies: 0
-  rifleEnemyChance: 0
-  enemyPrefab: {fileID: 4385406812283568742, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
-  enemyCount: 10
+  enemyPistolIntroWave: 0
+  enemyRifleIntroWave: 2
+  enemyPistolPrefab: {fileID: 4385406812283568742, guid: 291dbce7e5a8e024d99ab897165b2a95, type: 3}
+  enemyRiflePrefab: {fileID: 369857449208888106, guid: ea8f386e5a32d4b5dbf337cd3c94b154, type: 3}
+  baseEnemyCount: 2
+  maxEnemyCount: 0
+  wavePopulationMultiplier: 2
   minSpawnTime: 5
   maxSpawnTime: 10
+  waveDelay: 1
+  firstWaveDelay: 5

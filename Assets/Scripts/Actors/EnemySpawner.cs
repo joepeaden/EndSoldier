@@ -1,19 +1,34 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public static UnityEvent OnStopSpawning = new UnityEvent(); 
-
-    public static WaveData data;
     public static int waveEnemiesSpawned;
     public static bool shouldSpawn;
     public Transform enemiesParent;
 
+    private static int waveNumber;
+
+    #region Current Wave Variables
+    /// <summary>
+    /// how many enemies that should be spawned this wave
+    /// </summary>
+    private static int currentEnemyCountGoal;
+    /// <summary>
+    /// The current list of enemy prefabs to be chosen from (based on current wave)
+    /// </summary>
+    private static List<GameObject> spawnableEnemyPrefabs = new List<GameObject>();
+
+    #endregion
+
+    private static WaveData data;
+
     public void Start()
     {
+        data = WaveManager.Instance.GetWaveData();
+
         StartCoroutine("BeginSpawning");
     }
 
@@ -23,27 +38,19 @@ public class EnemySpawner : MonoBehaviour
         {
             while (shouldSpawn)
             {
-                if (waveEnemiesSpawned >= data.enemyCount)
-                {
-                    shouldSpawn = false;
-                    OnStopSpawning.Invoke();
-                    break;
-                }
-
                 float waitTime = Random.Range(data.minSpawnTime, data.maxSpawnTime);
                 yield return new WaitForSeconds(waitTime);
 
-                GameObject enemyGO = Instantiate(data.enemyPrefab, transform.position, Quaternion.identity, enemiesParent);
-                Enemy enemyScript = enemyGO.GetComponent<Enemy>();
-                if (enemyScript)
+                int randomEnemyIndex = Random.Range(0, spawnableEnemyPrefabs.Count);
+
+                // here because it's after the waitforseconds, so should be no accidental spawns after over the limit
+                if (waveEnemiesSpawned >= currentEnemyCountGoal)
                 {
-                    // should decide what kind of gear they have based on data
-                    ;
+                    shouldSpawn = false;
+                    break;
                 }
-                else
-                {
-                    Debug.LogWarning("No enemy script found on enemy " + enemyGO.name);
-                }
+            
+                Instantiate(spawnableEnemyPrefabs[randomEnemyIndex], transform.position, Quaternion.identity, enemiesParent);
 
                 waveEnemiesSpawned++;
             }
@@ -52,11 +59,37 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    public static void NextWave(WaveData newData)
+    public static void NextWave()
     {
         Debug.Log("Starting next wave!");
-        data = newData;
+        waveNumber++;
+
+        UpdateWaveVariables();
+
         waveEnemiesSpawned = 0;
         shouldSpawn = true;
+    }
+
+    private static void UpdateWaveVariables()
+    {
+        // Increase enemy count
+        if (waveNumber == 1)
+        {
+            currentEnemyCountGoal = data.baseEnemyCount;
+        }
+        else
+        {
+            currentEnemyCountGoal = (int)(data.baseEnemyCount * data.wavePopulationMultiplier * (waveNumber - 1));
+        }
+
+        // Add whatever enemies are appropriate based on the wave count
+        if (waveNumber >= data.enemyPistolIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyPistolPrefab))
+        {
+            spawnableEnemyPrefabs.Add(data.enemyPistolPrefab);
+        }
+        if (waveNumber >= data.enemyRifleIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyRiflePrefab))
+        {
+            spawnableEnemyPrefabs.Add(data.enemyRiflePrefab);
+        }
     }
 }

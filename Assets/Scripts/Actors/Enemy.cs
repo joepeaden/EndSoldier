@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
-// Author: Joseph Peaden
+using UnityEngine.Events;
 
 /// <summary>
 /// Base class for enemy actors.
@@ -14,6 +13,11 @@ using System.Linq;
 /// </remarks>
 public class Enemy : MonoBehaviour, ISetActive
 {
+	public static UnityEvent<int> OnEnemyKilled = new UnityEvent<int>();
+
+	[SerializeField]
+	private EnemyData data;
+
 	// scriptable object time...
 	public float shootPauseTimeMax;
 	public float shootPauseTimeMin;
@@ -25,10 +29,10 @@ public class Enemy : MonoBehaviour, ISetActive
 	public bool activateOnStart;
 
 	private Actor actor;
-	public GameObject target;
 	private bool pauseFiring;
+	private GameObject target;
 
-    private void Awake()
+	private void Awake()
     {
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Enemy;
@@ -46,7 +50,7 @@ public class Enemy : MonoBehaviour, ISetActive
 
 		if (actor.IsAlive)
 		{
-			GameManager.totalEnemiesAlive++;
+			WaveManager.totalEnemiesAlive++;
 		}
 	}
 
@@ -167,17 +171,10 @@ public class Enemy : MonoBehaviour, ISetActive
 
 		if (!actor.IsAlive)
 		{
-			GameManager.totalEnemiesAlive--;
+			WaveManager.totalEnemiesAlive--;
 		}
 
-		// for now just make him look ded.
-		//Quaternion q = new Quaternion();
-		//q.eulerAngles = new Vector3(0, 0, 90);
-		//transform.rotation = q;
-
-		// remove collider and set rigidbody to no grav so no collisions
-		//GetComponent<Rigidbody>().useGravity = false;
-		//GetComponent<Collider>().enabled = false;
+		OnEnemyKilled.Invoke(data.scoreValue);
 	}
 
 	private void ActorHasPotentialCover()

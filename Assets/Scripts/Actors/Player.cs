@@ -9,6 +9,7 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
 	public UnityEvent<InventoryWeapon> OnSwitchWeapons = new UnityEvent<InventoryWeapon>();
+	public UnityEvent OnPlayerDeath = new UnityEvent();
 
 	private Actor actor;
 	private Transform reticle;
@@ -153,14 +154,8 @@ public class Player : MonoBehaviour
 
     private void HandlePlayerDeath()
 	{
-		// for now just make him look ded.
-		Quaternion q = new Quaternion();
-		q.eulerAngles = new Vector3(0, 0, 90);
-		transform.rotation = q;
-
 		this.enabled = false;
-
-		SceneLoader.Instance.LoadScene(SceneLoader.SceneList.FailMenu, true);
+		OnPlayerDeath.Invoke();
 	}
 
 	private void HandleGetHit()

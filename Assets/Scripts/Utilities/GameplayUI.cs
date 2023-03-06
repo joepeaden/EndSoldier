@@ -31,7 +31,8 @@ public class GameplayUI : MonoBehaviour
             _instance = this;
         }
 
-        GameManager.OnPrepForNextWave.AddListener(StartNewWaveCoroutine);
+        WaveManager.OnPrepForNextWave.AddListener(StartNewWaveCoroutine);
+        Scoreboard.OnScoreUpdated.AddListener(UpdateScore);
     }
 
     private void Start()
@@ -45,12 +46,20 @@ public class GameplayUI : MonoBehaviour
 
     private void Update()
     {
-        (int loaded, int total) = player.GetAmmo();
+        if (player)
+        {
+            (int loaded, int total) = player.GetAmmo();
 
-        // int.MinValue means that the gun has infinite backup ammo (pistol)
-        string totalAmmoString = (total == int.MinValue) ? "INF" : total.ToString();
-        
-        ammoTxt.text = "Ammo: " + loaded + "/" + totalAmmoString;
+            // int.MinValue means that the gun has infinite backup ammo (pistol)
+            string totalAmmoString = (total == int.MinValue) ? "INF" : total.ToString();
+
+            ammoTxt.text = "Ammo: " + loaded + "/" + totalAmmoString;
+        }
+    }
+
+    private void UpdateScore(int totalPoints)
+    {
+        pointsTxt.text = "Points: $" + totalPoints + ".00";
     }
 
     private void UpdateCurrentWeapon(InventoryWeapon weapon)
@@ -127,7 +136,8 @@ public class GameplayUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.OnPrepForNextWave.RemoveListener(StartNewWaveCoroutine);
+        WaveManager.OnPrepForNextWave.RemoveListener(StartNewWaveCoroutine);
         player.OnSwitchWeapons.RemoveListener(UpdateCurrentWeapon);
+        Scoreboard.OnScoreUpdated.RemoveListener(UpdateScore);
     }
 }
