@@ -16,6 +16,20 @@ public class HitBox : MonoBehaviour
         actor = GetComponentInParent<Actor>();
         actor.OnCrouch.AddListener(HandleCrouch);
         actor.OnStand.AddListener(HandleStand);
+        actor.OnDeath.AddListener(HandleDeath);
+    }
+
+    private void OnDestroy()
+    {
+        actor.OnDeath.RemoveListener(HandleDeath);
+    }
+
+    /// <summary>
+    /// Disables hit box on actor death.
+    /// </summary>
+    private void HandleDeath()
+    {
+        gameObject.SetActive(false);
     }
 
     private void HandleCrouch()

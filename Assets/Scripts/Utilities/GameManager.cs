@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
 
         player = playerGO.GetComponent<Player>();
         player.OnPlayerDeath.AddListener(GameOver);
+
+        Cursor.visible = false;
     }
 
     public void OnDestroy()
@@ -84,6 +86,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        Cursor.visible = true;
         SceneLoader.Instance.LoadScene(SceneLoader.SceneList.FailMenu, true);
     }
 }

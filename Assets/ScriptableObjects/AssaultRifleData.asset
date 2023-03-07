@@ -25,4 +25,5 @@ MonoBehaviour:
   reloadTime: 2
   isAutomatic: 1
   modelPrefab: {fileID: 100000, guid: 38622e9fc6b6f2949a6145475324f80e, type: 3}
-  muzzlePosition: {x: 0, y: -0.235, z: 1.718}
+  muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
+  hasInfiniteBackupAmmo: 0

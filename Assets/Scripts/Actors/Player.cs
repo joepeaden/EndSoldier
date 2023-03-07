@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
 		// Normalized direction to shoot the projectile
 		//Vector2 aimVector = (reticle.position - transform.position).normalized;
 		Vector3 retPos = reticle.position;
-		retPos.y = transform.position.y;
+		//retPos.y = transform.position.y;
 		actor.UpdateActorRotation(retPos);
 
 		if (actor.state[Actor.State.Sprinting])

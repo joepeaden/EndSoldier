@@ -13,6 +13,7 @@ TagManager:
   - HealthBar
   - HitBox
   - Walls
+  - WeaponModel
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - IgnoreFurniture
   - Floor
   - IgnoreActors
-  - 
+  - PlayerZoneCollider
   - 
   - 
   - 

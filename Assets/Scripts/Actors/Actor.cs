@@ -186,11 +186,14 @@ public class Actor : MonoBehaviour
 	/// <param name="lookTarget">The target to look at.</param>
 	public void UpdateActorRotation(Vector3 newLookTarget)
 	{
-		lookTarget = newLookTarget;
-		lookTarget.y = 0f;
-		transform.LookAt(lookTarget);
+		//Vector3 rotation = Quaternion.LookRotation(newLookTarget).eulerAngles;
+		////rotation.y = 0f;
 
-		//inventory.
+		//transform.rotation = Quaternion.Euler(rotation);
+
+        newLookTarget.y = transform.position.y;
+        lookTarget = newLookTarget;
+        transform.LookAt(lookTarget);
 	}
 
 	public bool AttemptSwitchWeapons()

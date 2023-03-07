@@ -9,6 +9,8 @@ using UnityEngine;
 /// </summary>
 public class WeaponInstance : MonoBehaviour
 {
+    const string WEAPON_MODEL_TAG = "WeaponModel";
+
     // components & child objects
     [SerializeField] private GameObject weaponFlash;
     [SerializeField] private AudioSource audioSource;
@@ -99,11 +101,16 @@ public class WeaponInstance : MonoBehaviour
         ammoInWeapon = weapon.amountLoaded;
         audioSource.clip = weapon.data.attackSound;
 
+        // delete only weapon models from the gun parent
         for (int i = 0; i < gunModelParent.childCount; i++)
         {
-            Destroy(gunModelParent.GetChild(i).gameObject);
+            if (gunModelParent.GetChild(i).gameObject.CompareTag(WEAPON_MODEL_TAG))
+            {
+                Destroy(gunModelParent.GetChild(i).gameObject);
+            }
         }
-        Instantiate(weapon.data.modelPrefab, gunModelParent);
+        GameObject weapnGO = Instantiate(weapon.data.modelPrefab, gunModelParent);
+        weapnGO.tag = WEAPON_MODEL_TAG;
 
         muzzle.localPosition = weapon.data.muzzlePosition;
 
@@ -118,18 +125,16 @@ public class WeaponInstance : MonoBehaviour
         while (aiming)
         {
             RaycastHit hit;
-            Ray ray = new Ray(transform.position, transform.forward);
+            Ray ray = new Ray(muzzle.position, muzzle.forward);
 
-            // get opposite of projectile layer mask
-            // int layerMask = ~LayerMask.GetMask("Projectiles");
-            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString(), IgnoreLayerCollisions.CollisionLayers.IgnoreFurniture.ToString());
+            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString(), IgnoreLayerCollisions.CollisionLayers.IgnoreFurniture.ToString(), "PlayerZoneCollider");
             
-            if (Physics.Raycast(ray, out hit, 1000, layerMask))//, .GetMask("tiles").Projec))
+            if (Physics.Raycast(ray, out hit, int.MaxValue, layerMask))
             {
                 aimGlow.transform.position = hit.point;
          
                 line.enabled = true;
-                line.SetPosition(0, transform.position);
+                line.SetPosition(0, muzzle.position);
                 line.SetPosition(1, hit.point);
             }
 
@@ -166,7 +171,7 @@ public class WeaponInstance : MonoBehaviour
         //Vector3 projectileSpawnPosition = transform.position;
         //projectileSpawnPosition += transform.forward * 1.5f;
 
-        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, transform.rotation).GetComponent<Projectile>();
+        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, muzzle.rotation).GetComponent<Projectile>();
         projectile.SetOwningActor(actorOperator);
 
         StopCoroutine(Flash());
