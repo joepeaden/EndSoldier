@@ -52,12 +52,14 @@ public class WeaponInstance : MonoBehaviour
 
     private void LateUpdate()
     {
+        // this was here to allow actors to aim at crouching enemies. It caused problems though so just removing it for now.
+
         //Vector3 target = actorOperator.target;//Vector3.right;//transform.worldToLocalMatrix.MultiplyVector(transform.forward);
         //target.y = actorOperator.lookTarget.y;
-        if (actorOperator.target != null && actorOperator.IsAlive)
-        {
-            transform.LookAt(actorOperator.target);
-        }
+        //if (actorOperator.target != null && actorOperator.IsAlive)
+        //{
+        //    transform.LookAt(actorOperator.target);
+        //}
         //Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 1000f);
 
         //transform.Rotate(Vector3.right, 1);
