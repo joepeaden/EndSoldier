@@ -128,6 +128,11 @@ public class Actor : MonoBehaviour
         }
     }
 
+	public void SetAgentSpeed(float speed)
+    {
+		navAgent.speed = speed;
+    }
+
     public void SetVisibility(bool visible)
     {
 		for (int i = 0; i < transform.childCount; i++)

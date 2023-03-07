@@ -36,6 +36,7 @@ public class Enemy : MonoBehaviour, ISetActive
     {
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Enemy;
+		actor.SetAgentSpeed(data.navAgentSpeed);
     }
 
 	private void Start()

@@ -16,4 +16,6 @@ public class EnemyData : ScriptableObject
 	public float minBurstFrames;
 	public float maxTimeToFindPlayer;
 	public float minTimeToFindPlayer;
+
+	public float navAgentSpeed;
 }
