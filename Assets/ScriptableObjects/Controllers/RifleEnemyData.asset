@@ -21,3 +21,4 @@ MonoBehaviour:
   minBurstFrames: 0
   maxTimeToFindPlayer: 0
   minTimeToFindPlayer: 0
+  navAgentSpeed: 5
