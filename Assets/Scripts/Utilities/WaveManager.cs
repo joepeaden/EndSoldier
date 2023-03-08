@@ -11,11 +11,14 @@ public class WaveManager : MonoBehaviour
     public static WaveManager Instance { get { return _instance; } }
     private static WaveManager _instance;
 
+    public static UnityEvent OnWaveEnd = new UnityEvent();
     public static UnityEvent OnPrepForNextWave = new UnityEvent();
     public static int totalEnemiesAlive;
 
     [SerializeField]
     private WaveData waveData;
+
+    private bool shouldStartNextWave;
 
     private void Start()
     {
@@ -29,47 +32,61 @@ public class WaveManager : MonoBehaviour
             _instance = this;
         }
 
+        GameplayUI.OnRewardsPicked.AddListener(HandleRewardsPicked);
+
         // prep first wave
         StartCoroutine(BeginFirstWave());
+    }
+
+    /// <summary>
+    /// Handle rewards picked event.
+    /// </summary>
+    /// <param name="rewardKey">Thank you, I don't use this param, goodbye.</param>
+    private void HandleRewardsPicked(string rewardKey)
+    {
+        shouldStartNextWave = true;
     }
 
     private IEnumerator BeginFirstWave()
     {
         yield return new WaitForSeconds(waveData.firstWaveDelay);
+        shouldStartNextWave = true;
         StartCoroutine(WaitForWaveDelay());
     }
 
     private IEnumerator WaitForWaveDelay()
     {
-        OnPrepForNextWave.Invoke();
-        yield return new WaitForSeconds(waveData.waveDelay);
-
-        EnemySpawner.NextWave();
-
-        // wait until something is spawned before going to next wave
-        yield return new WaitUntil(() => totalEnemiesAlive > 0);
-        StartCoroutine("CheckForNextWave");
-    }
-
-    private IEnumerator CheckForNextWave()
-    {
-        while (totalEnemiesAlive > 0)
+        while (true)
         {
-            yield return new WaitForSeconds(1f);
-        }
+            yield return new WaitUntil(() => shouldStartNextWave);
+            shouldStartNextWave = false;
 
-        //if (currentWaveIndex > waves.Length)
-        //{
-        //    Debug.Log("You won!");
-        //}
-        //else
-        //{
-        StartCoroutine(WaitForWaveDelay());
-        //}
+            // launch prep events
+            OnPrepForNextWave.Invoke();
+
+            // start next wave
+            EnemySpawner.NextWave();
+
+            // wait until something is spawned
+            yield return new WaitUntil(() => totalEnemiesAlive > 0);
+
+            // wait until all enemies die before continuing loop
+            while (totalEnemiesAlive > 0)
+            {
+                yield return new WaitForSeconds(1f);
+            }
+
+            OnWaveEnd.Invoke();
+        }
     }
 
     public WaveData GetWaveData()
     {
         return waveData;
+    }
+
+    private void OnDestroy()
+    {
+        GameplayUI.OnRewardsPicked.RemoveListener(HandleRewardsPicked);
     }
 }

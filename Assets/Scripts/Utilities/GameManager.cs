@@ -1,11 +1,14 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Has references to the player.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    public static UnityEvent OnGameOver = new UnityEvent();
+
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
     public static bool isSlowMotion;
@@ -42,8 +45,6 @@ public class GameManager : MonoBehaviour
 
         player = playerGO.GetComponent<Player>();
         player.OnPlayerDeath.AddListener(GameOver);
-
-        Cursor.visible = false;
     }
 
     public void OnDestroy()
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        Cursor.visible = true;
+        OnGameOver.Invoke();
         SceneLoader.Instance.LoadScene(SceneLoader.SceneList.FailMenu, true);
     }
 }

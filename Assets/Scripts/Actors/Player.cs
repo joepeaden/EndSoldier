@@ -31,102 +31,109 @@ public class Player : MonoBehaviour
 
     private void Update()
 	{
-		if (Input.GetKey(KeyCode.LeftShift))
+		if (!GameplayUI.Instance.InMenu())
 		{
-			actor.SetState(Actor.State.Sprinting);
-		}
-		else if (Input.GetButton("Fire2"))
-		{
-			actor.SetState(Actor.State.Aiming);
-			actor.OnActorBeginAim.Invoke();
-		}
-		else
-		{
-			actor.OnActorEndAim.Invoke();
-			actor.SetState(Actor.State.Walking);
-		}
 
-		if (Input.GetButtonDown("Fire1"))
-        {
-			triggerPull = true;
-        }
-		else
-        {
-			triggerPull = false;
-        }		
+			if (Input.GetKey(KeyCode.LeftShift))
+			{
+				actor.SetState(Actor.State.Sprinting);
+			}
+			else if (Input.GetButton("Fire2"))
+			{
+				actor.SetState(Actor.State.Aiming);
+				actor.OnActorBeginAim.Invoke();
+			}
+			else
+			{
+				actor.OnActorEndAim.Invoke();
+				actor.SetState(Actor.State.Walking);
+			}
 
-		if (Input.GetButton("Fire1") && !actor.state[Actor.State.Sprinting])
-		{
-			actor.AttemptAttack(triggerPull);
-        }
+			if (Input.GetButtonDown("Fire1"))
+			{
+				triggerPull = true;
+			}
+			else
+			{
+				triggerPull = false;
+			}
 
-		if (Input.GetKeyDown(KeyCode.R))
-		{
-			actor.AttemptReload();
-        }
+			if (Input.GetButton("Fire1") && !actor.state[Actor.State.Sprinting])
+			{
+				actor.AttemptAttack(triggerPull);
+			}
 
-		if (Input.GetKeyDown(KeyCode.C))
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				actor.AttemptReload();
+			}
+
+			if (Input.GetKeyDown(KeyCode.C))
 			{
 				actor.ToggleCrouch();
 			}
 
-		if (Input.GetKeyDown(KeyCode.E))
-        {
-			actor.AttemptInteraction();
-        }
-
-		if (Input.GetKeyDown(KeyCode.Q))
-        {
-			actor.AttemptUseEquipment();
-        }
-
-		if (Input.GetKeyDown(KeyCode.Space))
-        {
-			bool result = actor.AttemptSwitchWeapons();
-			if (result == true)
+			if (Input.GetKeyDown(KeyCode.E))
 			{
-				OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
+				actor.AttemptInteraction();
+			}
+
+			if (Input.GetKeyDown(KeyCode.Q))
+			{
+				actor.AttemptUseEquipment();
+			}
+
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				bool result = actor.AttemptSwitchWeapons();
+				if (result == true)
+				{
+					OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
+				}
 			}
 		}
 	}
 
     private void FixedUpdate()
     {
-		// Normalized direction to shoot the projectile
-		//Vector2 aimVector = (reticle.position - transform.position).normalized;
-		Vector3 retPos = reticle.position;
-		//retPos.y = transform.position.y;
-		actor.UpdateActorRotation(retPos);
-
-		if (actor.state[Actor.State.Sprinting])
+		if (!GameplayUI.Instance.InMenu())
 		{
-			// only go forward if sprinting
-			actor.Move(transform.forward, false);
-		}
-		else
-		{
-			Vector3 moveDir = Vector3.zero;
-			// Movement inputs
-			if (Input.GetKey(KeyCode.W))
-			{
-				moveDir += Vector3.forward + Vector3.right;
-			}
-			if (Input.GetKey(KeyCode.S))
-			{
-				moveDir += -Vector3.forward - Vector3.right;
-			}
-			if (Input.GetKey(KeyCode.A))
-			{
-				moveDir += -Vector3.right + Vector3.forward;
-			}
-			if (Input.GetKey(KeyCode.D))
-			{
-				moveDir += Vector3.right - Vector3.forward;
-			}
+			// Normalized direction to shoot the projectile
+			//Vector2 aimVector = (reticle.position - transform.position).normalized;
+			Vector3 retPos = reticle.position;
+			//retPos.y = transform.position.y;
+			actor.UpdateActorRotation(retPos);
 
-			moveDir = Vector3.ClampMagnitude(moveDir, 1f);
+			if (actor.state[Actor.State.Sprinting])
+			{
+				// only go forward if sprinting
+				actor.Move(transform.forward, false);
+			}
+			else
+			{
+				Vector3 moveDir = Vector3.zero;
+				// Movement inputs
+				if (Input.GetKey(KeyCode.W))
+				{
+					moveDir += Vector3.forward + Vector3.right;
+				}
+				if (Input.GetKey(KeyCode.S))
+				{
+					moveDir += -Vector3.forward - Vector3.right;
+				}
+				if (Input.GetKey(KeyCode.A))
+				{
+					moveDir += -Vector3.right + Vector3.forward;
+				}
+				if (Input.GetKey(KeyCode.D))
+				{
+					moveDir += Vector3.right - Vector3.forward;
+				}
 
-			actor.Move(moveDir, false);
+				moveDir = Vector3.ClampMagnitude(moveDir, 1f);
+
+				actor.Move(moveDir, false);
+			}
 		}
 	}
 
