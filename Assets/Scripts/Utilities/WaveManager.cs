@@ -42,7 +42,7 @@ public class WaveManager : MonoBehaviour
     /// Handle rewards picked event.
     /// </summary>
     /// <param name="rewardKey">Thank you, I don't use this param, goodbye.</param>
-    private void HandleRewardsPicked(string rewardKey)
+    private void HandleRewardsPicked(ShopItem item)
     {
         shouldStartNextWave = true;
     }

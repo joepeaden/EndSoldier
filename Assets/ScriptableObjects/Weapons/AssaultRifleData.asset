@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: AssaultRifleData
   m_EditorClassIdentifier: 
   displayName: Assault Rifle
+  rewardKey: RIFLE
+  cost: 100
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
   recoil: 1
   attackInterval: 0.075

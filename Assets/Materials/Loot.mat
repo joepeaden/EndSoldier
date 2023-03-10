@@ -20,12 +20,11 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BombLoot
+  m_Name: Loot
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ValidKeywords:
-  - _EMISSION
+  m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 2
+  m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -120,8 +119,8 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.5614007, g: 0.47009614, b: 0.7169812, a: 1}
-    - _Color: {r: 0.5614007, g: 0.47009614, b: 0.7169812, a: 1}
-    - _EmissionColor: {r: 0.27450982, g: 0.25490198, b: 0.25490198, a: 1}
+    - _BaseColor: {r: 0.3962264, g: 0.20438258, b: 0.11027056, a: 1}
+    - _Color: {r: 0.3962264, g: 0.20438258, b: 0.11027056, a: 1}
+    - _EmissionColor: {r: 0.068627454, g: 0.063725494, b: 0.063725494, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

@@ -13,24 +13,25 @@ public class GameplayUI : MonoBehaviour
     public static GameplayUI Instance { get { return _instance; } }
     private static GameplayUI _instance;
 
-    public static UnityEvent<string> OnRewardsPicked = new UnityEvent<string>();
-
-    [SerializeField] private RectTransform reloadBarTransform;
-
-    [SerializeField] private GameObject battleUI;
-    [SerializeField] private GameObject rewardUI;
+    public static UnityEvent<ShopItem> OnRewardsPicked = new UnityEvent<ShopItem>();
 
     #region BattleUI vars
+    [Header("Battle UI")]
+    [SerializeField] private GameObject battleUI;
     [SerializeField] private TMP_Text curntWpnTxt;
     [SerializeField] private TMP_Text ammoTxt;
     [SerializeField] private TMP_Text waveTxt;
     [SerializeField] private TMP_Text pointsTxt;
-    #endregion BattleUI vars
+    [SerializeField] private RectTransform reloadBarTransform;
+    #endregion
 
     #region RewardUI vars
+    [Header("Reward UI")]
+    [SerializeField] private GameObject rewardUI;
     [SerializeField] private Button confirmRewardButton;
-    [SerializeField] private Button rifleButton;
-    private string pickedRewardKey;
+    [SerializeField] private Button shopItemButtonPrefab;
+    [SerializeField] private Transform shopItemParent;
+    private ShopItem pickedRewardItem;
     #endregion
 
     private Player player;
@@ -100,26 +101,50 @@ public class GameplayUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Handle a reward choice. This is attatched to the buttons through the inspector!
+    /// Handle a reward choice.
     /// </summary>
     /// <param name="rewardKey">String code for the inventory item chosen.</param>
-    public void HandleRewardPicked(string rewardKey)
+    public void HandleRewardPicked(ShopItem shopItem)
     {
-        pickedRewardKey = rewardKey;
+        // if it's the same button, deselect the reward by making a blank one.
+        if (shopItem.rewardKey == pickedRewardItem.rewardKey)
+        {
+            // this could be better. Instantiating a new object every time isn't really necessary.
+            // I don't care though. But now you know that I know. Bro.
+            shopItem = new ShopItem();
+        }
+
+        pickedRewardItem = shopItem;
     }    
 
     private void HandleRewardConfirm()
     {
-        OnRewardsPicked.Invoke(pickedRewardKey);
+        OnRewardsPicked.Invoke(pickedRewardItem);
         ShowBattleUI();
     }
 
+    /// <summary>
+    /// Activates reward UI, shows mouse, and populates shop items
+    /// </summary>
     private void ShowRewardUI()
     {
         ShowMouse();
 
         rewardUI.SetActive(true);
         battleUI.SetActive(false);
+
+        // clear children
+        for (int i = 0; i < shopItemParent.childCount; i++)
+        {
+            Destroy(shopItemParent.GetChild(i).gameObject);
+        }
+
+        // add reward buttons
+        foreach (ShopItem item in Rewards.Instance.GetRewardShopItems())
+        {
+            ShopItemButton shopButtonScript = Instantiate(shopItemButtonPrefab, shopItemParent).GetComponent<ShopItemButton>();
+            shopButtonScript.SetItem(item);
+        }
     }
 
     private void ShowBattleUI()

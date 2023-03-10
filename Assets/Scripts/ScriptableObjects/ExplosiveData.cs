@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ExplosiveData", menuName = "MyScriptables/ExplosiveData")]
-public class ExplosiveData : ScriptableObject
+public class ExplosiveData : ShopRewardData
 {
     public float explosionRadius;
     public float explosionPower;

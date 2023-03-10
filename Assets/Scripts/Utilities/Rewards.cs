@@ -4,8 +4,26 @@ using UnityEngine;
 
 public class Rewards : MonoBehaviour
 {
+    private static Rewards _instance;
+    public static Rewards Instance { get { return _instance; } }
+
+    [SerializeField] private InventoryItemDataStorage dataStore;
+
     public GameObject lootPrefab;
     public List<Transform> spawnPoints = new List<Transform>();
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else if (_instance != this)
+        {
+            Destroy(this.gameObject);
+            Debug.LogWarning("More than one instance of Rewards; deleting this one.");
+        }
+    }
 
     private void Start()
     {
@@ -16,18 +34,58 @@ public class Rewards : MonoBehaviour
     {
         GameplayUI.OnRewardsPicked.RemoveListener(HandleRewardPicked);
     }
-    
-    private void HandleRewardPicked(string rewardKey)
+
+    public List<ShopItem> GetRewardShopItems()
     {
-        int spawnPointIndex = Random.Range(0, spawnPoints.Count);
-        Loot loot = Instantiate(lootPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity).GetComponent<Loot>();
-        if (loot)
+        List<ShopItem> shopItems = new List<ShopItem>();
+        shopItems.Add(new ShopItem(dataStore.assaultRifle));
+        shopItems.Add(new ShopItem(dataStore.plasticExplosive));
+
+        return shopItems;
+    }
+    
+    private void HandleRewardPicked(ShopItem reward)
+    {
+        // no reward was picked
+        if (reward.rewardKey == null)
         {
-            loot.lootType = rewardKey;
+            return;
+        }
+
+        // make sure the player can afford
+        bool hadEnoughPoints = Scoreboard.TryRemovePoints(reward.cost);
+        if (hadEnoughPoints)
+        {
+            // spawn the loot somewhere
+            int spawnPointIndex = Random.Range(0, spawnPoints.Count);
+            Loot loot = Instantiate(lootPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity).GetComponent<Loot>();
+            if (loot)
+            {
+                loot.lootType = reward.rewardKey;
+            }
+            else
+            {
+                Debug.LogError("No loot script on loot object");
+            }
         }
         else
         {
-            Debug.LogError("No loot script on loot object");
+            // the idea is that the button catches this situation and we don't ever end up here. But just in case.
+            Debug.LogError("User tried to purchase item they could not afford");
         }
+    }
+}
+
+public struct ShopItem
+{
+    public string rewardKey;
+    public int cost;
+    public string displayName;
+
+    public ShopItem(ShopRewardData data)
+    {
+        rewardKey = data.rewardKey;
+        cost = data.cost;
+        displayName = data.displayName;
     }
 }
