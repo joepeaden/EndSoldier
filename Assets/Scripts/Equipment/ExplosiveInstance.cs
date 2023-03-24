@@ -26,20 +26,30 @@ public class ExplosiveInstance : MonoBehaviour
         // generate an explosive force
         Vector3 explosionPos = transform.position;
 
-        // apply it to the rigidbody
+        // generate target hits
         Collider[] colliders = Physics.OverlapSphere(explosionPos, data.explosionRadius);
         foreach (Collider hit in colliders)
         {
-            if (hit.GetComponent<Shatter>())
+            // lol
+            Shatter shat = hit.GetComponent<Shatter>();
+            if (shat != null)
             {
-                hit.GetComponent<Shatter>().ShatterObject();
+                shat.ShatterObject();
+            }
+
+            Actor hitActor = hit.GetComponent<Actor>();
+            if (hitActor != null)
+            {
+                hitActor.GetHit(data.damage);
             }
         }
 
+        // apply force
+        // colliders is retrieved twice becasue if there's a Shatter object now we need to detect the pieces.
+        // Yeah, there's better ways to do this, whatever.
         colliders = Physics.OverlapSphere(explosionPos, data.explosionRadius);
         foreach (Collider hit in colliders)
         {
-
             Rigidbody rb = hit.GetComponent<Rigidbody>();
 
             if (rb != null)
@@ -52,7 +62,6 @@ public class ExplosiveInstance : MonoBehaviour
         GetComponent<MeshRenderer>().enabled = false;
 
         StartCoroutine("DestroyObject");
-
     }
 
     // wait 3 seconds before destroying object

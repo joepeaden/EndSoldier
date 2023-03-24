@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Bombs
   rewardKey: BOMB
   cost: 200
+  damage: 100
   explosionRadius: 3
   explosionPower: 500
   upwardsForce: 0

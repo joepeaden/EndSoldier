@@ -51,11 +51,8 @@ public class GameplayUI : MonoBehaviour
         WaveManager.OnPrepForNextWave.AddListener(StartNewWaveCoroutine);
         WaveManager.OnWaveEnd.AddListener(ShowRewardUI);
         Scoreboard.OnScoreUpdated.AddListener(UpdateScore);
-        GameManager.OnGameOver.AddListener(ShowMouse);
 
         confirmRewardButton.onClick.AddListener(HandleRewardConfirm);
-
-        Cursor.visible = false;
     }
 
     private void Start()
@@ -86,18 +83,12 @@ public class GameplayUI : MonoBehaviour
         WaveManager.OnWaveEnd.RemoveListener(ShowRewardUI);
         player.OnSwitchWeapons.RemoveListener(UpdateCurrentWeapon);
         Scoreboard.OnScoreUpdated.RemoveListener(UpdateScore);
-        GameManager.OnGameOver.RemoveListener(ShowMouse);
         confirmRewardButton.onClick.RemoveListener(HandleRewardConfirm);
     }
 
     public bool InMenu()
     {
         return rewardUI.activeInHierarchy;
-    }
-
-    private void ShowMouse()
-    {
-        Cursor.visible = true;
     }
 
     /// <summary>
@@ -128,8 +119,6 @@ public class GameplayUI : MonoBehaviour
     /// </summary>
     private void ShowRewardUI()
     {
-        ShowMouse();
-
         rewardUI.SetActive(true);
         battleUI.SetActive(false);
 

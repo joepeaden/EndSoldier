@@ -11,7 +11,7 @@ public class Loot : Interactable, ISetActive
 
     public InventoryItem item;
     // temporary, eventually will do a dropdown to select the loot type.
-    public string lootType;
+    public string rewardKey;
 
     private MeshRenderer rend;
 
@@ -22,7 +22,7 @@ public class Loot : Interactable, ISetActive
 
     private void Start()
     {
-        switch (lootType)
+        switch (rewardKey)
         {
             case "BOMB":
                 item = new ExplosiveEquipment(dataStorage.plasticExplosive);
@@ -35,7 +35,7 @@ public class Loot : Interactable, ISetActive
                 break;
         }
 
-        item.itemType = lootType;
+        item.rewardKey = rewardKey;
     }
 
     public override void Interact(Actor a)

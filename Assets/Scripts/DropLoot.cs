@@ -20,7 +20,7 @@ public class DropLoot : MonoBehaviour
     private void DropTheLoot()
     {
         Loot l = Instantiate(loot, transform.position, Quaternion.identity).GetComponent<Loot>();
-        l.lootType = lootType;
+        l.rewardKey = lootType;
     }
 
     private void OnDestroy()

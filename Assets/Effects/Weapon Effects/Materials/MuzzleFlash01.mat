@@ -21,16 +21,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: MuzzleFlash01
-  m_Shader: {fileID: 4800000, guid: 0406db5a14f94604a8c57ccfbc9f3b46, type: 3}
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
   m_ValidKeywords:
-  - _EMISSION
-  - _FADING_ON
-  - _SOFTPARTICLES_ON
-  m_InvalidKeywords:
-  - _ALPHABLEND_ON
-  - _FLIPBOOKBLENDING_OFF
   - _SURFACE_TYPE_TRANSPARENT
-  - _USE_GRADIENT_ON
+  m_InvalidKeywords:
+  - _EMISSION
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -108,6 +103,7 @@ Material:
     - _Mode: 4
     - _NoiseStrength: 0.4
     - _QueueOffset: 0
+    - _SampleGI: 0
     - _SoftParticlesEnabled: 1
     - _SoftParticlesFarFadeDistance: 1
     - _SoftParticlesNearFadeDistance: 0
@@ -117,10 +113,10 @@ Material:
     - _ZWrite: 0
     - _cutoffTemp: 0
     m_Colors:
-    - _BaseColor: {r: 11.984314, g: 11.984314, b: 11.984314, a: 1}
+    - _BaseColor: {r: 1, g: 0.5754001, b: 0, a: 1}
     - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 11.984314, g: 11.984314, b: 11.984314, a: 1}
+    - _Color: {r: 1, g: 0.5754001, b: 0, a: 1}
     - _ColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _EdgeColor1: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}

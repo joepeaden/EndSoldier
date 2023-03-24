@@ -61,7 +61,7 @@ public class Rewards : MonoBehaviour
             Loot loot = Instantiate(lootPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity).GetComponent<Loot>();
             if (loot)
             {
-                loot.lootType = reward.rewardKey;
+                loot.rewardKey = reward.rewardKey;
             }
             else
             {

@@ -22,4 +22,4 @@ MonoBehaviour:
   minSpawnTime: 5
   maxSpawnTime: 10
   waveDelay: 1
-  firstWaveDelay: 5
+  firstWaveDelay: 1

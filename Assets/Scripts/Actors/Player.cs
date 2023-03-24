@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
 
     private void Update()
 	{
-		if (!GameplayUI.Instance.InMenu())
+		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
 
 			if (Input.GetKey(KeyCode.LeftShift))
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-		if (!GameplayUI.Instance.InMenu())
+		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
 			// Normalized direction to shoot the projectile
 			//Vector2 aimVector = (reticle.position - transform.position).normalized;

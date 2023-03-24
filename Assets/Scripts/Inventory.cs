@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.Events;
+using System.Linq;
 
 [RequireComponent(typeof(Actor))]
 public class Inventory : MonoBehaviour
@@ -26,12 +26,12 @@ public class Inventory : MonoBehaviour
         if (hasRifle)
         {
             inventoryWeapon = new InventoryWeapon(dataStorage.assaultRifle);
-            inventoryWeapon.itemType = "RIFLE";
+            inventoryWeapon.rewardKey = "RIFLE";
         }
         else
         {
             inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
-            inventoryWeapon.itemType = "PISTOL";
+            inventoryWeapon.rewardKey = "PISTOL";
         }
 
         if (startingAmmo != 0)
@@ -46,28 +46,60 @@ public class Inventory : MonoBehaviour
         bool result = true;
         try
         {
-            switch (item.itemType)
-            {
-                case "BOMB":
-                    if (equipment == null)
-                    {
-                        Equipment eqItem = (Equipment)item;
-                        equipment = eqItem;
-                        equipment.owningActor = actor;
-                    }
-                    break;
-                case "RIFLE":
-                    weapons.Add((InventoryWeapon)item);
-                    AttemptSwitchWeapons();
+            // check if actor already has this weapon (if it even is a weapon)
+            InventoryWeapon existingInventoryWeapon;
+            existingInventoryWeapon = weapons.Where(x => x.data.rewardKey.Equals(item.rewardKey)).FirstOrDefault<InventoryWeapon>();
 
-                    break;
-                case "PISTOL":
+            InventoryItem itemToAddAmountTo = item;
+            if (item as InventoryWeapon != null)
+            {
+                if (existingInventoryWeapon != null)
+                {
+                    itemToAddAmountTo = existingInventoryWeapon;
+                }
+                else
+                {
                     weapons.Add((InventoryWeapon)item);
                     AttemptSwitchWeapons();
-                    break;
+                }
+            }
+            else if (item as ExplosiveEquipment != null)
+            {
+                Equipment eqItem = (Equipment)item;
+                equipment = eqItem;
+                equipment.owningActor = actor;
             }
 
-            item.amount += item.amount;
+            // add charges to the item
+            itemToAddAmountTo.AddAmount(item.amount);
+
+            // process item based on type
+            //switch (item.rewardKey)
+            //{
+            //    case "BOMB":
+            //        if (equipment == null)
+            //        {
+            //            Equipment eqItem = (Equipment)item;
+            //            equipment = eqItem;
+            //            equipment.owningActor = actor;
+            //        }
+            //        break;
+            //case "RIFLE":
+            //    if (existingInventoryWeapon != null)
+            //    {
+
+            //    }
+            //    else
+            //    {
+            //        weapons.Add((InventoryWeapon)item);
+            //        AttemptSwitchWeapons();
+            //    }
+            //    break;
+            //case "PISTOL":
+            //    weapons.Add((InventoryWeapon)item);
+            //    AttemptSwitchWeapons();
+            //    break;
+            //}
         }
         catch
         {
