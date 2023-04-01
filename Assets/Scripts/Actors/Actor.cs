@@ -11,7 +11,6 @@ using UnityEngine.AI;
 /// </summary>
 public class Actor : MonoBehaviour
 {
-
 	public UnityAction OnActorBeginAim;
 	public UnityAction OnActorEndAim;
 	public UnityEvent OnDeath = new UnityEvent();
@@ -39,7 +38,7 @@ public class Actor : MonoBehaviour
 	// shows state and if actor is in that state
 	public Dictionary<State, bool> state;
 	public bool IsAlive { get; private set; } = true;
-	public bool IsPlayer { get; private set; }
+	public bool IsPlayer;
 	public int HitPoints { get; private set; }
 	public int MaxHitPoints { get { return data.hitPoints; } }
 
@@ -103,7 +102,6 @@ public class Actor : MonoBehaviour
 		navAgent = GetComponent<NavMeshAgent>();
 		audioSource = GetComponent<AudioSource>();
 		inventory = GetComponent<Inventory>();
-		IsPlayer = GetComponent<Player>() != null;
 		HitPoints = data.hitPoints;
 	}
 

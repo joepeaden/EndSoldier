@@ -29,7 +29,17 @@ public class EnemySpawner : MonoBehaviour
     {
         data = WaveManager.Instance.GetWaveData();
 
+        GameManager.OnGameOver.AddListener(Reset);
+
         StartCoroutine("BeginSpawning");
+    }
+
+    /// <summary>
+    /// Reset at game over
+    /// </summary>
+    private void Reset()
+    {
+        waveNumber = 0;
     }
 
     private IEnumerator BeginSpawning()

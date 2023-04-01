@@ -19,6 +19,8 @@ public class WeaponInstance : MonoBehaviour
     [SerializeField] private Transform gunModelParent;
     [SerializeField] private Transform muzzle;
 
+    private GameObject weaponModelGameObject;
+
     /// <summary>
     /// Just a debug option.
     /// </summary>
@@ -26,6 +28,21 @@ public class WeaponInstance : MonoBehaviour
 
     // the actor who is using this weapon
     private Actor actorOperator;
+    private Actor ActorOperator
+    {
+        get
+        {
+            if (actorOperator == null)
+            {
+                actorOperator = transform.GetComponentInParent<Actor>();
+            }
+            return actorOperator;
+        }
+        set
+        {
+            actorOperator = value;
+        }
+    }
 
     public InventoryWeapon inventoryWeapon;
     private int ammoInWeapon;
@@ -41,11 +58,11 @@ public class WeaponInstance : MonoBehaviour
 
     private void Start()
     {
-        actorOperator = transform.GetComponentInParent<Actor>();
-        actorOperator.OnActorBeginAim += BeginAim;
-        actorOperator.OnActorEndAim += EndAim;
-        actorOperator.OnCrouch.AddListener(HandleCrouch);
-        actorOperator.OnStand.AddListener(HandleStand);
+        ActorOperator.OnActorBeginAim += BeginAim;
+        ActorOperator.OnActorEndAim += EndAim;
+        ActorOperator.OnCrouch.AddListener(HandleCrouch);
+        ActorOperator.OnStand.AddListener(HandleStand);
+        ActorOperator.OnDeath.AddListener(HandleDeath);
 
         originalLocalPosition = transform.localPosition;
     }
@@ -70,6 +87,14 @@ public class WeaponInstance : MonoBehaviour
         StopAllCoroutines();
         readyToAttack = true;
         reloading = false;
+    }
+
+    private void HandleDeath()
+    {
+        if (weaponModelGameObject != null)
+        {
+            weaponModelGameObject.layer = (int)LayerNames.CollisionLayers.IgnoreActors;
+        }
     }
 
     private void BeginAim()
@@ -103,16 +128,26 @@ public class WeaponInstance : MonoBehaviour
         ammoInWeapon = weapon.amountLoaded;
         audioSource.clip = weapon.data.attackSound;
 
+        // leaving in case necessary later
+
         // delete only weapon models from the gun parent
-        for (int i = 0; i < gunModelParent.childCount; i++)
+        //for (int i = 0; i < gunModelParent.childCount; i++)
+        //{
+        //    if (gunModelParent.GetChild(i).gameObject.CompareTag(WEAPON_MODEL_TAG))
+        //    {
+        //        Destroy(gunModelParent.GetChild(i).gameObject);
+        //    }
+        //}
+
+        if (weaponModelGameObject != null)
         {
-            if (gunModelParent.GetChild(i).gameObject.CompareTag(WEAPON_MODEL_TAG))
-            {
-                Destroy(gunModelParent.GetChild(i).gameObject);
-            }
+            Destroy(weaponModelGameObject);
+            // not sure if this would result from Destroy, so just in case
+            weaponModelGameObject = null;
         }
-        GameObject weapnGO = Instantiate(weapon.data.modelPrefab, gunModelParent);
-        weapnGO.tag = WEAPON_MODEL_TAG;
+        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, gunModelParent);
+        weaponModelGameObject.tag = WEAPON_MODEL_TAG;
+        weaponModelGameObject.layer = ActorOperator.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
 
         muzzle.localPosition = weapon.data.muzzlePosition;
 
@@ -129,10 +164,20 @@ public class WeaponInstance : MonoBehaviour
             RaycastHit hit;
             Ray ray = new Ray(muzzle.position, muzzle.forward);
 
-            int layerMask = LayerMask.GetMask(IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture.ToString(), IgnoreLayerCollisions.CollisionLayers.Actors.ToString(), IgnoreLayerCollisions.CollisionLayers.IgnoreFurniture.ToString(), "PlayerZoneCollider");
+            int layerMask = LayerMask.GetMask(LayerNames.CollisionLayers.HouseAndFurniture.ToString(), LayerNames.CollisionLayers.Actors.ToString(), LayerNames.CollisionLayers.IgnoreFurniture.ToString(), "PlayerZoneCollider");
             
             if (Physics.Raycast(ray, out hit, int.MaxValue, layerMask))
             {
+                //if (hit.transform.gameObject.tag == "HitBox")
+                //{
+                //    // messy whatever
+                //    //hit.transform.parent.GetComponentInChildren<ActorModel>().gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+                //    foreach (SkinnedMeshRenderer r in hit.transform.parent.GetComponentInChildren<ActorModel>().gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
+                //    {
+                //        r.gameObject.layer = (int)LayerNames.CollisionLayers.EnemyFill;
+                //    }
+                //}
+
                 aimGlow.transform.position = hit.point;
          
                 line.enabled = true;

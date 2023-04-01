@@ -47,7 +47,7 @@ public class Door : Interactable
     /// <returns></returns>
     public IEnumerator ToggleCollisionAfterSwing() {
         HingeJoint hinge = GetComponent<HingeJoint>();
-        col.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.IgnoreActorsAndFurniture;
+        col.gameObject.layer = (int)LayerNames.CollisionLayers.IgnoreActorsAndFurniture;
 
         // if we're opening or closing and haven't reached the stop point of the hinge
         while ((isOpening && hinge.angle > hinge.limits.min - 1f) || (!isOpening && hinge.angle < hinge.limits.max - 1f))
@@ -58,7 +58,7 @@ public class Door : Interactable
         rb.freezeRotation = true;
         rb.velocity = Vector3.zero;
 
-        col.gameObject.layer = (int)IgnoreLayerCollisions.CollisionLayers.Default;
+        col.gameObject.layer = (int)LayerNames.CollisionLayers.Default;
     }
 
 }

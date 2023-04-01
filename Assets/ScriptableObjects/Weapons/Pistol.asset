@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   displayName: Pistol
+  rewardKey: 
+  cost: 0
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
   recoil: 1
   attackInterval: 0.1
-  range: 20
+  range: 15
   ammoCapacity: 10
   totalAmount: 20
   attackSound: {fileID: 8300000, guid: 9a7d54770be339e478fc73a7609c5753, type: 3}

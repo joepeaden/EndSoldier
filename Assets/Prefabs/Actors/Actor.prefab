@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3680559978625251078}
   - component: {fileID: 6621039823173931288}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Aim Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 355814685251962843}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,11 +174,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1310252469257724913}
   - component: {fileID: 4404756533418901247}
-  - component: {fileID: 4796819403604366461}
   - component: {fileID: 1143217580977220765}
   - component: {fileID: 3177180349973180707}
   - component: {fileID: 3880547155541323028}
   - component: {fileID: 8905177908027167111}
+  - component: {fileID: 597699031485559313}
   m_Layer: 3
   m_Name: Actor
   m_TagString: Untagged
@@ -229,6 +229,7 @@ MonoBehaviour:
   OnStand:
     m_PersistentCalls:
       m_Calls: []
+  IsPlayer: 0
   data: {fileID: 11400000, guid: 088ef8621086b774c99c9174844e7740, type: 2}
   modelRenderer: {fileID: 0}
   TargetSpot: {fileID: 9157430240214517296}
@@ -237,22 +238,6 @@ MonoBehaviour:
   lookTarget: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   team: 0
---- !u!114 &4796819403604366461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310252469257724915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92bf1c7815b32a44eb63bca1fc64af5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dataStorage: {fileID: 8100413924085744880, guid: 9641dce66f7be442cb3b438f138cfd0b, type: 3}
-  weaponInstance: {fileID: 2062017164814779945}
-  hasRifle: 0
-  startingAmmo: 0
 --- !u!136 &1143217580977220765
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -401,6 +386,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &597699031485559313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310252469257724915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc2c16e7b14043469f3ae09f1a7aec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataStorage: {fileID: 8100413924085744880, guid: 9641dce66f7be442cb3b438f138cfd0b, type: 3}
+  weaponInstance: {fileID: 2062017164814779945}
+  hasRifle: 0
+  startingAmmo: 0
 --- !u!1 &1745033373422121327
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,7 +414,7 @@ GameObject:
   - component: {fileID: 7220342367331181376}
   - component: {fileID: 7994928161989725152}
   - component: {fileID: 7177122754101766222}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Aim Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +510,7 @@ GameObject:
   - component: {fileID: 505351160188211090}
   - component: {fileID: 1754678184076884464}
   - component: {fileID: 9082509319324819148}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Blast Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -625,13 +626,13 @@ GameObject:
   - component: {fileID: 6365025369633413872}
   - component: {fileID: 1064506619511561823}
   - component: {fileID: 1570267477254988640}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Visual Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6365025369633413872
 Transform:
   m_ObjectHideFlags: 0
@@ -710,7 +711,7 @@ GameObject:
   - component: {fileID: 7227493840991707178}
   - component: {fileID: 3926493698411017434}
   - component: {fileID: 7516837563973603090}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +911,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5343905166255433907}
-  - {fileID: 8047003422027970728}
   m_Father: {fileID: 3996930033360803888}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1066,7 +1066,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8617607009107877251}
   - component: {fileID: 6433696913013533928}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1671,72 +1671,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7514569647694880730, guid: c986b3fd36464a844a02524402e98ad8, type: 3}
   m_PrefabInstance: {fileID: 6863186728782825450}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &8047003422027833896
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 325524504401818928}
-    m_Modifications:
-    - target: {fileID: 100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_Name
-      value: w_usp
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_TagString
-      value: WeaponModel
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -5.041063e-38
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.000000065289434
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.00000000756979
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071067
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.00000006181724
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.000000061817225
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
---- !u!4 &8047003422027970728 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
-  m_PrefabInstance: {fileID: 8047003422027833896}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8689917108580308657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1749,8 +1683,16 @@ PrefabInstance:
       value: MuzzleFlash01
       objectReference: {fileID: 0}
     - target: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1992675705445476, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4300533007854612, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
       propertyPath: m_RootOrder

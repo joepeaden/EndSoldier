@@ -30,9 +30,9 @@ TagManager:
   - Floor
   - IgnoreActors
   - PlayerZoneCollider
-  - 
-  - 
-  - 
+  - PlayerOutline
+  - EnemyOutline
+  - EnemyFill
   - 
   - 
   - 

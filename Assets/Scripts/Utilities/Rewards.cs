@@ -39,7 +39,8 @@ public class Rewards : MonoBehaviour
     {
         List<ShopItem> shopItems = new List<ShopItem>();
         shopItems.Add(new ShopItem(dataStore.assaultRifle));
-        shopItems.Add(new ShopItem(dataStore.plasticExplosive));
+        // removed for now.
+        //shopItems.Add(new ShopItem(dataStore.plasticExplosive));
 
         return shopItems;
     }

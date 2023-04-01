@@ -13,6 +13,9 @@ public class ActorModel : MonoBehaviour
 
     private List<Rigidbody> ragRigidBodies;
     private List<Collider> ragColliders;
+    private List<GameObject> bodyParts = new List<GameObject>();
+
+    //private bool isHighlighted;
 
     void Start()
     {
@@ -27,7 +30,64 @@ public class ActorModel : MonoBehaviour
         {
             c.enabled = false;
         }
+
+        // can just assign these in the inspector if optimization is needed.
+        SkinnedMeshRenderer[] smrs = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach (SkinnedMeshRenderer smr in smrs)
+        {
+            if (smr.gameObject.activeInHierarchy)
+            {
+                bodyParts.Add(smr.gameObject);
+            }
+        }
+
+        //StartCoroutine(CheckOutline());
     }
+
+    // not using it, but just in case, who knows if i'll need it later
+    // ya know what i mean?
+    // work was tough this week.
+    //private IEnumerator CheckOutline()
+    //{
+    //    while (actor.IsAlive)
+    //    {
+    //        Ray r = new Ray(Camera.main.transform.position, transform.position - Camera.main.transform.position);
+    //        if (Physics.Raycast(ray: r, out RaycastHit hitInfo, maxDistance: float.MaxValue, layerMask: ~LayerMask.GetMask(LayerNames.CollisionLayers.MouseOnly.ToString())))
+    //        {
+    //            // should highlight
+    //            if (hitInfo.transform.GetComponent<Actor>() == null && hitInfo.transform.GetComponentInParent<Actor>() == null)
+    //            {
+    //                if (!isHighlighted)
+    //                {
+    //                    gameObject.layer = actor.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
+
+    //                    // this could be waaay optimized.
+    //                    //Transform[] transforms = GetComponentsInChildren<Transform>();
+    //                    foreach (GameObject g in bodyParts)
+    //                    {
+    //                        g.layer = actor.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
+    //                    }
+
+    //                    isHighlighted = true;
+    //                }
+    //            }
+    //            // should unhighlight
+    //            else if (isHighlighted)
+    //            {
+    //                gameObject.layer = (int)LayerNames.CollisionLayers.IgnoreActors;
+
+    //                foreach (GameObject g in bodyParts)
+    //                {
+    //                    g.layer = (int)LayerNames.CollisionLayers.IgnoreActors;
+    //                }
+
+    //                isHighlighted = false;
+    //            }
+    //        }
+
+    //        yield return new WaitForSeconds(.1f);
+    //    }
+    //}
 
     public void UpdateVelocityBasedAnimations(Vector3 velocity)
     {
@@ -52,6 +112,11 @@ public class ActorModel : MonoBehaviour
         foreach (Collider c in ragColliders)
         {
             c.enabled = true;
+        }
+
+        foreach (GameObject g in bodyParts)
+        {
+            g.layer = (int) LayerNames.CollisionLayers.IgnoreActors;
         }
 
         ragAnim.enabled = false;

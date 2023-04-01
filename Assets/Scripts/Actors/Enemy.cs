@@ -106,7 +106,7 @@ public class Enemy : MonoBehaviour, ISetActive
 				RaycastHit[] hits = Physics.RaycastAll(r, weapon.data.range);
 
 				RaycastHit[] targetHits = hits.Where(hit => hit.collider.GetComponent<HitBox>() != null && hit.collider.GetComponent<HitBox>().GetActor().gameObject == target).ToArray();
-				RaycastHit[] blockHits = hits.Where(hit => hit.collider.gameObject.layer == (int) IgnoreLayerCollisions.CollisionLayers.HouseAndFurniture).ToArray();
+				RaycastHit[] blockHits = hits.Where(hit => hit.collider.gameObject.layer == (int) LayerNames.CollisionLayers.HouseAndFurniture).ToArray();
 				
 				// should only be one or zero targetHits. Check if any blocking hit is closer than the target, if so, can't shoot 
 				foreach (RaycastHit targetHit in targetHits)
