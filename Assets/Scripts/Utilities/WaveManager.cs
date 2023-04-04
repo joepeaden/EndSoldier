@@ -10,14 +10,13 @@ public class WaveManager : MonoBehaviour
     //                                                                                                                ^ that's my attempt at a shrug
     public static WaveManager Instance { get { return _instance; } }
     private static WaveManager _instance;
-
     public static UnityEvent OnWaveEnd = new UnityEvent();
     public static UnityEvent OnPrepForNextWave = new UnityEvent();
     public static int totalEnemiesAlive;
 
+    public int initialWaveNum;
     [SerializeField]
     private WaveData waveData;
-
     private bool shouldStartNextWave;
 
     private void Start()
@@ -33,6 +32,8 @@ public class WaveManager : MonoBehaviour
         }
 
         GameplayUI.OnRewardsPicked.AddListener(HandleRewardsPicked);
+
+        EnemySpawner.waveNumber = initialWaveNum;
 
         // prep first wave
         StartCoroutine(BeginFirstWave());

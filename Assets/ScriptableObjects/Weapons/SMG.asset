@@ -19,9 +19,9 @@ MonoBehaviour:
   recoil: 1
   attackInterval: 0.03
   range: 20
-  ammoCapacity: 30
-  totalAmount: 90
-  attackSound: {fileID: 8300000, guid: daf2a7aa4b10def4f92c1ca44ab3552d, type: 3}
+  ammoCapacity: 40
+  totalAmount: 120
+  attackSound: {fileID: 8300000, guid: 8d19cd7f377aa9e4e834d2627646d695, type: 3}
   emptyWeaponSound: {fileID: 8300000, guid: d206759db9edbc64cb1c55c8161efc5f, type: 3}
   reloadSound: {fileID: 8300000, guid: ac0199642ab4840dfb70a850b9cd79a4, type: 3}
   reloadTime: 1.5

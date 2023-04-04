@@ -9,7 +9,7 @@ public class EnemySpawner : MonoBehaviour
     public static bool shouldSpawn;
     public Transform enemiesParent;
 
-    private static int waveNumber;
+    public static int waveNumber;
 
     #region Current Wave Variables
     /// <summary>

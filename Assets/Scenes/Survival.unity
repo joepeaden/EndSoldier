@@ -1990,6 +1990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22003ae43a1584f139fecdb340a7bc2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialWaveNum: 0
   waveData: {fileID: 11400000, guid: f036966372d2993439e04770f06d7a32, type: 2}
 --- !u!114 &182226818
 MonoBehaviour:

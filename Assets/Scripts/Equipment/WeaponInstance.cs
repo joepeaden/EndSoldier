@@ -220,11 +220,12 @@ public class WeaponInstance : MonoBehaviour
 
         Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, muzzle.rotation).GetComponent<Projectile>();
         projectile.SetOwningActor(actorOperator);
+        projectile.SetAudioEffect(inventoryWeapon.data.attackSound);
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
-        PlayAudioClip(inventoryWeapon.data.attackSound);
+        //PlayAudioClip(inventoryWeapon.data.attackSound);
 
         // never really worked. jsut comment out for now BRO.
         //StopCoroutine(ApplyRecoil(actorRecoilControl));
@@ -341,8 +342,6 @@ public class WeaponInstance : MonoBehaviour
         readyToAttack = true;
         reloading = false;
     }
-
-    private Vector3 originalDimensions;
 
     private void HandleCrouch()
     {
