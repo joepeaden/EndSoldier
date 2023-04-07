@@ -40,6 +40,8 @@ public class Rewards : MonoBehaviour
         List<ShopItem> shopItems = new List<ShopItem>();
         shopItems.Add(new ShopItem(dataStore.assaultRifle));
         shopItems.Add(new ShopItem(dataStore.subMachineGun));
+        shopItems.Add(new ShopItem(dataStore.semiAutoRifle));
+        shopItems.Add(new ShopItem(dataStore.shotgun));
 
         return shopItems;
     }

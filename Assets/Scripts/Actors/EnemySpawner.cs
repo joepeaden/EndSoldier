@@ -31,6 +31,9 @@ public class EnemySpawner : MonoBehaviour
 
         GameManager.OnGameOver.AddListener(Reset);
 
+        // for reloading the scene
+        spawnableEnemyPrefabs.Clear();
+
         StartCoroutine("BeginSpawning");
     }
 

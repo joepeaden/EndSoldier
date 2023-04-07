@@ -31,6 +31,7 @@ public class WaveManager : MonoBehaviour
             _instance = this;
         }
 
+        totalEnemiesAlive = 0;
         GameplayUI.OnRewardsPicked.AddListener(HandleRewardsPicked);
 
         EnemySpawner.waveNumber = initialWaveNum;
@@ -88,6 +89,7 @@ public class WaveManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopAllCoroutines();
         GameplayUI.OnRewardsPicked.RemoveListener(HandleRewardsPicked);
     }
 }

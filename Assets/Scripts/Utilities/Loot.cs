@@ -33,6 +33,12 @@ public class Loot : Interactable, ISetActive
             case "SMG":
                 item = new InventoryWeapon(dataStorage.subMachineGun);
                 break;
+            case "SAR":
+                item = new InventoryWeapon(dataStorage.semiAutoRifle);
+                break;
+            case "SHOTGUN":
+                item = new InventoryWeapon(dataStorage.shotgun);
+                break;
             case "PISTOL":
                 item = new InventoryWeapon(dataStorage.pistol);
                 break;

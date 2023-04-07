@@ -52,7 +52,6 @@ MonoBehaviour:
   velocity: 50
   impact: 75
   range: 0
-  damage: 1
   isExplosive: 0
   owningActor: {fileID: 0}
 --- !u!65 &5477406972381997941
@@ -146,7 +145,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0

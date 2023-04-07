@@ -13,6 +13,15 @@ public class Inventory : MonoBehaviour
     [SerializeField] private bool hasRifle;
     [SerializeField] private int startingAmmo;
 
+    // wierd?
+    public int weaponCount
+    {
+        get
+        {
+            return weapons != null ? weapons.Count() : 0;
+        }
+    }
+
     private Equipment equipment;
     private List<InventoryWeapon> weapons = new List<InventoryWeapon>();
     private int currentWeaponIndex;
@@ -61,6 +70,7 @@ public class Inventory : MonoBehaviour
                 {
                     weapons.Add((InventoryWeapon)item);
                     AttemptSwitchWeapons();
+
                 }
             }
             else if (item as ExplosiveEquipment != null)

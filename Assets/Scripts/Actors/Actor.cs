@@ -203,7 +203,10 @@ public class Actor : MonoBehaviour
     {
 		if (inventory != null)
         {
-			return inventory.AttemptSwitchWeapons();
+			if (inventory.AttemptSwitchWeapons())
+            {
+				return true;
+            }
         }
 
 		return false;
@@ -525,8 +528,7 @@ public class Actor : MonoBehaviour
 		{
 			HitPoints -= damage;
 
-			audioSource.clip = data.woundSound2;
-			audioSource.Play();
+			PlaySound(data.woundSound2);
 
 			OnGetHit.Invoke();
 
@@ -540,6 +542,16 @@ public class Actor : MonoBehaviour
 	}
 
 	/// <summary>
+    /// Play a sound using the Actor's audio source.
+    /// </summary>
+    /// <param name="clip"></param>
+	public void PlaySound(AudioClip clip)
+    {
+		audioSource.clip = clip;
+		audioSource.Play();
+	}
+
+	/// <summary>
 	/// Kill this actor.
 	/// </summary>
 	private void Die()
@@ -550,8 +562,7 @@ public class Actor : MonoBehaviour
 		navAgent.enabled = false;
 		mainCollider.enabled = false;
 
-		audioSource.clip = data.deathSound2;
-		audioSource.Play();
+		PlaySound(data.deathSound2);
 
 		// have actor handle it's own inevitable destruction. It's ok buddy.
 		OnDeath.Invoke();

@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour, ISetActive
 	public static UnityEvent<int> OnEnemyKilled = new UnityEvent<int>();
 
 	[SerializeField]
-	private EnemyData data;
+	private ControllerData data;
 
 	// scriptable object time...
 	public float shootPauseTimeMax;

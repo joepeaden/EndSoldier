@@ -53,9 +53,6 @@ public class WeaponInstance : MonoBehaviour
     private bool readyToAttack = true;
     private bool reloading;
 
-    // has to do with weapon recoil - honestly confused how it works but right now it has to be class var
-    private float t = 0.0f;
-
     private void Start()
     {
         ActorOperator.OnActorBeginAim += BeginAim;
@@ -125,8 +122,13 @@ public class WeaponInstance : MonoBehaviour
             inventoryWeapon.amountLoaded = ammoInWeapon;
         }
 
+        if (ActorOperator.IsPlayer)
+        {
+            // play reload when switch for cools
+            PlayAudioClip(weapon.data.reloadSound);
+        }
+
         ammoInWeapon = weapon.amountLoaded;
-        audioSource.clip = weapon.data.attackSound;
 
         // leaving in case necessary later
 
@@ -150,7 +152,6 @@ public class WeaponInstance : MonoBehaviour
         weaponModelGameObject.layer = ActorOperator.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
 
         muzzle.localPosition = weapon.data.muzzlePosition;
-
         inventoryWeapon = weapon;
     }
 
@@ -211,25 +212,28 @@ public class WeaponInstance : MonoBehaviour
 
     private void LaunchAttack(float actorRecoilControl)
     {
-        ammoInWeapon--;
+        // remove as many bullets as are fired
+        ammoInWeapon--;// ammoInWeapon > inventoryWeapon.data.projFiredPerShot ? inventoryWeapon.data.projFiredPerShot : ammoInWeapon;
+
         readyToAttack = false;
 
-        // need to put bullet at end of gun barrel so it doesn't hit player
-        //Vector3 projectileSpawnPosition = transform.position;
-        //projectileSpawnPosition += transform.forward * 1.5f;
+        for (int proj = 0; proj < inventoryWeapon.data.projFiredPerShot; proj++)
+        {
+            // account for aiming
+            float accuracyAngle = inventoryWeapon.data.accuracyAngle - (aiming ? inventoryWeapon.data.accuracyAngle / 3 : 0);
 
-        Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, muzzle.rotation).GetComponent<Projectile>();
-        projectile.SetOwningActor(actorOperator);
-        projectile.SetAudioEffect(inventoryWeapon.data.attackSound);
+            // make the bullet less accurate
+            float rotAdjust = Random.Range(-accuracyAngle / 2, accuracyAngle / 2);
+            Quaternion projRot = muzzle.rotation;
+            projRot.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y + rotAdjust, projRot.eulerAngles.z);
+
+            Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, projRot).GetComponent<Projectile>();
+            projectile.Initialize(actorOperator, inventoryWeapon.data);
+        }
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
-        //PlayAudioClip(inventoryWeapon.data.attackSound);
-
-        // never really worked. jsut comment out for now BRO.
-        //StopCoroutine(ApplyRecoil(actorRecoilControl));
-        //StartCoroutine(ApplyRecoil(actorRecoilControl));
         
         if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
@@ -242,46 +246,6 @@ public class WeaponInstance : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         weaponFlash.SetActive(false);
-    }
-
-    // should probably be in weapon class
-    protected IEnumerator ApplyRecoil(float actorRecoilControl)
-    {
-        bool recoilComplete = false;
-        bool returning = false;
-
-        float minimum = 0;
-        float maximum = Random.Range(-1, 2) * inventoryWeapon.data.recoil;
-
-        // COULD USE Quaternion.Slerp()
-
-        do
-        {
-            Quaternion q = new Quaternion();
-            q.eulerAngles = new Vector3(0, 0, Mathf.Lerp(minimum, maximum, t));
-
-            transform.localRotation = q;
-
-            t += actorRecoilControl * Time.deltaTime;
-
-            if (t > 1.0f)
-            {
-                if (returning)
-                    recoilComplete = true;
-
-                float temp = maximum;
-                maximum = minimum;
-                minimum = temp;
-                t = 0.0f;
-                returning = true;
-            }
-
-            yield return null;
-        } while (!recoilComplete);
-
-        transform.localRotation = Quaternion.identity;
-
-        yield return null;
     }
 
     // refers to the time in between shots
@@ -310,7 +274,7 @@ public class WeaponInstance : MonoBehaviour
     {
         PlayAudioClip(inventoryWeapon.data.reloadSound, 12f);
 
-        if (actorOperator.IsPlayer)
+        if (ActorOperator.IsPlayer)
         {
             GameplayUI.Instance.StartReloadBarAnimation(inventoryWeapon.data.reloadTime);
         }
@@ -334,7 +298,7 @@ public class WeaponInstance : MonoBehaviour
         }
             
         // if infinite ammo or it's not the player, don't deplete backup ammo.
-        if (inventoryWeapon.data.hasInfiniteBackupAmmo|| !actorOperator.IsPlayer)
+        if (inventoryWeapon.data.hasInfiniteBackupAmmo|| !ActorOperator.IsPlayer)
         {
             inventoryWeapon.amount = inventoryWeapon.data.totalAmount;
         }
@@ -385,10 +349,7 @@ public class WeaponInstance : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (actorOperator != null)
-        {
-            actorOperator.OnActorBeginAim -= BeginAim;
-            actorOperator.OnActorEndAim -= EndAim;
-        }
+        ActorOperator.OnActorBeginAim -= BeginAim;
+        ActorOperator.OnActorEndAim -= EndAim;
     }
 }

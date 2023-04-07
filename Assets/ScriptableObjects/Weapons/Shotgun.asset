@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31caf38739274904f8ea83d1af25c7e4, type: 3}
-  m_Name: AssaultRifleData
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  displayName: Assault Rifle
-  rewardKey: RIFLE
+  displayName: Shotgun
+  rewardKey: SHOTGUN
   cost: 100
-  accuracyAngle: 7
+  accuracyAngle: 30
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
   recoil: 1
-  attackInterval: 0.075
-  range: 25
-  damage: 50
-  ammoCapacity: 30
-  totalAmount: 90
-  attackSound: {fileID: 8300000, guid: daf2a7aa4b10def4f92c1ca44ab3552d, type: 3}
-  emptyWeaponSound: {fileID: 8300000, guid: 8e47353dd30fd4b87b726b819632eab8, type: 3}
+  attackInterval: 0.5
+  range: 10
+  damage: 40
+  ammoCapacity: 8
+  totalAmount: 80
+  attackSound: {fileID: 8300000, guid: 8c4eb3b500cc54808b668ab9657e44f0, type: 3}
+  emptyWeaponSound: {fileID: 8300000, guid: 9e1008f3ca4054a6188ca33900d3d087, type: 3}
   reloadSound: {fileID: 8300000, guid: cad50383732c54e1ba437bb598a3a08d, type: 3}
-  reloadTime: 2
-  isAutomatic: 1
-  projFiredPerShot: 1
-  modelPrefab: {fileID: 100000, guid: 45dedc0f8a0695947a4913f73e2236a3, type: 3}
-  muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
+  reloadTime: 1.1
+  isAutomatic: 0
+  projFiredPerShot: 10
+  modelPrefab: {fileID: 100000, guid: f7108c4a40f85e649a915657a2600cea, type: 3}
+  muzzlePosition: {x: -1.764, y: -0.002, z: 0.235}
   hasInfiniteBackupAmmo: 0

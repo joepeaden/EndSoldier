@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d353c0846a3f6a8438f71cbf95ebf6bd, type: 3}
+  m_Name: PistolEnemyActor
+  m_EditorClassIdentifier: 
+  hitPoints: 100
+  recoilControl: 10
+  slowWalkMoveForce: 8
+  fastWalkMoveForce: 20
+  sprintMoveForce: 40
+  rotationTorque: 30
+  moveToCoverSpeed: 10
+  coverSensorDistance: 1.25
+  crouchDogeChance: 0.25
+  woundSound1: {fileID: 0}
+  woundSound2: {fileID: 0}
+  woundSound3: {fileID: 0}
+  woundSound4: {fileID: 0}
+  woundSound5: {fileID: 0}
+  woundSound6: {fileID: 0}
+  deathSound1: {fileID: 0}
+  deathSound2: {fileID: 0}
+  deathSound3: {fileID: 0}
+  minSemiAutoFireRate: 0.1
+  maxSemiAutoFireRate: 1
+  velocityMoveAnimThreshold: 0

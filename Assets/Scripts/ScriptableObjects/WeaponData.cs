@@ -3,10 +3,16 @@
 [CreateAssetMenu(fileName = "WeaponData", menuName = "MyScriptables/WeaponData")]
 public class WeaponData : ShopRewardData
 {
+	/// <summary>
+	/// The arc that bullets may be rotated in. (degrees)
+    /// Lower numbers are more accurate.
+	/// </summary>
+	public float accuracyAngle;
 	public GameObject projectile;
 	public float recoil;
 	public float attackInterval;
 	public int range;
+	public int damage;
 	public int ammoCapacity;
 	/// <summary>
     /// Refers to total amount of ammo
@@ -17,6 +23,7 @@ public class WeaponData : ShopRewardData
 	public AudioClip reloadSound;
 	public float reloadTime;
 	public bool isAutomatic;
+	public int projFiredPerShot;
 	public GameObject modelPrefab;
 	public Vector3 muzzlePosition;
 	public bool hasInfiniteBackupAmmo;

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -83,7 +81,7 @@ public class Player : MonoBehaviour
 				actor.AttemptUseEquipment();
 			}
 
-			if (Input.GetKeyDown(KeyCode.Space))
+			if (Input.GetKeyDown(KeyCode.Space) && actor.GetInventory().weaponCount > 1)
 			{
 				bool result = actor.AttemptSwitchWeapons();
 				if (result == true)

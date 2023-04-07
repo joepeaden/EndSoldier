@@ -13,11 +13,10 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     protected float range;
     [SerializeField]
-    protected int damage;
-    [SerializeField]
     protected bool isExplosive;
     [SerializeField]
     protected Actor owningActor;
+    protected int damage;
 
     private AudioSource audioSource;
     private Vector3 lastPoint;
@@ -83,6 +82,20 @@ public class Projectile : MonoBehaviour
     }
 
     /// <summary>
+    /// Init the damage, etc. and play the fire sound.
+    /// </summary>
+    /// <param name="firingActor">Actor who fired it</param>
+    /// <param name="data">The data of the firing weapon (pass in when fired)</param>
+    public void Initialize(Actor firingActor, WeaponData data)
+    {
+        owningActor = firingActor;
+        damage = data.damage;
+        audioSource.clip = data.attackSound;
+
+        audioSource.Play();
+    }
+
+    /// <summary>
     /// Wait a period of time to allow audio source to fully play out.
     /// </summary>
     /// <returns></returns>
@@ -90,23 +103,6 @@ public class Projectile : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         Destroy(gameObject);
-    }
-
-    /// <summary>
-    /// Set and play the projectile sound effect
-    /// </summary>
-    /// <param name="audioClip"></param>
-    public void SetAudioEffect(AudioClip audioClip)
-    {
-        audioSource.clip = audioClip;
-
-        audioSource.Play();
-    }
-
-    public void SetOwningActor(Actor actor)
-    {
-        // set the actor who fired this projectile
-        owningActor = actor;
     }
 
     protected void CreateExplosion()

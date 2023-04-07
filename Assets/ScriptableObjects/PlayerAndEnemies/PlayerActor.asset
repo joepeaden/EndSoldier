@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d353c0846a3f6a8438f71cbf95ebf6bd, type: 3}
-  m_Name: PlayerData
+  m_Name: PlayerActor
   m_EditorClassIdentifier: 
-  hitPoints: 15
+  hitPoints: 200
   recoilControl: 10
   slowWalkMoveForce: 16
   fastWalkMoveForce: 30

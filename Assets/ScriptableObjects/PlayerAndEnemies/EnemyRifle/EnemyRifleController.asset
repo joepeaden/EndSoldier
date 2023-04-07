@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 866e09bcba0223943864e529978a571f, type: 3}
-  m_Name: PistolEnemyData
+  m_Name: EnemyRifleController
   m_EditorClassIdentifier: 
   minSemiAutoFireRate: 0
   maxSemiAutoFireRate: 0
-  scoreValue: 50
+  scoreValue: 100
   shootPauseTimeMax: 0
   shootPauseTimeMin: 0
   maxBurstFrames: 0
   minBurstFrames: 0
   maxTimeToFindPlayer: 0
   minTimeToFindPlayer: 0
-  navAgentSpeed: 7
+  navAgentSpeed: 5

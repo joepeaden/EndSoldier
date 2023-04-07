@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyData", menuName = "MyScriptables/EnemyData")]
-public class EnemyData : ScriptableObject
+[CreateAssetMenu(fileName = "ControllerData", menuName = "MyScriptables/ControllerData")]
+public class ControllerData : ScriptableObject
 {
     public int minSemiAutoFireRate;
     public int maxSemiAutoFireRate;
