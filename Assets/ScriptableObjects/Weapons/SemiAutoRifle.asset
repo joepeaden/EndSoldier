@@ -15,12 +15,10 @@ MonoBehaviour:
   displayName: Semi-Auto Rifle
   rewardKey: SAR
   cost: 100
-  accuracyAngle: 2
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
   recoil: 1
   attackInterval: 0.2
   range: 30
-  damage: 100
   ammoCapacity: 20
   totalAmount: 80
   attackSound: {fileID: 8300000, guid: 683f43b92ef1f2442a33beb5d10b1233, type: 3}
@@ -32,3 +30,6 @@ MonoBehaviour:
   modelPrefab: {fileID: 100000, guid: 4af8bcf25a077c046a32a40e08621cfd, type: 3}
   muzzlePosition: {x: -1.764, y: -0.002, z: 0.235}
   hasInfiniteBackupAmmo: 0
+  accuracyAngle: 10
+  movementAccuracyPenalty: 5
+  aimingBoon: 100

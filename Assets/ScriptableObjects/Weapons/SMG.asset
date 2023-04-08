@@ -15,12 +15,10 @@ MonoBehaviour:
   displayName: Submachine Gun
   rewardKey: SMG
   cost: 100
-  accuracyAngle: 15
-  projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
+  projectile: {fileID: 6425079759990356200, guid: b5f2e306111ac4e2aab9f9da950c0040, type: 3}
   recoil: 1
   attackInterval: 0.03
   range: 20
-  damage: 34
   ammoCapacity: 40
   totalAmount: 120
   attackSound: {fileID: 8300000, guid: 8d19cd7f377aa9e4e834d2627646d695, type: 3}
@@ -32,3 +30,6 @@ MonoBehaviour:
   modelPrefab: {fileID: 100000, guid: 4fcb1ff557801b444a9eec3637129631, type: 3}
   muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
   hasInfiniteBackupAmmo: 0
+  accuracyAngle: 12
+  movementAccuracyPenalty: 1
+  aimingBoon: 2

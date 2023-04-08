@@ -13,6 +13,9 @@ public class Inventory : MonoBehaviour
     [SerializeField] private bool hasRifle;
     [SerializeField] private int startingAmmo;
 
+    [Header("Debug Options")]
+    [SerializeField] private bool hasAllWeapons;
+
     // wierd?
     public int weaponCount
     {
@@ -31,23 +34,52 @@ public class Inventory : MonoBehaviour
     {
         actor = GetComponent<Actor>();
 
-        InventoryWeapon inventoryWeapon;
-        if (hasRifle)
+        if (hasAllWeapons)
         {
+            // This is the second place where these reward key strings are. I need to make these into an enumeration if there comes a third place or the list gets out of hand.
+            // then I can just iterate a for loop of all the enum names as strings or maybe keep them in a hashmap with their associated data...
+            InventoryWeapon inventoryWeapon;
             inventoryWeapon = new InventoryWeapon(dataStorage.assaultRifle);
             inventoryWeapon.rewardKey = "RIFLE";
+            inventoryWeapon.amount = startingAmmo;
+            AttemptAddItem(inventoryWeapon);
+            inventoryWeapon = new InventoryWeapon(dataStorage.semiAutoRifle);
+            inventoryWeapon.rewardKey = "SAR";
+            inventoryWeapon.amount = startingAmmo;
+            AttemptAddItem(inventoryWeapon);
+            inventoryWeapon = new InventoryWeapon(dataStorage.shotgun);
+            inventoryWeapon.rewardKey = "SHOTGUN";
+            inventoryWeapon.amount = startingAmmo;
+            AttemptAddItem(inventoryWeapon);
+            inventoryWeapon = new InventoryWeapon(dataStorage.subMachineGun);
+            inventoryWeapon.rewardKey = "SMG";
+            inventoryWeapon.amount = startingAmmo;
+            AttemptAddItem(inventoryWeapon);
+            inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
+            inventoryWeapon.rewardKey = "PISTOL";
+            inventoryWeapon.amount = startingAmmo;
+            AttemptAddItem(inventoryWeapon);
         }
         else
         {
-            inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
-            inventoryWeapon.rewardKey = "PISTOL";
-        }
+            InventoryWeapon inventoryWeapon;
+            if (hasRifle)
+            {
+                inventoryWeapon = new InventoryWeapon(dataStorage.assaultRifle);
+                inventoryWeapon.rewardKey = "RIFLE";
+            }
+            else
+            {
+                inventoryWeapon = new InventoryWeapon(dataStorage.pistol);
+                inventoryWeapon.rewardKey = "PISTOL";
+            }
 
-        if (startingAmmo != 0)
-        {
-            inventoryWeapon.amount = startingAmmo;
+            if (startingAmmo != 0)
+            {
+                inventoryWeapon.amount = startingAmmo;
+            }
+            AttemptAddItem(inventoryWeapon);
         }
-        AttemptAddItem(inventoryWeapon);
     }
 
     public bool AttemptAddItem(InventoryItem item)

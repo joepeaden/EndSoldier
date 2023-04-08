@@ -8,6 +8,7 @@ using UnityEngine.AI;
 
 /// <summary>
 /// Superclass for any actor (player, enemy, etc.)
+/// Actors are the bodies of enemy and player (as opposed to the Controller i.e. Player.cs, Enemy.cs being the brain)
 /// </summary>
 public class Actor : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Actor : MonoBehaviour
 	public UnityEvent OnGetHit = new UnityEvent();
 	public UnityEvent OnCrouch = new UnityEvent();
 	public UnityEvent OnStand = new UnityEvent();
+	public UnityEvent<Vector3> EmitVelocityInfo = new UnityEvent<Vector3>();
 
 	public enum State
 	{
@@ -109,11 +111,14 @@ public class Actor : MonoBehaviour
     {
 		OnDeath.RemoveAllListeners();
 		OnGetHit.RemoveAllListeners();
-    }
+		EmitVelocityInfo.RemoveAllListeners();
+		OnCrouch.RemoveAllListeners();
+	    OnStand.RemoveAllListeners();
+	}
 
 	private void LateUpdate()
 	{
-		actorModel.UpdateVelocityBasedAnimations(isUsingNavAgent ? navAgent.velocity : rigidBody.velocity);
+		EmitVelocityInfo.Invoke(isUsingNavAgent ? navAgent.velocity : rigidBody.velocity);
 	}
 
     private void OnCollisionEnter(Collision collision)

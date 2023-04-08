@@ -6,17 +6,16 @@ public class Projectile : MonoBehaviour
 {
     // move this stuff into a Scriptable.
 
+ //   [SerializeField]
+	//protected float velocity; //50
+    //[SerializeField]
+    //protected bool isExplosive;
+
     [SerializeField]
-	protected float velocity;
-    [SerializeField]
-    public float impact;
-    [SerializeField]
-    protected float range;
-    [SerializeField]
-    protected bool isExplosive;
-    [SerializeField]
+    protected ProjectileData data;
+
     protected Actor owningActor;
-    protected int damage;
+    //protected int damage;
 
     private AudioSource audioSource;
     private Vector3 lastPoint;
@@ -26,15 +25,20 @@ public class Projectile : MonoBehaviour
     {
         lastPoint = transform.position;
         audioSource = GetComponent<AudioSource>();
+
+        GetComponent<MeshRenderer>().material = data.material;
     }
 
     private void FixedUpdate()
     {
-        if (velocity != 0)
-
-            GetComponent<Rigidbody>().velocity = velocity * transform.forward;
+        if (data.velocity != 0)
+        {
+            GetComponent<Rigidbody>().velocity = data.velocity * transform.forward;
+        }
         else
-            Debug.LogWarning("Projectile velocity for " + gameObject.name + " is not set");
+        {
+            Debug.LogWarning("Projectile velocity for " + gameObject.name + " is zero");
+        }
 
         Vector3 movementSinceLastFrame = (transform.position - lastPoint);
         Physics.Raycast(lastPoint, movementSinceLastFrame.normalized, out RaycastHit hitInfo, movementSinceLastFrame.magnitude);
@@ -62,9 +66,9 @@ public class Projectile : MonoBehaviour
             if (actor != null && other.gameObject.GetComponent<HitBox>())
             {
                 // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
-                shouldDestroy = actor.GetHit(damage);
+                shouldDestroy = actor.GetHit(data.damage);
 
-                if (isExplosive)
+                if (data.isExplosive)
                 {
                     // implement method per projectile types
                     CreateExplosion();
@@ -86,13 +90,22 @@ public class Projectile : MonoBehaviour
     /// </summary>
     /// <param name="firingActor">Actor who fired it</param>
     /// <param name="data">The data of the firing weapon (pass in when fired)</param>
-    public void Initialize(Actor firingActor, WeaponData data)
+    /// <param name="siblingNumber">If more than one bullet fired, which sibling is this?</param>
+    public void Initialize(Actor firingActor, WeaponData data, int siblingNumber)
     {
         owningActor = firingActor;
-        damage = data.damage;
-        audioSource.clip = data.attackSound;
 
-        audioSource.Play();
+        // only play one sound when fired.
+        if (siblingNumber < 1 && audioSource != null)
+        {
+            audioSource.clip = data.attackSound;
+            audioSource.Play();
+        }
+    }
+
+    public ProjectileData GetData()
+    {
+        return data;
     }
 
     /// <summary>

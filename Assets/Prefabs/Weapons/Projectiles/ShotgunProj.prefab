@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1912005960309371250}
   - component: {fileID: 8191133798857819844}
   m_Layer: 8
-  m_Name: Bullet
+  m_Name: ShotgunProj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6425079759990356200}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.5}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -49,11 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197e2c23723fd1547ab522ad46c36825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 50
-  impact: 75
-  range: 0
-  isExplosive: 0
-  owningActor: {fileID: 0}
+  data: {fileID: 11400000, guid: aa758799661b741158ddbae57094cb3d, type: 2}
 --- !u!65 &5477406972381997941
 BoxCollider:
   m_ObjectHideFlags: 0

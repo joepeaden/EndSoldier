@@ -310,6 +310,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
     - target: {fileID: 2062017164814779945, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: drawAccuracyAngle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2062017164814779945, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: infiniteBackupAmmo
       value: 0
       objectReference: {fileID: 0}
@@ -360,6 +364,10 @@ PrefabInstance:
     - target: {fileID: 3996930033360309522, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996930033360309522, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3996930033360310726, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
@@ -536,6 +544,10 @@ PrefabInstance:
     - target: {fileID: 3996930033360519550, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996930033360519550, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3996930033360520494, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer

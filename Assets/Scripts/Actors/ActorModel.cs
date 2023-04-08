@@ -41,7 +41,7 @@ public class ActorModel : MonoBehaviour
             }
         }
 
-        //StartCoroutine(CheckOutline());
+        actor.EmitVelocityInfo.AddListener(UpdateVelocityBasedAnimations);
     }
 
     // not using it, but just in case, who knows if i'll need it later
@@ -137,5 +137,6 @@ public class ActorModel : MonoBehaviour
     private void OnDestroy()
     {
         actor.OnDeath.RemoveListener(SwapToRagdoll);
+        actor.EmitVelocityInfo.RemoveListener(UpdateVelocityBasedAnimations);
     }
 }

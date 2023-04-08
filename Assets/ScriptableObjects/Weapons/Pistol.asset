@@ -15,12 +15,10 @@ MonoBehaviour:
   displayName: Pistol
   rewardKey: 
   cost: 0
-  accuracyAngle: 10
-  projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
+  projectile: {fileID: 6425079759990356200, guid: b5f2e306111ac4e2aab9f9da950c0040, type: 3}
   recoil: 1
   attackInterval: 0.1
   range: 15
-  damage: 34
   ammoCapacity: 10
   totalAmount: 20
   attackSound: {fileID: 8300000, guid: 9a7d54770be339e478fc73a7609c5753, type: 3}
@@ -32,3 +30,6 @@ MonoBehaviour:
   modelPrefab: {fileID: 100000, guid: 792b88acfb4e778419bb4a4ca38f54d4, type: 3}
   muzzlePosition: {x: -0.588, y: -0.007, z: 0.223}
   hasInfiniteBackupAmmo: 1
+  accuracyAngle: 8
+  movementAccuracyPenalty: 2
+  aimingBoon: 2

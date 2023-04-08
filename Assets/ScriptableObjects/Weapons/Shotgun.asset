@@ -15,12 +15,10 @@ MonoBehaviour:
   displayName: Shotgun
   rewardKey: SHOTGUN
   cost: 100
-  accuracyAngle: 30
-  projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
+  projectile: {fileID: 6425079759990356200, guid: e4591a73cc793440ab848b64bdf0554f, type: 3}
   recoil: 1
   attackInterval: 0.5
   range: 10
-  damage: 40
   ammoCapacity: 8
   totalAmount: 80
   attackSound: {fileID: 8300000, guid: 8c4eb3b500cc54808b668ab9657e44f0, type: 3}
@@ -32,3 +30,6 @@ MonoBehaviour:
   modelPrefab: {fileID: 100000, guid: f7108c4a40f85e649a915657a2600cea, type: 3}
   muzzlePosition: {x: -1.764, y: -0.002, z: 0.235}
   hasInfiniteBackupAmmo: 0
+  accuracyAngle: 30
+  movementAccuracyPenalty: 1
+  aimingBoon: 3

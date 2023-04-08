@@ -44,6 +44,8 @@ public class WeaponInstance : MonoBehaviour
         }
     }
 
+    private Vector3 actorVelocity;
+
     public InventoryWeapon inventoryWeapon;
     private int ammoInWeapon;
     private Vector3 originalLocalPosition;
@@ -53,6 +55,10 @@ public class WeaponInstance : MonoBehaviour
     private bool readyToAttack = true;
     private bool reloading;
 
+    [Header("Debug Options")]
+    [SerializeField]
+    private bool drawAccuracyAngle;
+
     private void Start()
     {
         ActorOperator.OnActorBeginAim += BeginAim;
@@ -60,8 +66,25 @@ public class WeaponInstance : MonoBehaviour
         ActorOperator.OnCrouch.AddListener(HandleCrouch);
         ActorOperator.OnStand.AddListener(HandleStand);
         ActorOperator.OnDeath.AddListener(HandleDeath);
-
+        ActorOperator.EmitVelocityInfo.AddListener(ReceiveActorVelocityData);
         originalLocalPosition = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        if (drawAccuracyAngle)
+        {
+            float accuracy = GetAccuracy();
+
+            Quaternion projRot = muzzle.rotation;
+            Quaternion ray1Dir = new Quaternion();
+            ray1Dir.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y + accuracy, projRot.eulerAngles.z);
+            Quaternion ray2Dir = new Quaternion();
+            ray2Dir.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y - accuracy, projRot.eulerAngles.z);
+
+            Debug.DrawRay(muzzle.position, ray1Dir * Vector3.forward * 10f, Color.red);
+            Debug.DrawRay(muzzle.position, ray2Dir * Vector3.forward * 10f, Color.red);
+        }
     }
 
     private void LateUpdate()
@@ -219,8 +242,7 @@ public class WeaponInstance : MonoBehaviour
 
         for (int proj = 0; proj < inventoryWeapon.data.projFiredPerShot; proj++)
         {
-            // account for aiming
-            float accuracyAngle = inventoryWeapon.data.accuracyAngle - (aiming ? inventoryWeapon.data.accuracyAngle / 3 : 0);
+            float accuracyAngle = GetAccuracy();
 
             // make the bullet less accurate
             float rotAdjust = Random.Range(-accuracyAngle / 2, accuracyAngle / 2);
@@ -228,7 +250,7 @@ public class WeaponInstance : MonoBehaviour
             projRot.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y + rotAdjust, projRot.eulerAngles.z);
 
             Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, projRot).GetComponent<Projectile>();
-            projectile.Initialize(actorOperator, inventoryWeapon.data);
+            projectile.Initialize(actorOperator, inventoryWeapon.data, proj);
         }
 
         StopCoroutine(Flash());
@@ -237,6 +259,29 @@ public class WeaponInstance : MonoBehaviour
         
         if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
+    }
+
+    /// <summary>
+    /// determine accuracy (aiming, is the player standing still?)
+    /// </summary>
+    /// <returns>The angle that projectiles can be fired in.</returns>
+    private float GetAccuracy()
+    {
+        float accuracyAngle = inventoryWeapon.data.accuracyAngle;
+        if (aiming)
+        {
+            if (actorOperator.IsPlayer)
+                Debug.Log("Aiming");
+            accuracyAngle /= inventoryWeapon.data.aimingBoon;
+        }
+        if (actorVelocity.magnitude > 1f)
+        {
+            if (actorOperator.IsPlayer)
+                Debug.Log("Moving");
+            accuracyAngle *= inventoryWeapon.data.movementAccuracyPenalty;
+        }
+
+        return accuracyAngle;
     }
 
     private IEnumerator Flash()
@@ -347,9 +392,16 @@ public class WeaponInstance : MonoBehaviour
         return inventoryWeapon.data.displayName;
     }
 
+
+    private void ReceiveActorVelocityData(Vector3 vel)
+    {
+        actorVelocity = vel;
+    }
+
     private void OnDestroy()
     {
         ActorOperator.OnActorBeginAim -= BeginAim;
         ActorOperator.OnActorEndAim -= EndAim;
+        ActorOperator.EmitVelocityInfo.RemoveListener(ReceiveActorVelocityData);
     }
 }
