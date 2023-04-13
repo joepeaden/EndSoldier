@@ -21,15 +21,15 @@ MonoBehaviour:
   moveToCoverSpeed: 10
   coverSensorDistance: 1.25
   crouchDogeChance: 0.25
-  woundSound1: {fileID: 0}
-  woundSound2: {fileID: 0}
-  woundSound3: {fileID: 0}
-  woundSound4: {fileID: 0}
-  woundSound5: {fileID: 0}
-  woundSound6: {fileID: 0}
-  deathSound1: {fileID: 0}
-  deathSound2: {fileID: 0}
-  deathSound3: {fileID: 0}
+  woundSound1: {fileID: 8300000, guid: e4e708d164c3e4246845976f393b9741, type: 3}
+  woundSound2: {fileID: 8300000, guid: 0454f25f7aff04124a7c8a5a57788990, type: 3}
+  woundSound3: {fileID: 8300000, guid: d9920967ceb54495b9dd717c06328e96, type: 3}
+  woundSound4: {fileID: 8300000, guid: f444bbed81afe4d8a9e40d6432b8f54e, type: 3}
+  woundSound5: {fileID: 8300000, guid: 94be4eea7b20143d986cd31d9bcdd831, type: 3}
+  woundSound6: {fileID: 8300000, guid: f973f451e5bc14d3e9fe6b020f9cdf3c, type: 3}
+  deathSound1: {fileID: 8300000, guid: 5d3e7ec09c25f41c48946b51f241eb7b, type: 3}
+  deathSound2: {fileID: 8300000, guid: 060ef4aabd21b4db3bab6646472c16a1, type: 3}
+  deathSound3: {fileID: 8300000, guid: c849c404f273c4a30a046d5d66ac6cb3, type: 3}
   minSemiAutoFireRate: 0.1
   maxSemiAutoFireRate: 1
   velocityMoveAnimThreshold: 0

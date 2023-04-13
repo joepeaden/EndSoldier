@@ -11500,6 +11500,22 @@ PrefabInstance:
       propertyPath: drawAccuracyAngle
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3814845372838983303, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: maxVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814845372838983303, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: minVolume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814845372838983303, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814845372838983303, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: groundLayers.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 3855111821839161167, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: m_Layer
       value: 15
@@ -11578,6 +11594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8009151145797562973, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+    - {fileID: 3814845372838983303, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
 --- !u!4 &1579995691 stripped
 Transform:

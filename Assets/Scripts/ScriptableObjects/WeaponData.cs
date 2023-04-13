@@ -7,6 +7,7 @@ public class WeaponData : ShopRewardData
 	public float recoil;
 	public float attackInterval;
 	public int range;
+	public int optimalRange;
 	public int ammoCapacity;
 	/// <summary>
     /// Refers to total amount of ammo

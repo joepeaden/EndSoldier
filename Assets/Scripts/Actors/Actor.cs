@@ -48,6 +48,7 @@ public class Actor : MonoBehaviour
 	[SerializeField] private MeshRenderer modelRenderer;
 	[SerializeField] private Transform TargetSpot;
 	[SerializeField] private ActorModel actorModel;
+	[SerializeField] private GameObject bloodPoofEffect;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	//[SerializeField] private Material originalMaterial;
@@ -73,18 +74,19 @@ public class Actor : MonoBehaviour
 	// original dimensions of actor object
 	//private Vector3 originalModelDimensions;
 
-	private bool movingToCover;
-	private Cover targetCover;
-
 	public Vector3 lookTarget;
 	/// <summary>
     /// Not sure if it's really the actor's target, but a guess.
     /// </summary>
 	public Transform target;
-
 	public ActorTeam team;
 
 	private bool isUsingNavAgent;
+	private List<AudioClip> deathSounds;
+	private List<AudioClip> woundSounds;
+	private Vector3 lastHitLocation;
+	private bool movingToCover;
+	private Cover targetCover;
 
 	private void Awake()
     {
@@ -105,6 +107,23 @@ public class Actor : MonoBehaviour
 		audioSource = GetComponent<AudioSource>();
 		inventory = GetComponent<Inventory>();
 		HitPoints = data.hitPoints;
+
+		deathSounds = new List<AudioClip>()
+		{
+			data.deathSound1,
+			data.deathSound2,
+			data.deathSound3
+		};
+
+		woundSounds = new List<AudioClip>()
+		{
+			data.woundSound1,
+			data.woundSound2,
+			data.woundSound3,
+			data.woundSound4,
+			data.woundSound5,
+			data.woundSound6,
+		};
 	}
 
     private void OnDestroy()
@@ -512,8 +531,10 @@ public class Actor : MonoBehaviour
     /// </summary>
     /// <param name="damage">Damage to deal to this actor.</param>
     /// <returns>If the projectile should </returns>
-    public bool GetHit(int damage)
+    public bool GetHit(int damage, Vector3 hitLocation)
 	{
+		lastHitLocation = hitLocation;
+
 		bool gotHit = true;
 		if (!IsAlive || isInvincible)
         {
@@ -533,7 +554,13 @@ public class Actor : MonoBehaviour
 		{
 			HitPoints -= damage;
 
-			PlaySound(data.woundSound2);
+			// don't always play the sound.
+			int index = Random.Range(0, woundSounds.Count * 3);
+			if (index < woundSounds.Count)
+			{
+				PlaySound(woundSounds[index]);
+			}
+
 
 			OnGetHit.Invoke();
 
@@ -567,7 +594,14 @@ public class Actor : MonoBehaviour
 		navAgent.enabled = false;
 		mainCollider.enabled = false;
 
-		PlaySound(data.deathSound2);
+		int index = Random.Range(0, deathSounds.Count * 3);
+		if (index < deathSounds.Count)
+		{
+			PlaySound(deathSounds[index]);
+		}
+
+		lastHitLocation = new Vector3(lastHitLocation.x, lastHitLocation.y + Random.Range(0f, .5f), lastHitLocation.z);
+		Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
 
 		// have actor handle it's own inevitable destruction. It's ok buddy.
 		OnDeath.Invoke();

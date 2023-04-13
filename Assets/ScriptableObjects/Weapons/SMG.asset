@@ -18,7 +18,8 @@ MonoBehaviour:
   projectile: {fileID: 6425079759990356200, guid: b5f2e306111ac4e2aab9f9da950c0040, type: 3}
   recoil: 1
   attackInterval: 0.03
-  range: 20
+  range: 22
+  optimalRange: 15
   ammoCapacity: 40
   totalAmount: 120
   attackSound: {fileID: 8300000, guid: 8d19cd7f377aa9e4e834d2627646d695, type: 3}

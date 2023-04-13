@@ -15,10 +15,11 @@ MonoBehaviour:
   displayName: Semi-Auto Rifle
   rewardKey: SAR
   cost: 100
-  projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
+  projectile: {fileID: 6425079759990356200, guid: 2605da23b5e7c4c5fbad81084b707f57, type: 3}
   recoil: 1
   attackInterval: 0.2
-  range: 30
+  range: 60
+  optimalRange: 40
   ammoCapacity: 20
   totalAmount: 80
   attackSound: {fileID: 8300000, guid: 683f43b92ef1f2442a33beb5d10b1233, type: 3}

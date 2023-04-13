@@ -3,11 +3,13 @@
 // Author: Joseph Peaden
 
 /// <summary>
-/// Holds data for actors.
+/// Holds data for actors. Should be just body data like walk speed, hitpoints, etc. Stuff that the Actor class needs.
 /// </summary>
 [CreateAssetMenu(fileName = "ActorData", menuName = "MyScriptables/ActorData")]
 public class ActorData : ScriptableObject
 {
+	// there's a lot of stuff here that shouldn't be here.
+
 	public int hitPoints;
 	public float recoilControl;
 	public float slowWalkMoveForce;

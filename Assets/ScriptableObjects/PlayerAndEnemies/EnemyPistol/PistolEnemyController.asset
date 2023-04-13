@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 866e09bcba0223943864e529978a571f, type: 3}
   m_Name: PistolEnemyController
   m_EditorClassIdentifier: 
-  minSemiAutoFireRate: 0
-  maxSemiAutoFireRate: 0
+  canMoveAndShoot: 0
   scoreValue: 50
-  shootPauseTimeMax: 0
-  shootPauseTimeMin: 0
-  maxBurstFrames: 0
-  minBurstFrames: 0
-  maxTimeToFindPlayer: 0
-  minTimeToFindPlayer: 0
-  navAgentSpeed: 7
+  startWeapon: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
+  shootPauseTimeMax: 4
+  shootPauseTimeMin: 2
+  maxBurstFrames: 60
+  minBurstFrames: 1
+  navAgentSpeed: 5

@@ -5,17 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ControllerData", menuName = "MyScriptables/ControllerData")]
 public class ControllerData : ScriptableObject
 {
-    public int minSemiAutoFireRate;
-    public int maxSemiAutoFireRate;
-
-    public int scoreValue;
+	public bool canMoveAndShoot;
+	public int scoreValue;
+	public WeaponData startWeapon;
 
 	public float shootPauseTimeMax;
 	public float shootPauseTimeMin;
 	public float maxBurstFrames;
 	public float minBurstFrames;
-	public float maxTimeToFindPlayer;
-	public float minTimeToFindPlayer;
 
 	public float navAgentSpeed;
 }

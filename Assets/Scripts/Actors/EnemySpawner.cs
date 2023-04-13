@@ -95,6 +95,7 @@ public class EnemySpawner : MonoBehaviour
             currentEnemyCountGoal = (int)(data.baseEnemyCount * data.wavePopulationMultiplier * (waveNumber - 1));
         }
 
+        // I don't really like this.
         // Add whatever enemies are appropriate based on the wave count
         if (waveNumber >= data.enemyPistolIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyPistolPrefab))
         {
@@ -103,6 +104,18 @@ public class EnemySpawner : MonoBehaviour
         if (waveNumber >= data.enemyRifleIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyRiflePrefab))
         {
             spawnableEnemyPrefabs.Add(data.enemyRiflePrefab);
+        }
+        if (waveNumber >= data.enemySMGIntroWave && !spawnableEnemyPrefabs.Contains(data.enemySMGPrefab))
+        {
+            spawnableEnemyPrefabs.Add(data.enemySMGPrefab);
+        }
+        if (waveNumber >= data.enemyBreacherIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyBreacherPrefab))
+        {
+            spawnableEnemyPrefabs.Add(data.enemyBreacherPrefab);
+        }
+        if (waveNumber >= data.enemyMarksmanIntroWave && !spawnableEnemyPrefabs.Contains(data.enemyMarksmanPrefab))
+        {
+            spawnableEnemyPrefabs.Add(data.enemyMarksmanPrefab);
         }
     }
 }

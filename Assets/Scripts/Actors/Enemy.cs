@@ -18,14 +18,6 @@ public class Enemy : MonoBehaviour, ISetActive
 	[SerializeField]
 	private ControllerData data;
 
-	// scriptable object time...
-	public float shootPauseTimeMax;
-	public float shootPauseTimeMin;
-	public float maxBurstFrames;
-	public float minBurstFrames;
-	public float maxTimeToFindPlayer; 
-	public float minTimeToFindPlayer;
-
 	public bool activateOnStart;
 
 	private Actor actor;
@@ -34,6 +26,8 @@ public class Enemy : MonoBehaviour, ISetActive
 
 	private void Awake()
     {
+		// probably should make like an init method for the actor.... but since it's really just two controllers and not likely to grow...
+		// whatever.
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Enemy;
 		actor.SetAgentSpeed(data.navAgentSpeed);
@@ -43,6 +37,8 @@ public class Enemy : MonoBehaviour, ISetActive
 	{
 		actor.AddCoverListener(ActorHasPotentialCover);
 		actor.OnDeath.AddListener(HandleEnemyDeath);
+
+		actor.GetInventory().SetWeaponFromData(data.startWeapon);
 
 		if (activateOnStart)
 		{
@@ -59,22 +55,35 @@ public class Enemy : MonoBehaviour, ISetActive
     {
 		if (actor.IsAlive && target != null)
 		{
-			if (TargetInRangeAndLOS())
+			(bool targetInRangeAndLOS, bool targetInOptimalRange) = TargetInRangeAndLOS();
+			if (targetInRangeAndLOS)
 			{
-				actor.StopMoving();
-
-				actor.UpdateActorRotation(target.transform.position);
-
-				if (actor.GetEquippedWeaponAmmo() <= 0)
+				if (targetInOptimalRange)
 				{
-					actor.AttemptReload();
+					actor.StopMoving();
 				}
-				else if (!pauseFiring)
+				else
 				{
-					int numToFire = (int)Random.Range(minBurstFrames, maxBurstFrames);
-
-					StartCoroutine(FireBurst(numToFire));
+					actor.Move(target.transform.position);
 				}
+
+				// if we're close enough to stop and shoot, OR if we're dope enough to move and shoot
+				if (targetInOptimalRange || data.canMoveAndShoot)
+				{
+					actor.UpdateActorRotation(target.transform.position);
+
+					if (actor.GetEquippedWeaponAmmo() <= 0)
+					{
+						actor.AttemptReload();
+					}
+					else if (!pauseFiring)
+					{
+						int numToFire = (int)Random.Range(data.minBurstFrames, data.maxBurstFrames);
+
+						StartCoroutine(FireBurst(numToFire));
+					}
+				}
+
 			}
 			else
 			{
@@ -86,12 +95,9 @@ public class Enemy : MonoBehaviour, ISetActive
 	/// <summary>
 	/// Check if the actor's current target is in range and in LOS
 	/// </summary>
-	/// <returns></returns>
-	private bool TargetInRangeAndLOS()
+	/// <returns>A pair of bools: (TargetInRangeAndLOS, TargetAtOptimalRange)</returns>
+	private (bool, bool) TargetInRangeAndLOS()
     {
-		// how to check target type? Maybe could also use for walking to sounds... in which case range would be 0, the exact position to move to
-		// basically make this more generic
-
 		InventoryWeapon weapon = actor.GetEquippedWeapon();
 
 		// cast overlap sphere with radius = range to see if target is possibly in range
@@ -115,16 +121,20 @@ public class Enemy : MonoBehaviour, ISetActive
 					{
 						if (blockHit.distance < targetHit.distance)
 						{
-							return false;
+							return (false, false);
 						}
 					}
 				}
 
-				return targetHits.Count() > 0;
+				// if we made it here and hit a target, then we do indeed have LOS and Range (otherwise would have returned or skipped this block)
+				bool targetInRangeAndLOS = targetHits.Count() > 0;
+				bool targetInOptimalRange = targetInRangeAndLOS ? ((target.transform.position - transform.position).magnitude <= weapon.data.optimalRange) : false;
+
+				return (targetInRangeAndLOS, targetInOptimalRange);
             }
         }
 
-		return false;
+		return (false, false);
 	}
 
 	public void Activate()
@@ -155,9 +165,7 @@ public class Enemy : MonoBehaviour, ISetActive
 
 	private IEnumerator LookForTarget()
     {
-		// for now. Just pause for a moment and then find player.
-		// eventually, can use a sphere collider for awareness trigger then raycast to see if target is not visible (hits wall instead)
-		yield return new WaitForSeconds((int) Random.Range(minTimeToFindPlayer, maxTimeToFindPlayer));
+		// they know where you are.
 		target = GameManager.Instance.GetPlayerGO();
 		actor.target = target.GetComponent<Actor>().GetShootAtMeTransform();
 		yield return null;
@@ -209,7 +217,7 @@ public class Enemy : MonoBehaviour, ISetActive
 			}
 		}
 
-		yield return new WaitForSeconds(Random.Range(shootPauseTimeMin, shootPauseTimeMax));
+		yield return new WaitForSeconds(Random.Range(data.shootPauseTimeMin, data.shootPauseTimeMax));
 
 		pauseFiring = false;
 	}
