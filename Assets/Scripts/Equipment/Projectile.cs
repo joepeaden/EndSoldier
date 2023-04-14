@@ -6,10 +6,12 @@ public class Projectile : MonoBehaviour
 {
     // move this stuff into a Scriptable.
 
- //   [SerializeField]
-	//protected float velocity; //50
+    //   [SerializeField]
+    //protected float velocity; //50
     //[SerializeField]
     //protected bool isExplosive;
+
+    public Vector3 movementDirection { private set; get; }
 
     [SerializeField]
     protected ProjectileData data;
@@ -19,7 +21,6 @@ public class Projectile : MonoBehaviour
 
     private AudioSource audioSource;
     private Vector3 lastPoint;
-    private Vector3 movementDirection;
     private bool destroying;
 
     private void Awake()
@@ -67,7 +68,7 @@ public class Projectile : MonoBehaviour
             if (actor != null && other.gameObject.GetComponent<HitBox>())
             {
                 // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
-                shouldDestroy = actor.GetHit(data.damage, transform.position, movementDirection);
+                shouldDestroy = actor.GetHit(this);
 
                 if (data.isExplosive)
                 {

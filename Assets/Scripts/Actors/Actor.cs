@@ -14,15 +14,11 @@ public class Actor : MonoBehaviour
 {
 	public UnityAction OnActorBeginAim;
 	public UnityAction OnActorEndAim;
-	///// <summary>
- //   /// Param is the location of the hit which killed the actor.
- //   /// </summary>
-	//public UnityEvent<Vector3> OnDeath = new UnityEvent<Vector3>();
-	/// <summary>
-	/// Param is the location of the hit which killed the actor.
-	/// </summary>
 	public UnityEvent OnDeath = new UnityEvent();
-	public UnityEvent<Vector3, Vector3> OnGetHit = new UnityEvent<Vector3, Vector3>();
+	/// <summary>
+	/// 
+	/// </summary>
+	public UnityEvent<Projectile> OnGetHit = new UnityEvent<Projectile>();
 	public UnityEvent OnHeal = new UnityEvent();
 	public UnityEvent OnCrouch = new UnityEvent();
 	public UnityEvent OnStand = new UnityEvent();
@@ -544,11 +540,9 @@ public class Actor : MonoBehaviour
 	/// </summary>
 	/// <param name="damage">Damage to deal to this actor.</param>
 	/// <returns>If the projectile should </returns>
-	public bool GetHit(int damage, Vector3 hitLocation, Vector3 hitDirection)
+	//public bool GetHit(int damage, Vector3 hitLocation, Vector3 hitDirection)
+	public bool GetHit(Projectile projectile)
 	{
-		Vector3 lastHitLocation = hitLocation;
-		Vector3 lastHitDirection = hitDirection;
-
 		bool gotHit = true;
 		if (!IsAlive || isInvincible)
         {
@@ -566,7 +560,7 @@ public class Actor : MonoBehaviour
 
 		if (gotHit)
 		{
-			HitPoints -= damage;
+			HitPoints -= projectile.GetData().damage;
 
 			// don't always play the sound.
 			int index = Random.Range(0, woundSounds.Count * 3);
@@ -575,7 +569,7 @@ public class Actor : MonoBehaviour
 				PlaySound(woundSounds[index]);
 			}
 
-			OnGetHit.Invoke(lastHitLocation, lastHitDirection);
+			OnGetHit.Invoke(projectile);
 
 			if (HitPoints <= 0)
 			{

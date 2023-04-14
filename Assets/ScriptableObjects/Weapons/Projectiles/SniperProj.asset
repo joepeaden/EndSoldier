@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006a28bab6cd3473188a9a50e3ea48c0, type: 3}
   m_Name: SniperProj
   m_EditorClassIdentifier: 
+  causesHeadShots: 1
   velocity: 60
+  force: 15000
   damage: 100
   material: {fileID: 2100000, guid: efde5349fa4af45309403104738ee0ca, type: 2}
   isExplosive: 0

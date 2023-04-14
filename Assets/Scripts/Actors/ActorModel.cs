@@ -16,8 +16,7 @@ public class ActorModel : MonoBehaviour
     private List<Rigidbody> ragRigidBodies;
     private List<Collider> ragColliders;
     private List<GameObject> bodyParts = new List<GameObject>();
-    private Vector3 lastHitLocation;
-    private Vector3 lastHitDirection;
+    private Projectile projectileThatKilledJim;
 
     //private bool isHighlighted;
 
@@ -25,7 +24,7 @@ public class ActorModel : MonoBehaviour
     {
         //actor.OnCrouch.AddListener(HandleCrouch);
         //actor.OnStand.AddListener(HandleStand);
-        actor.OnDeath.AddListener(SwapToRagdoll);
+        actor.OnDeath.AddListener(HandleActorDeath);
         actor.OnGetHit.AddListener(HandleActorHit);
 
         ragRigidBodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
@@ -94,11 +93,11 @@ public class ActorModel : MonoBehaviour
     //    }
     //}
 
-    private void HandleActorHit(Vector3 hitLocation, Vector3 hitDirection)
+    //private void HandleActorHit(Vector3 hitLocation, Vector3 hitDirection)
+    private void HandleActorHit(Projectile projectile)
     {
-        lastHitLocation = hitLocation;
-        lastHitDirection = hitDirection;
-    }    
+        projectileThatKilledJim = projectile;
+    }
 
     public void UpdateVelocityBasedAnimations(Vector3 velocity)
     {
@@ -110,13 +109,28 @@ public class ActorModel : MonoBehaviour
         ragAnim.SetFloat("HorizontalAxis", horiz);
     }
 
-    private void SwapToRagdoll()
+    private void HandleActorDeath()
     {
-        Rigidbody hitRigidbody = null;
+        Vector3 lastHitDirection = projectileThatKilledJim.movementDirection;
+        Vector3 lastHitLocation = projectileThatKilledJim.transform.position;
 
+        // fudge the hit location a bit to make it interesting
+        lastHitLocation = new Vector3(lastHitLocation.x, lastHitLocation.y + Random.Range(0f, .5f), lastHitLocation.z);
+
+        // swap to the ragdoll and note which body part was closest to the hit
+        Rigidbody hitRigidbody = null;
         foreach (Rigidbody rb in ragRigidBodies)
-        {
-            if (hitRigidbody == null || (lastHitLocation - hitRigidbody.transform.position).magnitude > (lastHitLocation - rb.transform.position).magnitude)
+        {   if (projectileThatKilledJim.GetData().causesHeadShots)
+            {
+                // really should just save the pieces. This isn't reliable. Whatever.
+                // really not good in the long run. Whatever!
+                if (rb.name.StartsWith("Bip001 Head"))
+                {
+                    Debug.Log("Headshot!");
+                    hitRigidbody = rb;
+                }
+            }
+            else if (hitRigidbody == null || (lastHitLocation - hitRigidbody.transform.position).magnitude > (lastHitLocation - rb.transform.position).magnitude)
             {
                 hitRigidbody = rb;
             }
@@ -136,10 +150,8 @@ public class ActorModel : MonoBehaviour
 
         ragAnim.enabled = false;
 
-        // should not be hardcoded.
-        hitRigidbody.AddForce(lastHitDirection * 3000f);
-
-        lastHitLocation = new Vector3(lastHitLocation.x, lastHitLocation.y + Random.Range(0f, .5f), lastHitLocation.z);
+        // add force and blood poof
+        hitRigidbody.AddForce(lastHitDirection * projectileThatKilledJim.GetData().force);
         Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
     }
 
@@ -157,7 +169,7 @@ public class ActorModel : MonoBehaviour
 
     private void OnDestroy()
     {
-        actor.OnDeath.RemoveListener(SwapToRagdoll);
+        actor.OnDeath.RemoveListener(HandleActorDeath);
         actor.EmitVelocityInfo.RemoveListener(UpdateVelocityBasedAnimations);
     }
 }

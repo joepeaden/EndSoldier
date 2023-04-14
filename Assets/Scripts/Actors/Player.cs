@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
     /// </summary>
     /// <param name="hitLocation"></param>
     /// <param name="hitDirection"></param>
-	private void HandleGetHit(Vector3 hitLocation, Vector3 hitDirection)
+	private void HandleGetHit(Projectile proj)
     {
 		UpdateHealthUI();
     }

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006a28bab6cd3473188a9a50e3ea48c0, type: 3}
   m_Name: ShotgunProj
   m_EditorClassIdentifier: 
+  causesHeadShots: 0
   velocity: 45
+  force: 15000
   damage: 40
   material: {fileID: 2100000, guid: f95dd8cdc8d7a4bf98fe0fc72846d82e, type: 2}
   isExplosive: 0
