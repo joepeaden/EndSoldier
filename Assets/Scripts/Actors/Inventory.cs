@@ -126,6 +126,12 @@ public class Inventory : MonoBehaviour
                 equipment = eqItem;
                 equipment.owningActor = actor;
             }
+            else if (item as MedkitEquipment != null)
+            {
+                Equipment eqItem = (Equipment)item;
+                equipment = eqItem;
+                equipment.owningActor = actor;
+            }
 
             // add charges to the item
             itemToAddAmountTo.AddAmount(item.amount);

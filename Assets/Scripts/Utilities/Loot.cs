@@ -27,6 +27,9 @@ public class Loot : Interactable, ISetActive
             case "BOMB":
                 item = new ExplosiveEquipment(dataStorage.plasticExplosive);
                 break;
+            case "MEDKIT":
+                item = new MedkitEquipment(dataStorage.medkit);
+                break;
             case "RIFLE":
                 item = new InventoryWeapon(dataStorage.assaultRifle);
                 break;

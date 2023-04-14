@@ -19,6 +19,7 @@ public class Projectile : MonoBehaviour
 
     private AudioSource audioSource;
     private Vector3 lastPoint;
+    private Vector3 movementDirection;
     private bool destroying;
 
     private void Awake()
@@ -40,8 +41,8 @@ public class Projectile : MonoBehaviour
             Debug.LogWarning("Projectile velocity for " + gameObject.name + " is zero");
         }
 
-        Vector3 movementSinceLastFrame = (transform.position - lastPoint);
-        Physics.Raycast(lastPoint, movementSinceLastFrame.normalized, out RaycastHit hitInfo, movementSinceLastFrame.magnitude);
+        movementDirection = (transform.position - lastPoint);
+        Physics.Raycast(lastPoint, movementDirection.normalized, out RaycastHit hitInfo, movementDirection.magnitude);
         if (hitInfo.collider != null)
         {
             OnTriggerEnter(hitInfo.collider);
@@ -66,7 +67,7 @@ public class Projectile : MonoBehaviour
             if (actor != null && other.gameObject.GetComponent<HitBox>())
             {
                 // may not always destroy if hit actor, i.e. if actor is crouching and it "missed"
-                shouldDestroy = actor.GetHit(data.damage, transform.position);
+                shouldDestroy = actor.GetHit(data.damage, transform.position, movementDirection);
 
                 if (data.isExplosive)
                 {

@@ -10,10 +10,14 @@ public class ActorModel : MonoBehaviour
     private GameObject ragdoll;
     [SerializeField]
     private Animator ragAnim;
+    [SerializeField]
+    private GameObject bloodPoofEffect;
 
     private List<Rigidbody> ragRigidBodies;
     private List<Collider> ragColliders;
     private List<GameObject> bodyParts = new List<GameObject>();
+    private Vector3 lastHitLocation;
+    private Vector3 lastHitDirection;
 
     //private bool isHighlighted;
 
@@ -22,6 +26,7 @@ public class ActorModel : MonoBehaviour
         //actor.OnCrouch.AddListener(HandleCrouch);
         //actor.OnStand.AddListener(HandleStand);
         actor.OnDeath.AddListener(SwapToRagdoll);
+        actor.OnGetHit.AddListener(HandleActorHit);
 
         ragRigidBodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
         ragColliders = new List<Collider>(GetComponentsInChildren<Collider>());
@@ -89,6 +94,12 @@ public class ActorModel : MonoBehaviour
     //    }
     //}
 
+    private void HandleActorHit(Vector3 hitLocation, Vector3 hitDirection)
+    {
+        lastHitLocation = hitLocation;
+        lastHitDirection = hitDirection;
+    }    
+
     public void UpdateVelocityBasedAnimations(Vector3 velocity)
     {
         float vert = Vector3.Dot(velocity, transform.forward);
@@ -101,11 +112,15 @@ public class ActorModel : MonoBehaviour
 
     private void SwapToRagdoll()
     {
-        //    ragdoll.SetActive(true);
-        //    model.SetActive(false);
+        Rigidbody hitRigidbody = null;
 
         foreach (Rigidbody rb in ragRigidBodies)
         {
+            if (hitRigidbody == null || (lastHitLocation - hitRigidbody.transform.position).magnitude > (lastHitLocation - rb.transform.position).magnitude)
+            {
+                hitRigidbody = rb;
+            }
+
             rb.isKinematic = false;
         }
 
@@ -116,10 +131,16 @@ public class ActorModel : MonoBehaviour
 
         foreach (GameObject g in bodyParts)
         {
-            g.layer = (int) LayerNames.CollisionLayers.IgnoreActors;
+            g.layer = (int)LayerNames.CollisionLayers.IgnoreActors;
         }
 
         ragAnim.enabled = false;
+
+        // should not be hardcoded.
+        hitRigidbody.AddForce(lastHitDirection * 3000f);
+
+        lastHitLocation = new Vector3(lastHitLocation.x, lastHitLocation.y + Random.Range(0f, .5f), lastHitLocation.z);
+        Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
     }
 
     private void HandleCrouch()

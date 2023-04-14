@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The backend for the shop etc.
+/// </summary>
 public class Rewards : MonoBehaviour
 {
     private static Rewards _instance;
@@ -38,6 +41,7 @@ public class Rewards : MonoBehaviour
     public List<ShopItem> GetRewardShopItems()
     {
         List<ShopItem> shopItems = new List<ShopItem>();
+        shopItems.Add(new ShopItem(dataStore.medkit));
         shopItems.Add(new ShopItem(dataStore.assaultRifle));
         shopItems.Add(new ShopItem(dataStore.subMachineGun));
         shopItems.Add(new ShopItem(dataStore.semiAutoRifle));

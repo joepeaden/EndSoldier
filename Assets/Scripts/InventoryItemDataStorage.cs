@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InventoryItemDataStorage : MonoBehaviour
 {
+    public MedkitData medkit;
     public ExplosiveData plasticExplosive;
     public WeaponData assaultRifle;
     public WeaponData subMachineGun;

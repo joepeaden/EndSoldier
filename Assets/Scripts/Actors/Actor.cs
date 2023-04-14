@@ -14,8 +14,16 @@ public class Actor : MonoBehaviour
 {
 	public UnityAction OnActorBeginAim;
 	public UnityAction OnActorEndAim;
+	///// <summary>
+ //   /// Param is the location of the hit which killed the actor.
+ //   /// </summary>
+	//public UnityEvent<Vector3> OnDeath = new UnityEvent<Vector3>();
+	/// <summary>
+	/// Param is the location of the hit which killed the actor.
+	/// </summary>
 	public UnityEvent OnDeath = new UnityEvent();
-	public UnityEvent OnGetHit = new UnityEvent();
+	public UnityEvent<Vector3, Vector3> OnGetHit = new UnityEvent<Vector3, Vector3>();
+	public UnityEvent OnHeal = new UnityEvent();
 	public UnityEvent OnCrouch = new UnityEvent();
 	public UnityEvent OnStand = new UnityEvent();
 	public UnityEvent<Vector3> EmitVelocityInfo = new UnityEvent<Vector3>();
@@ -48,7 +56,6 @@ public class Actor : MonoBehaviour
 	[SerializeField] private MeshRenderer modelRenderer;
 	[SerializeField] private Transform TargetSpot;
 	[SerializeField] private ActorModel actorModel;
-	[SerializeField] private GameObject bloodPoofEffect;
 
 	// temporary to visually show cover status. Remove once we have models, animations etc.
 	//[SerializeField] private Material originalMaterial;
@@ -84,7 +91,6 @@ public class Actor : MonoBehaviour
 	private bool isUsingNavAgent;
 	private List<AudioClip> deathSounds;
 	private List<AudioClip> woundSounds;
-	private Vector3 lastHitLocation;
 	private bool movingToCover;
 	private Cover targetCover;
 
@@ -149,6 +155,13 @@ public class Actor : MonoBehaviour
 			movingToCover = false;
         }
     }
+
+	public void AddHitPoints(int amountHealed)
+    {
+		HitPoints = Mathf.Clamp(amountHealed + HitPoints, 0, MaxHitPoints);
+
+		OnHeal.Invoke();
+	}
 
 	public void SetAgentSpeed(float speed)
     {
@@ -526,14 +539,15 @@ public class Actor : MonoBehaviour
         return inventory;
     }
 
-    /// <summary>
-    /// Take a specified amount of damage.
-    /// </summary>
-    /// <param name="damage">Damage to deal to this actor.</param>
-    /// <returns>If the projectile should </returns>
-    public bool GetHit(int damage, Vector3 hitLocation)
+	/// <summary>
+	/// Take a specified amount of damage.
+	/// </summary>
+	/// <param name="damage">Damage to deal to this actor.</param>
+	/// <returns>If the projectile should </returns>
+	public bool GetHit(int damage, Vector3 hitLocation, Vector3 hitDirection)
 	{
-		lastHitLocation = hitLocation;
+		Vector3 lastHitLocation = hitLocation;
+		Vector3 lastHitDirection = hitDirection;
 
 		bool gotHit = true;
 		if (!IsAlive || isInvincible)
@@ -561,8 +575,7 @@ public class Actor : MonoBehaviour
 				PlaySound(woundSounds[index]);
 			}
 
-
-			OnGetHit.Invoke();
+			OnGetHit.Invoke(lastHitLocation, lastHitDirection);
 
 			if (HitPoints <= 0)
 			{
@@ -583,6 +596,7 @@ public class Actor : MonoBehaviour
 		audioSource.Play();
 	}
 
+
 	/// <summary>
 	/// Kill this actor.
 	/// </summary>
@@ -599,9 +613,6 @@ public class Actor : MonoBehaviour
 		{
 			PlaySound(deathSounds[index]);
 		}
-
-		lastHitLocation = new Vector3(lastHitLocation.x, lastHitLocation.y + Random.Range(0f, .5f), lastHitLocation.z);
-		Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
 
 		// have actor handle it's own inevitable destruction. It's ok buddy.
 		OnDeath.Invoke();

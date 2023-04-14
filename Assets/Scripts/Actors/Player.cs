@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
 	{
 		actor.OnDeath.AddListener(HandlePlayerDeath);
 		actor.OnGetHit.AddListener(HandleGetHit);
+		actor.OnHeal.AddListener(UpdateHealthUI);
 		actor.GetInventory().SetWeaponFromData();
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
@@ -139,7 +140,9 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
 		actor.OnDeath.RemoveListener(HandlePlayerDeath);
-    }
+		actor.OnGetHit.RemoveListener(HandleGetHit);
+		actor.OnHeal.RemoveListener(UpdateHealthUI);
+	}
 
 	public Inventory GetInventory()
     {
@@ -164,7 +167,17 @@ public class Player : MonoBehaviour
 		OnPlayerDeath.Invoke();
 	}
 
-	private void HandleGetHit()
+	/// <summary>
+    /// Don't need params; just update the health UI.
+    /// </summary>
+    /// <param name="hitLocation"></param>
+    /// <param name="hitDirection"></param>
+	private void HandleGetHit(Vector3 hitLocation, Vector3 hitDirection)
+    {
+		UpdateHealthUI();
+    }
+
+	private void UpdateHealthUI()
     {
 		CameraManager.Instance.SetVignette(1f - ((float) actor.HitPoints) / ((float) actor.MaxHitPoints));
     }
