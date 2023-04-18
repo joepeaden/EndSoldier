@@ -152,7 +152,15 @@ public class ActorModel : MonoBehaviour
 
         // add force and blood poof
         hitRigidbody.AddForce(lastHitDirection * projectileThatKilledJim.GetData().force);
-        Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
+        GameObject poof = Instantiate(bloodPoofEffect, lastHitLocation, Quaternion.identity);
+
+        StartCoroutine(DeletePoofAfterWait(poof));
+    }
+
+    private IEnumerator DeletePoofAfterWait(GameObject poof)
+    {
+        yield return new WaitForSeconds(1.5f);
+        Destroy(poof);
     }
 
     private void HandleCrouch()

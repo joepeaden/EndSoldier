@@ -97,6 +97,12 @@ public class Projectile : MonoBehaviour
     {
         owningActor = firingActor;
 
+        // make sure friendlie(?)'s bullet sounds are never cut off.
+        if (owningActor.team == Actor.ActorTeam.Friendly)
+        {
+            audioSource.priority = 0;
+        }
+
         // only play one sound when fired.
         if (siblingNumber < 1 && audioSource != null)
         {

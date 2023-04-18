@@ -19,7 +19,7 @@ public class ObjectiveMarker : MonoBehaviour
     private Transform objectiveTransform;
     private RectTransform rectTrans;
 
-    private void Start()
+    private void Awake()
     {
         rectTrans = GetComponent<RectTransform>();
         label = GetComponentInChildren<TMP_Text>();

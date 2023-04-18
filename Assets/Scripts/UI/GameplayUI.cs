@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Class for UI that is specific to in-level gameplay.
@@ -24,6 +26,7 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] private TMP_Text pointsTxt;
     [SerializeField] private RectTransform reloadBarTransform;
     [SerializeField] private GameObject objectiveMarkerPrefab;
+    [SerializeField] private Image healGreenOutImg;
     #endregion
 
     #region RewardUI vars
@@ -36,6 +39,7 @@ public class GameplayUI : MonoBehaviour
     #endregion
 
     private Player player;
+    private VolumeProfile postProcProfile;
 
     private void Awake()
     {
@@ -54,6 +58,12 @@ public class GameplayUI : MonoBehaviour
         Scoreboard.OnScoreUpdated.AddListener(UpdateScore);
 
         confirmRewardButton.onClick.AddListener(HandleRewardConfirm);
+
+        postProcProfile = CameraManager.Instance.GetPostProcProf();
+        // this sucks but I don't feel like trying harder right now. Need to figure out how to not permanently modify it.
+        Vignette v;
+        postProcProfile.TryGet(out v);
+        v.intensity.Override(0f);
     }
 
     private void Start()
@@ -224,5 +234,80 @@ public class GameplayUI : MonoBehaviour
         }
 
         reloadBarTransform.gameObject.SetActive(false);
+    }
+
+    public void SetVignette(float percent)
+    {
+
+        StartCoroutine(AnimateVingette(percent));
+    }
+
+    // clean this up. It just makes the vingette effect move visibly rather than just pop to a new val in single frame.
+    private IEnumerator AnimateVingette(float newVingetteIntensity)
+    {
+        Vignette v;
+        postProcProfile.TryGet(out v);
+
+        float oldVingetteIntensity = v.intensity.value;
+        float increment;
+
+        // if new val less than current val, player is being healed.
+        if (newVingetteIntensity < oldVingetteIntensity)
+        {
+            increment = -0.01f;
+
+            float currentVingetteIntensity = oldVingetteIntensity;
+            while (currentVingetteIntensity > newVingetteIntensity)
+            {
+                currentVingetteIntensity += increment;
+                v.intensity.Override(currentVingetteIntensity);
+
+                yield return null;
+            }
+        }
+        else
+        {
+            // this should be a variable. Maybe in a SO. Idk though might be too many data objects? Maybe? Also just one prefab of this in a game so not like it's a size issue... hmm.
+            increment = 0.01f;
+
+            float currentVingetteIntensity = oldVingetteIntensity;
+            while (currentVingetteIntensity < newVingetteIntensity)
+            {
+                currentVingetteIntensity += increment;
+                v.intensity.Override(currentVingetteIntensity);
+
+                yield return null;
+            }
+        }
+
+        v.color.Override(Color.red);
+    }
+
+    public void HealthFlash()
+    {
+        StartCoroutine(StartHealthFlash());
+    }
+
+    // just debug/iteration/tweaking public vars for the following method.
+    //public float healthFlashDuration;
+    //public float healthFlashAlpha;
+
+    private IEnumerator StartHealthFlash()
+    {
+        float healthFlashDuration = .75f;
+        float healthFlashAlpha = .33f;
+
+        float remainingTime = healthFlashDuration;
+
+        while (remainingTime > 0)
+        {
+            float percent = remainingTime / healthFlashDuration;
+            Color newColor = healGreenOutImg.color;
+            newColor.a = healthFlashAlpha * percent;
+            healGreenOutImg.color = newColor;
+
+            remainingTime -= Time.deltaTime;
+            yield return null;
+        }
     }
 }

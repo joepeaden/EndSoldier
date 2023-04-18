@@ -14,22 +14,22 @@ public class Player : MonoBehaviour
 	private bool triggerPull;
 
 	private void Awake()
-    {
+	{
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Friendly;
-    }
+	}
 
-    private void Start()
+	private void Start()
 	{
 		actor.OnDeath.AddListener(HandlePlayerDeath);
 		actor.OnGetHit.AddListener(HandleGetHit);
-		actor.OnHeal.AddListener(UpdateHealthUI);
+		actor.OnHeal.AddListener(HandleHeal);
 		actor.GetInventory().SetWeaponFromData();
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
-    }
+	}
 
-    private void Update()
+	private void Update()
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
@@ -94,8 +94,8 @@ public class Player : MonoBehaviour
 		}
 	}
 
-    private void FixedUpdate()
-    {
+	private void FixedUpdate()
+	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
 			// Normalized direction to shoot the projectile
@@ -137,48 +137,54 @@ public class Player : MonoBehaviour
 		}
 	}
 
-    private void OnDestroy()
-    {
+	private void OnDestroy()
+	{
 		actor.OnDeath.RemoveListener(HandlePlayerDeath);
 		actor.OnGetHit.RemoveListener(HandleGetHit);
-		actor.OnHeal.RemoveListener(UpdateHealthUI);
+		actor.OnHeal.RemoveListener(HandleHeal);
 	}
 
 	public Inventory GetInventory()
-    {
+	{
 		return actor.GetInventory();
-    }
+	}
 
 	/// <summary>
 	/// Get the ammo and max ammo of the player's weapon
 	/// </summary>
 	/// <returns>2 integers: the weapon's loaded ammo, and the total backup ammo. If infinite backup, backup val will be int.MinValue</returns>
 	public (int, int) GetAmmo()
-    {
+	{
 		int totalAmmo = actor.GetEquippedWeapon().data.hasInfiniteBackupAmmo ? int.MinValue : actor.GetEquippedWeapon().amount;
 		int currentAmmo = actor.GetEquippedWeaponAmmo();
 
 		return (currentAmmo, totalAmmo);
-    }
+	}
 
-    private void HandlePlayerDeath()
+	private void HandlePlayerDeath()
 	{
 		this.enabled = false;
 		OnPlayerDeath.Invoke();
 	}
 
 	/// <summary>
-    /// Don't need params; just update the health UI.
-    /// </summary>
-    /// <param name="hitLocation"></param>
-    /// <param name="hitDirection"></param>
+	/// Don't need params; just update the health UI.
+	/// </summary>
+	/// <param name="hitLocation"></param>
+	/// <param name="hitDirection"></param>
 	private void HandleGetHit(Projectile proj)
+	{
+		UpdateHealthUI();
+	}
+
+	private void HandleHeal()
     {
+		GameplayUI.Instance.HealthFlash();
 		UpdateHealthUI();
     }
 
 	private void UpdateHealthUI()
     {
-		CameraManager.Instance.SetVignette(1f - ((float) actor.HitPoints) / ((float) actor.MaxHitPoints));
-    }
+		GameplayUI.Instance.SetVignette(1f - ((float) actor.HitPoints) / ((float) actor.MaxHitPoints));
+	}
 }

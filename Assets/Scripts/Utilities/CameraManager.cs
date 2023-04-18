@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using Cinemachine.PostFX;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-
-// Author: Joseph Peaden
 
 /// <summary>
 /// Manages the camera. Camerawork should go through here.
@@ -19,8 +14,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera vCam;
     // is this ref needed?
     [SerializeField] private Camera mainCam;
-
-    public VolumeProfile postProcProfile;
 
     private void Awake()
     {
@@ -37,12 +30,16 @@ public class CameraManager : MonoBehaviour
         //Player.OnPlayerBeginAim += FollowReticle;
         //Player.OnPlayerEndAim += FollowPlayer;
 
-        postProcProfile = vCam.GetComponent<CinemachineVolumeSettings>().m_Profile;
+        //postProcProfile = vCam.GetComponent<CinemachineVolumeSettings>().m_Profile;
+    }
 
-        // this sucks but I don't feel like trying harder right now. Need to figure out how to not permanently modify it.
-        Vignette v;
-        postProcProfile.TryGet(out v);
-        v.intensity.Override(0f);
+    /// <summary>
+    /// Gets the post process profile of the virtual camera.
+    /// </summary>
+    /// <returns></returns>
+    public VolumeProfile GetPostProcProf()
+    {
+        return vCam.GetComponent<CinemachineVolumeSettings>().m_Profile;
     }
 
     private void FollowPlayer()
@@ -59,12 +56,4 @@ public class CameraManager : MonoBehaviour
     {
         vCam.Follow = toFollow;
     }
-
-    public void SetVignette(float percent)
-    {
-        Vignette v;
-        postProcProfile.TryGet(out v);
-        v.intensity.Override(percent);
-    }
-
 }
