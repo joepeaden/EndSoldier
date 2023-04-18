@@ -23,6 +23,7 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] private TMP_Text waveTxt;
     [SerializeField] private TMP_Text pointsTxt;
     [SerializeField] private RectTransform reloadBarTransform;
+    [SerializeField] private GameObject objectiveMarkerPrefab;
     #endregion
 
     #region RewardUI vars
@@ -84,6 +85,12 @@ public class GameplayUI : MonoBehaviour
         player.OnSwitchWeapons.RemoveListener(UpdateCurrentWeapon);
         Scoreboard.OnScoreUpdated.RemoveListener(UpdateScore);
         confirmRewardButton.onClick.RemoveListener(HandleRewardConfirm);
+    }
+
+    public void AddObjectiveMarker(GameObject objectToMark, string label)
+    {
+        GameObject marker = Instantiate(objectiveMarkerPrefab, battleUI.transform);
+        marker.GetComponent<ObjectiveMarker>().SetData(objectToMark.transform, label);
     }
 
     public bool InMenu()

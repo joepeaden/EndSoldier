@@ -48,6 +48,8 @@ public class Loot : Interactable, ISetActive
         }
 
         item.rewardKey = rewardKey;
+
+        GameplayUI.Instance.AddObjectiveMarker(this.gameObject, "SUPPORT");
     }
 
     public override void Interact(Actor a)
