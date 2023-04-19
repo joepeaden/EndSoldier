@@ -24,6 +24,7 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] private TMP_Text ammoTxt;
     [SerializeField] private TMP_Text waveTxt;
     [SerializeField] private TMP_Text pointsTxt;
+    [SerializeField] private TMP_Text equipmentTxt;
     [SerializeField] private RectTransform reloadBarTransform;
     [SerializeField] private GameObject objectiveMarkerPrefab;
     [SerializeField] private Image healGreenOutImg;
@@ -60,7 +61,8 @@ public class GameplayUI : MonoBehaviour
         confirmRewardButton.onClick.AddListener(HandleRewardConfirm);
 
         postProcProfile = CameraManager.Instance.GetPostProcProf();
-        // this sucks but I don't feel like trying harder right now. Need to figure out how to not permanently modify it.
+
+        // Reset the vingette.
         Vignette v;
         postProcProfile.TryGet(out v);
         v.intensity.Override(0f);
@@ -70,9 +72,11 @@ public class GameplayUI : MonoBehaviour
     {
         player = GameManager.Instance.GetPlayerScript();
         player.OnSwitchWeapons.AddListener(UpdateCurrentWeapon);
+        player.OnUpdateEquipment.AddListener(UpdateEquipment);
 
         // missed the UpdateCurrentWeapon initial event, so just update it.
         UpdateCurrentWeapon(player.GetInventory().GetEquippedWeapon());
+        UpdateEquipment(player.GetInventory().GetEquipment());
     }
 
     private void Update()
@@ -93,6 +97,7 @@ public class GameplayUI : MonoBehaviour
         WaveManager.OnPrepForNextWave.RemoveListener(StartNewWaveCoroutine);
         WaveManager.OnWaveEnd.RemoveListener(ShowRewardUI);
         player.OnSwitchWeapons.RemoveListener(UpdateCurrentWeapon);
+        player.OnUpdateEquipment.RemoveListener(UpdateEquipment);
         Scoreboard.OnScoreUpdated.RemoveListener(UpdateScore);
         confirmRewardButton.onClick.RemoveListener(HandleRewardConfirm);
     }
@@ -167,6 +172,20 @@ public class GameplayUI : MonoBehaviour
     private void UpdateCurrentWeapon(InventoryWeapon weapon)
     {
         curntWpnTxt.text = weapon.data.displayName;
+    }
+
+    private void UpdateEquipment(Equipment eq)
+    {
+        string str;
+        if (eq == null)
+        {
+            str = "No Equipment";
+        }
+        else
+        {
+            str = $"{eq.data.displayName} {eq.amount}";
+        }
+        equipmentTxt.text = str;
     }
 
     private void StartNewWaveCoroutine()

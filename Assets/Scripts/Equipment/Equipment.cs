@@ -4,5 +4,6 @@ using UnityEngine;
 
 public abstract class Equipment : InventoryItem
 {
+    public ShopRewardData data;
     public abstract bool Use();
 }

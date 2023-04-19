@@ -299,7 +299,7 @@ public class Actor : MonoBehaviour
         }
 
 		return null;
-    }
+	}
 
 	/// <summary>
 	/// Toggle the actor crouch.

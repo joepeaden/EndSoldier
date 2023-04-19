@@ -8,11 +8,12 @@ using UnityEngine;
 /// </summary>
 public class MedkitEquipment : Equipment
 {
-    public MedkitData data;
+    public MedkitData medData;
 
     public MedkitEquipment(MedkitData data)
     {
         this.data = data;
+        medData = (MedkitData)data;
         amount = data.totalAmount;
     }
 
@@ -22,7 +23,7 @@ public class MedkitEquipment : Equipment
         {
             try
             {
-                owningActor.AddHitPoints(data.amountHealed);
+                owningActor.AddHitPoints(medData.amountHealed);
                 amount--;
 
                 return true;

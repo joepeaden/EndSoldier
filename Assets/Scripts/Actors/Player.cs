@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
 	public UnityEvent<InventoryWeapon> OnSwitchWeapons = new UnityEvent<InventoryWeapon>();
+	public UnityEvent<Equipment> OnUpdateEquipment = new UnityEvent<Equipment>();
 	public UnityEvent OnPlayerDeath = new UnityEvent();
 
 	private Actor actor;
@@ -76,11 +77,15 @@ public class Player : MonoBehaviour
 			if (Input.GetKeyDown(KeyCode.E))
 			{
 				actor.AttemptInteraction();
+
+				// hmmmmm I haven't figured out how to handle swapping equipment, etc. Or even if I will allow that.
+				OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
 			}
 
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
 				actor.AttemptUseEquipment();
+				OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
 			}
 
 			if (Input.GetKeyDown(KeyCode.Space) && actor.GetInventory().weaponCount > 1)

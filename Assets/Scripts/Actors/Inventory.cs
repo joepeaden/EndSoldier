@@ -240,4 +240,18 @@ public class Inventory : MonoBehaviour
 
         return null;
     }
+
+    /// <summary>
+    /// Here, equipment refers to the bombs, tools etc. Maybe Tools is a better description for this kind of stuff. Idk.
+    /// </summary>
+    /// <returns></returns>
+    public Equipment GetEquipment()
+    {
+        if (equipment != null)
+        {
+            return equipment;
+        }
+
+        return null;
+    }
 }
