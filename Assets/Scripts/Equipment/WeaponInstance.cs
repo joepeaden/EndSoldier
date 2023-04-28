@@ -270,14 +270,10 @@ public class WeaponInstance : MonoBehaviour
         float accuracyAngle = inventoryWeapon.data.accuracyAngle;
         if (aiming)
         {
-            if (actorOperator.IsPlayer)
-                Debug.Log("Aiming");
             accuracyAngle /= inventoryWeapon.data.aimingBoon;
         }
         if (actorVelocity.magnitude > 1f)
         {
-            if (actorOperator.IsPlayer)
-                Debug.Log("Moving");
             accuracyAngle *= inventoryWeapon.data.movementAccuracyPenalty;
         }
 

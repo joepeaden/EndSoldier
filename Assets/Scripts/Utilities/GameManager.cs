@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject reticleGO;
 
+    private AudioSource genericSoundPlayer;
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -50,6 +52,25 @@ public class GameManager : MonoBehaviour
     public void OnDestroy()
     {
         player.OnPlayerDeath.RemoveListener(GameOver);
+    }
+
+    /// <summary>
+    /// Creates a new object with an audio source component to play the sound. One use of this is classes that aren't monobehaviours needing to play audio. 
+    /// </summary>
+    /// <param name="clip"></param>
+    public void PlaySound(AudioClip clip)
+    {
+        if (genericSoundPlayer == null)
+        {
+            GameObject soundPlayerGO = Instantiate(new GameObject());
+            soundPlayerGO.name = "GM Sound Player";
+            genericSoundPlayer = soundPlayerGO.AddComponent<AudioSource>();
+            genericSoundPlayer.volume = 1f;
+        }
+        
+        genericSoundPlayer.clip = clip;
+        genericSoundPlayer.Play();
+        
     }
 
     public Player GetPlayerScript()

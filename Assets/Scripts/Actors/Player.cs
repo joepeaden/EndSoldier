@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controller for the player, also handles a few player specific things like death.
@@ -13,11 +14,16 @@ public class Player : MonoBehaviour
 	private Actor actor;
 	private Transform reticle;
 	private bool triggerPull;
+	private PlayerControls controls;
 
 	private void Awake()
 	{
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Friendly;
+
+		controls = new PlayerControls();
+		// throw away the parameter... hmm. cool.
+		controls.Gameplay.Move.performed += x => testMethod();
 	}
 
 	private void Start()
@@ -28,7 +34,24 @@ public class Player : MonoBehaviour
 		actor.GetInventory().SetWeaponFromData();
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
+
+
 	}
+
+    private void OnEnable()
+    {
+		controls.Gameplay.Enable();
+    }
+
+	private void OnDisable()
+	{
+		controls.Gameplay.Disable();
+	}
+
+	void testMethod()
+    {
+		Debug.Log("Up!");
+    }
 
 	private void Update()
 	{

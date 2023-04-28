@@ -59,17 +59,17 @@ public class GameplayUI : MonoBehaviour
         Scoreboard.OnScoreUpdated.AddListener(UpdateScore);
 
         confirmRewardButton.onClick.AddListener(HandleRewardConfirm);
+    }
 
+    private void Start()
+    {
         postProcProfile = CameraManager.Instance.GetPostProcProf();
 
         // Reset the vingette.
         Vignette v;
         postProcProfile.TryGet(out v);
         v.intensity.Override(0f);
-    }
 
-    private void Start()
-    {
         player = GameManager.Instance.GetPlayerScript();
         player.OnSwitchWeapons.AddListener(UpdateCurrentWeapon);
         player.OnUpdateEquipment.AddListener(UpdateEquipment);
