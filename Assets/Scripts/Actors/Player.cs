@@ -18,11 +18,13 @@ public class Player : MonoBehaviour
 
 	private Actor actor;
 	private Transform reticle;
-	private bool triggerPull;
 
 	// control stuff
 	private PlayerControls controls;
 	private Vector2 movementInput;
+	private Vector2 rotationInput;
+	private bool attemptingToFire;
+	private bool triggerPull;
 
 	private void Awake()
 	{
@@ -33,11 +35,18 @@ public class Player : MonoBehaviour
 		// Add these to on destroy please please please please I beg you
 		controls.Gameplay.Move.performed += HandleMovementInput; 
 		controls.Gameplay.Move.canceled += ZeroMovementInput;
-		controls.Gameplay.Sprint.performed += HandleSprintStart;
-		controls.Gameplay.Sprint.canceled += HandleSprintStop;
+		controls.Gameplay.Sprint.performed += HandleSprintPerformedInput;
+		controls.Gameplay.Sprint.canceled += HandleSprintStopInput;
 		controls.Gameplay.Rotate.performed += HandleRotationInput;
-		controls.Gameplay.Rotate.canceled += ZeroRotationInput;
-
+		controls.Gameplay.Aim.performed += HandleAimBeginInput;
+		controls.Gameplay.Aim.canceled += HandleAimEndInput;
+		controls.Gameplay.Fire.started += HandleFireStartInput;
+		//controls.Gameplay.Fire.performed += HandleFirePerformedInput;
+		controls.Gameplay.Fire.canceled += HandleFireStopInput;
+		controls.Gameplay.SwitchWeapons.performed += HandleSwitchWeaponsInput;
+		controls.Gameplay.Reload.performed += HandleReloadInput;
+		controls.Gameplay.UseEquipment.performed += HandleUseEquipmentInput;
+		controls.Gameplay.Interact.performed += HandleInteractInput;
 	}
 
 	private void Start()
@@ -64,67 +73,16 @@ public class Player : MonoBehaviour
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
-			if (Input.GetKey(KeyCode.LeftShift))
+			if (attemptingToFire)
 			{
-				//actor.SetState(Actor.State.Sprinting);
-			}
-			else if (Input.GetButton("Fire2") && !actor.state[Actor.State.Sprinting])
-			{
-				actor.SetState(Actor.State.Aiming);
-				actor.OnActorBeginAim.Invoke();
-			}
-			else
-			{
-				//actor.OnActorEndAim.Invoke();
-				//actor.SetState(Actor.State.Walking);
-			}
-
-			if (Input.GetButtonDown("Fire1"))
-			{
-				triggerPull = true;
-			}
-			else
-			{
+				actor.AttemptAttack(triggerPull);
 				triggerPull = false;
 			}
 
-			if (Input.GetButton("Fire1") && !actor.state[Actor.State.Sprinting])
-			{
-				actor.AttemptAttack(triggerPull);
-			}
-
-			if (Input.GetKeyDown(KeyCode.R))
-			{
-				actor.AttemptReload();
-			}
-
-			if (Input.GetKeyDown(KeyCode.C))
-			{
-				actor.ToggleCrouch();
-			}
-
-			if (Input.GetKeyDown(KeyCode.E))
-			{
-				actor.AttemptInteraction();
-
-				// hmmmmm I haven't figured out how to handle swapping equipment, etc. Or even if I will allow that.
-				OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
-			}
-
-			if (Input.GetKeyDown(KeyCode.Q))
-			{
-				actor.AttemptUseEquipment();
-				OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
-			}
-
-			if (Input.GetKeyDown(KeyCode.Space) && actor.GetInventory().weaponCount > 1)
-			{
-				bool result = actor.AttemptSwitchWeapons();
-				if (result == true)
-				{
-					OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
-				}
-			}
+			//if (Input.GetKeyDown(KeyCode.C))
+			//{
+			//	actor.ToggleCrouch();
+			//}
 		}
 	}
 
@@ -132,39 +90,45 @@ public class Player : MonoBehaviour
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
-
-			float newRotation = Mathf.Atan(rotation.x / rotation.y) * Mathf.Rad2Deg;
-
-			if (rotation.y < 0)
-            {
-				newRotation -= 180;
-            }
-
-            // get the move direction
-            Vector3 rotDir = new Vector3(0f, newRotation, 0f);
-
-			Quaternion tRot = transform.rotation;
-			tRot.eulerAngles = rotDir;
-
-			tRot = Quaternion.AngleAxis(45, Vector3.up) * tRot;
-			transform.rotation = tRot;
-
-            if (actor.state[Actor.State.Sprinting])
+			Vector3 rotationInputToUse;
+			if (!actor.state[Actor.State.Sprinting])
 			{
-				// only go forward if sprinting
-				actor.Move(transform.forward, false);
-			}
-			else
-			{
+				//// Movement ////
 				// get the move direction
-                Vector3 moveDir = new Vector3(movementInput.x, 0f, movementInput.y);
+				Vector3 moveDir = new Vector3(movementInput.x, 0f, movementInput.y);
 				// adjust it for isometric camera pos
 				moveDir = Quaternion.AngleAxis(45, Vector3.up) * moveDir;
 
 				moveDir = Vector3.ClampMagnitude(moveDir, 1f);
 
-                actor.Move(moveDir, false);
+				actor.Move(moveDir, false);
+
+				rotationInputToUse = rotationInput;
 			}
+			else 
+			{
+				// only go forward if sprinting
+				actor.Move(transform.forward, false);
+				rotationInputToUse = movementInput;
+			}
+
+			//// Rotation ////
+			// Get the angle of rotation based on the controller input (look, math! I did it!)
+			float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
+
+			// handle the wierd problem with negative y values (idk why man it works ok?)
+			if (rotationInputToUse.y < 0)
+			{
+				newRotationYAngle -= 180;
+			}
+
+			// create new rotation quaternion
+			Quaternion newRotation = transform.rotation;
+			newRotation.eulerAngles = new Vector3(0f, newRotationYAngle, 0f);
+
+			// rotate it so that from the isometric camera angle it looks right (up is actually 45 degrees not 0)
+			newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
+			transform.rotation = newRotation;
 		}
 	}
 
@@ -189,27 +153,85 @@ public class Player : MonoBehaviour
 		movementInput = Vector2.zero;
 	}
 
-	private void HandleSprintStart(InputAction.CallbackContext cntxt)
+	private void HandleSprintPerformedInput(InputAction.CallbackContext cntxt)
 	{
 		actor.SetState(Actor.State.Sprinting);
 		actor.OnActorEndAim.Invoke();
 	}
 
-	private void HandleSprintStop(InputAction.CallbackContext cntxt)
+	private void HandleSprintStopInput(InputAction.CallbackContext cntxt)
 	{
+		actor.SetState(Actor.State.Walking);
+
+		// since rotation is based on the movement input when sprinting, clean it up so we don't pop back to previous rot input value.
+		rotationInput = movementInput;
+	}
+
+	private void HandleRotationInput(InputAction.CallbackContext cntxt)
+	{
+		rotationInput = cntxt.ReadValue<Vector2>();
+	}
+
+	private void HandleAimBeginInput(InputAction.CallbackContext cntxt)
+	{
+		if (!actor.state[Actor.State.Sprinting])
+		{
+			actor.SetState(Actor.State.Aiming);
+			actor.OnActorBeginAim.Invoke();
+		}
+	}
+
+	private void HandleAimEndInput(InputAction.CallbackContext cntxt)
+	{
+		actor.OnActorEndAim.Invoke();
 		actor.SetState(Actor.State.Walking);
 	}
 
-	private Vector2 rotation;
-	public float rotvalue;
-	private void HandleRotationInput(InputAction.CallbackContext cntxt)
+	private void HandleFireStartInput(InputAction.CallbackContext cntxt)
 	{
-		rotation = cntxt.ReadValue<Vector2>();
+		// start input callback happens when start and finish input. Kinda wierd if you ask me.
+		if (!attemptingToFire)
+		{
+			triggerPull = true;
+			attemptingToFire = true;
+		}
 	}
 
-	private void ZeroRotationInput(InputAction.CallbackContext cntxt)
+	private void HandleFireStopInput(InputAction.CallbackContext cntxt)
+    {
+        triggerPull = false;
+		attemptingToFire = false;
+    }
+
+	private void HandleSwitchWeaponsInput(InputAction.CallbackContext cntxt)
 	{
-		//rotation = Vector2.zero;
+		if (actor.GetInventory().weaponCount > 1)
+		{
+			bool result = actor.AttemptSwitchWeapons();
+			if (result == true)
+			{
+				OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
+			}
+		}
+	}
+
+	private void HandleReloadInput(InputAction.CallbackContext cntxt)
+	{
+		actor.AttemptReload();
+	}
+
+	private void HandleUseEquipmentInput(InputAction.CallbackContext cntxt)
+	{
+		actor.AttemptUseEquipment();
+		OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
+	}
+
+	private void HandleInteractInput(InputAction.CallbackContext cntxt)
+	{
+		actor.AttemptInteraction();
+
+		// hmmmmm I haven't figured out how to handle swapping equipment, etc. Or even if I will allow that.
+		OnUpdateEquipment.Invoke(actor.GetInventory().GetEquipment());
 	}
 
 	#endregion
