@@ -126,6 +126,9 @@ public class Actor : MonoBehaviour
 			data.woundSound5,
 			data.woundSound6,
 		};
+
+		// initialize the move force.
+		moveForce = data.fastWalkMoveForce;
 	}
 
     private void OnDestroy()

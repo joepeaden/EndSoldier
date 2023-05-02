@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// Controller for the player, also handles a few player specific things like death.
 /// </summary>
+/// <remarks>
+/// Honestly I kind of feel like input should be handled in its own class. Because then it would be very easy to find, understand, debug.
+/// But I don't feel like it at the moment.
+/// </remarks>
 public class Player : MonoBehaviour
 {
 	public UnityEvent<InventoryWeapon> OnSwitchWeapons = new UnityEvent<InventoryWeapon>();
@@ -14,7 +19,10 @@ public class Player : MonoBehaviour
 	private Actor actor;
 	private Transform reticle;
 	private bool triggerPull;
+
+	// control stuff
 	private PlayerControls controls;
+	private Vector2 movementInput;
 
 	private void Awake()
 	{
@@ -22,8 +30,14 @@ public class Player : MonoBehaviour
 		actor.team = Actor.ActorTeam.Friendly;
 
 		controls = new PlayerControls();
-		// throw away the parameter... hmm. cool.
-		controls.Gameplay.Move.performed += x => testMethod();
+		// Add these to on destroy please please please please I beg you
+		controls.Gameplay.Move.performed += HandleMovementInput; 
+		controls.Gameplay.Move.canceled += ZeroMovementInput;
+		controls.Gameplay.Sprint.performed += HandleSprintStart;
+		controls.Gameplay.Sprint.canceled += HandleSprintStop;
+		controls.Gameplay.Rotate.performed += HandleRotationInput;
+		controls.Gameplay.Rotate.canceled += ZeroRotationInput;
+
 	}
 
 	private void Start()
@@ -34,8 +48,6 @@ public class Player : MonoBehaviour
 		actor.GetInventory().SetWeaponFromData();
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
-
-
 	}
 
     private void OnEnable()
@@ -48,29 +60,23 @@ public class Player : MonoBehaviour
 		controls.Gameplay.Disable();
 	}
 
-	void testMethod()
-    {
-		Debug.Log("Up!");
-    }
-
 	private void Update()
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
-
 			if (Input.GetKey(KeyCode.LeftShift))
 			{
-				actor.SetState(Actor.State.Sprinting);
+				//actor.SetState(Actor.State.Sprinting);
 			}
-			else if (Input.GetButton("Fire2"))
+			else if (Input.GetButton("Fire2") && !actor.state[Actor.State.Sprinting])
 			{
 				actor.SetState(Actor.State.Aiming);
 				actor.OnActorBeginAim.Invoke();
 			}
 			else
 			{
-				actor.OnActorEndAim.Invoke();
-				actor.SetState(Actor.State.Walking);
+				//actor.OnActorEndAim.Invoke();
+				//actor.SetState(Actor.State.Walking);
 			}
 
 			if (Input.GetButtonDown("Fire1"))
@@ -126,41 +132,38 @@ public class Player : MonoBehaviour
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
-			// Normalized direction to shoot the projectile
-			//Vector2 aimVector = (reticle.position - transform.position).normalized;
-			Vector3 retPos = reticle.position;
-			//retPos.y = transform.position.y;
-			actor.UpdateActorRotation(retPos);
 
-			if (actor.state[Actor.State.Sprinting])
+			float newRotation = Mathf.Atan(rotation.x / rotation.y) * Mathf.Rad2Deg;
+
+			if (rotation.y < 0)
+            {
+				newRotation -= 180;
+            }
+
+            // get the move direction
+            Vector3 rotDir = new Vector3(0f, newRotation, 0f);
+
+			Quaternion tRot = transform.rotation;
+			tRot.eulerAngles = rotDir;
+
+			tRot = Quaternion.AngleAxis(45, Vector3.up) * tRot;
+			transform.rotation = tRot;
+
+            if (actor.state[Actor.State.Sprinting])
 			{
 				// only go forward if sprinting
 				actor.Move(transform.forward, false);
 			}
 			else
 			{
-				Vector3 moveDir = Vector3.zero;
-				// Movement inputs
-				if (Input.GetKey(KeyCode.W))
-				{
-					moveDir += Vector3.forward + Vector3.right;
-				}
-				if (Input.GetKey(KeyCode.S))
-				{
-					moveDir += -Vector3.forward - Vector3.right;
-				}
-				if (Input.GetKey(KeyCode.A))
-				{
-					moveDir += -Vector3.right + Vector3.forward;
-				}
-				if (Input.GetKey(KeyCode.D))
-				{
-					moveDir += Vector3.right - Vector3.forward;
-				}
+				// get the move direction
+                Vector3 moveDir = new Vector3(movementInput.x, 0f, movementInput.y);
+				// adjust it for isometric camera pos
+				moveDir = Quaternion.AngleAxis(45, Vector3.up) * moveDir;
 
 				moveDir = Vector3.ClampMagnitude(moveDir, 1f);
 
-				actor.Move(moveDir, false);
+                actor.Move(moveDir, false);
 			}
 		}
 	}
@@ -171,6 +174,45 @@ public class Player : MonoBehaviour
 		actor.OnGetHit.RemoveListener(HandleGetHit);
 		actor.OnHeal.RemoveListener(HandleHeal);
 	}
+
+	///////////////
+	#region Input
+	///////////////
+	
+	private void HandleMovementInput(InputAction.CallbackContext cntxt)
+	{
+		movementInput = cntxt.ReadValue<Vector2>();
+	}
+
+	private void ZeroMovementInput(InputAction.CallbackContext cntxt)
+	{
+		movementInput = Vector2.zero;
+	}
+
+	private void HandleSprintStart(InputAction.CallbackContext cntxt)
+	{
+		actor.SetState(Actor.State.Sprinting);
+		actor.OnActorEndAim.Invoke();
+	}
+
+	private void HandleSprintStop(InputAction.CallbackContext cntxt)
+	{
+		actor.SetState(Actor.State.Walking);
+	}
+
+	private Vector2 rotation;
+	public float rotvalue;
+	private void HandleRotationInput(InputAction.CallbackContext cntxt)
+	{
+		rotation = cntxt.ReadValue<Vector2>();
+	}
+
+	private void ZeroRotationInput(InputAction.CallbackContext cntxt)
+	{
+		//rotation = Vector2.zero;
+	}
+
+	#endregion
 
 	public Inventory GetInventory()
 	{
