@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -57,6 +57,8 @@ public class Player : MonoBehaviour
 		actor.GetInventory().SetWeaponFromData();
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
+
+		StartCoroutine(SetRotation());
 	}
 
     private void OnEnable()
@@ -90,6 +92,7 @@ public class Player : MonoBehaviour
 	{
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
+			// rotation is based on movement when sprinting and rotation input when otherwise. So need this.
 			Vector3 rotationInputToUse;
 			if (!actor.state[Actor.State.Sprinting])
 			{
@@ -116,21 +119,66 @@ public class Player : MonoBehaviour
 			// Get the angle of rotation based on the controller input (look, math! I did it!)
 			float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
 
-			// handle the wierd problem with negative y values (idk why man it works ok?)
-			if (rotationInputToUse.y < 0)
-			{
-				newRotationYAngle -= 180;
-			}
+            // handle the wierd problem with negative y values (idk why man it works ok?)
+            if (rotationInputToUse.y < 0)
+            {
+                newRotationYAngle -= 180;
+            }
 
-			// create new rotation quaternion
-			Quaternion newRotation = transform.rotation;
+            // create new rotation quaternion
+            Quaternion newRotation = transform.rotation;
 			newRotation.eulerAngles = new Vector3(0f, newRotationYAngle, 0f);
 
 			// rotate it so that from the isometric camera angle it looks right (up is actually 45 degrees not 0)
-			newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
-			transform.rotation = newRotation;
+			//newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
+			savedRot = newRotation;
 		}
 	}
+
+	Quaternion savedRot;
+	public float controllerMaxRotationSensitivity;
+	public float controllerRotationSensitivity;
+
+	private IEnumerator SetRotation()
+    {
+		//yield return new WaitUntil(() => rotationInput != Vector2.zero);
+		while (true)//(transform.rotation.y != savedRot.eulerAngles.y)
+		{
+            bool crossedZeroDown = savedRot.eulerAngles.y > 180 && transform.rotation.eulerAngles.y < 90;
+            bool crossedZeroUp = savedRot.eulerAngles.y < 90 && transform.rotation.eulerAngles.y > 180;
+
+            //if (transform.rotation.eulerAngles.y > 350 && savedRot.eulerAngles.y > 1)
+            //{
+
+            //}
+
+			float stratifiedRotation = Mathf.Abs(transform.rotation.eulerAngles.y - savedRot.eulerAngles.y) / controllerMaxRotationSensitivity;
+			float adjustedRotationDelta = stratifiedRotation * controllerRotationSensitivity;
+            float adjustedRotationValue = transform.rotation.eulerAngles.y > savedRot.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
+
+            // handle the wierd problem with negative y values (idk why man it works ok?)
+            //if (rotationInputToUse.y < 0)
+            //{
+            //	adjustedRotationValue -= 180;
+            //}
+
+            // create new rotation quaternion
+            //Quaternion newRotation = transform.rotation;
+            //newRotation.eulerAngles = new Vector3(0f, adjustedRotationValue, 0f);
+
+            //// rotate it so that from the isometric camera angle it looks right (up is actually 45 degrees not 0)
+            //newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
+
+			if (crossedZeroUp)
+            {
+				adjustedRotationValue = Mathf.Abs(adjustedRotationValue);
+            }
+
+            transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
+
+			yield return null;
+		}
+    }
 
 	private void OnDestroy()
 	{

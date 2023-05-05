@@ -11372,7 +11372,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1195520878132369631, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: isInvincible
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1667222826569261080, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: m_Layer
@@ -11913,6 +11913,14 @@ PrefabInstance:
     - target: {fileID: 8268618929255888857, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: rotvalue
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268618929255888857, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: controllerRotationSensitivity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268618929255888857, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: controllerMaxRotationSensitivity
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8009151145797562973, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}

@@ -179,7 +179,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e2fc2249-7b3f-48dd-b533-b36b5d85b022"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -203,7 +203,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""id"": ""e188a3de-f3cf-4fdd-bd58-065a07a04a8e"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=0.0001,y=0.0001)"",
                     ""groups"": """",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
