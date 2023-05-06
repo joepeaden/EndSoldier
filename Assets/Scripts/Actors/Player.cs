@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
 	public UnityEvent<Equipment> OnUpdateEquipment = new UnityEvent<Equipment>();
 	public UnityEvent OnPlayerDeath = new UnityEvent();
 
+	public float controllerAimRotaitonSensitivity;
+	public float regularSensitivity;
+	public float controllerMaxRotationSensitivity;
+	public float controllerRotationSensitivity;
+
 	private Actor actor;
 	private Transform reticle;
 
@@ -23,6 +28,7 @@ public class Player : MonoBehaviour
 	private PlayerControls controls;
 	private Vector2 movementInput;
 	private Vector2 rotationInput;
+	//Quaternion savedRot;
 	private bool attemptingToFire;
 	private bool triggerPull;
 
@@ -58,7 +64,7 @@ public class Player : MonoBehaviour
 
 		reticle = GameManager.Instance.GetReticleGO()?.transform;
 
-		StartCoroutine(SetRotation());
+		//StartCoroutine(SetRotation());
 	}
 
     private void OnEnable()
@@ -108,7 +114,7 @@ public class Player : MonoBehaviour
 
 				rotationInputToUse = rotationInput;
 			}
-			else 
+			else
 			{
 				// only go forward if sprinting
 				actor.Move(transform.forward, false);
@@ -116,69 +122,74 @@ public class Player : MonoBehaviour
 			}
 
 			//// Rotation ////
-			// Get the angle of rotation based on the controller input (look, math! I did it!)
-			float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
+			if (rotationInput != Vector2.zero)
+			{
+				// Get the angle of rotation based on the controller input (look, math! I did it!)
+				float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
+				 
+				// handle the wierd problem with negative y values (idk why man it works ok?)
+				if (rotationInputToUse.y < 0)
+				{
+					newRotationYAngle -= 180;
+				}
 
-            // handle the wierd problem with negative y values (idk why man it works ok?)
-            if (rotationInputToUse.y < 0)
-            {
-                newRotationYAngle -= 180;
-            }
+				// create new rotation quaternion
+				Quaternion newRotation = transform.rotation;
+				newRotation.eulerAngles = new Vector3(0f, newRotationYAngle, 0f);
 
-            // create new rotation quaternion
-            Quaternion newRotation = transform.rotation;
-			newRotation.eulerAngles = new Vector3(0f, newRotationYAngle, 0f);
+				newRotation = Quaternion.AngleAxis(45f, Vector3.up) * newRotation;
 
-			// rotate it so that from the isometric camera angle it looks right (up is actually 45 degrees not 0)
-			//newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
-			savedRot = newRotation;
+				float rotationDelta = Mathf.Abs(newRotation.eulerAngles.y - transform.rotation.eulerAngles.y);
+
+				// fix if we're going from 360 to 0 or the other way; this is confusing but don't stress it.
+				if (rotationDelta >= 180f)
+				{
+					Debug.Log("Greater");
+					//if (transform.rotation.eulerAngles.y < 90 && newRotation.eulerAngles.y >= 180 && transform.rotation.eulerAngles.y >= 180 && newRotation.eulerAngles.y <= 90)
+					//{
+						Debug.Log("Subtracting");
+						rotationDelta -= 359f;
+					//}
+				}
+
+				float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
+				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimRotaitonSensitivity : controllerRotationSensitivity);
+				float adjustedRotationValue = transform.rotation.eulerAngles.y > newRotation.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
+
+				transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
+
+				//yield return null;
+			}
 		}
 	}
 
-	Quaternion savedRot;
-	public float controllerMaxRotationSensitivity;
-	public float controllerRotationSensitivity;
+	//private IEnumerator SetRotation()
+ //   {
+	//	while (true)
+	//	{
+	//		//float rotationDelta = Mathf.Abs(transform.rotation.eulerAngles.y - savedRot.eulerAngles.y);
 
-	private IEnumerator SetRotation()
-    {
-		//yield return new WaitUntil(() => rotationInput != Vector2.zero);
-		while (true)//(transform.rotation.y != savedRot.eulerAngles.y)
-		{
-            bool crossedZeroDown = savedRot.eulerAngles.y > 180 && transform.rotation.eulerAngles.y < 90;
-            bool crossedZeroUp = savedRot.eulerAngles.y < 90 && transform.rotation.eulerAngles.y > 180;
+	//		//if (rotationDelta > 90f)
+	//		//{
+	//		//	if (transform.rotation.eulerAngles.y >= 180 && savedRot.eulerAngles.y <= 90)
+	//		//	{
+	//		//		rotationDelta -= 359f;
+	//		//	}
+	//		//	else if (transform.rotation.eulerAngles.y <= 90 && savedRot.eulerAngles.y >= 180)
+	//		//	{
+	//		//		rotationDelta += 359f;
+	//		//	}
+	//		//}
 
-            //if (transform.rotation.eulerAngles.y > 350 && savedRot.eulerAngles.y > 1)
-            //{
+	//		//float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
+	//		//float adjustedRotationDelta = stratifiedRotation * controllerRotationSensitivity;
+ //  //         float adjustedRotationValue = transform.rotation.eulerAngles.y > savedRot.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
 
-            //}
+ //  //         transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
 
-			float stratifiedRotation = Mathf.Abs(transform.rotation.eulerAngles.y - savedRot.eulerAngles.y) / controllerMaxRotationSensitivity;
-			float adjustedRotationDelta = stratifiedRotation * controllerRotationSensitivity;
-            float adjustedRotationValue = transform.rotation.eulerAngles.y > savedRot.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
-
-            // handle the wierd problem with negative y values (idk why man it works ok?)
-            //if (rotationInputToUse.y < 0)
-            //{
-            //	adjustedRotationValue -= 180;
-            //}
-
-            // create new rotation quaternion
-            //Quaternion newRotation = transform.rotation;
-            //newRotation.eulerAngles = new Vector3(0f, adjustedRotationValue, 0f);
-
-            //// rotate it so that from the isometric camera angle it looks right (up is actually 45 degrees not 0)
-            //newRotation = Quaternion.AngleAxis(45, Vector3.up) * newRotation;
-
-			if (crossedZeroUp)
-            {
-				adjustedRotationValue = Mathf.Abs(adjustedRotationValue);
-            }
-
-            transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
-
-			yield return null;
-		}
-    }
+	//		//yield return null;
+	//	}
+ //   }
 
 	private void OnDestroy()
 	{
