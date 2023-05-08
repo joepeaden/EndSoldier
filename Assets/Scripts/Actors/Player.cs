@@ -16,10 +16,12 @@ public class Player : MonoBehaviour
 	public UnityEvent<Equipment> OnUpdateEquipment = new UnityEvent<Equipment>();
 	public UnityEvent OnPlayerDeath = new UnityEvent();
 
+	// these should be in a SO
 	public float controllerAimRotaitonSensitivity;
 	public float regularSensitivity;
 	public float controllerMaxRotationSensitivity;
 	public float controllerRotationSensitivity;
+	public float aimDeadZoneAngle;
 
 	private Actor actor;
 	private Transform reticle;
@@ -126,70 +128,33 @@ public class Player : MonoBehaviour
 			{
 				// Get the angle of rotation based on the controller input (look, math! I did it!)
 				float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
-				 
+
 				// handle the wierd problem with negative y values (idk why man it works ok?)
 				if (rotationInputToUse.y < 0)
 				{
 					newRotationYAngle -= 180;
 				}
 
-				// create new rotation quaternion
-				Quaternion newRotation = transform.rotation;
-				newRotation.eulerAngles = new Vector3(0f, newRotationYAngle, 0f);
+				newRotationYAngle += 45f;
 
-				newRotation = Quaternion.AngleAxis(45f, Vector3.up) * newRotation;
+				float rotationDelta = Mathf.Abs(newRotationYAngle - transform.rotation.eulerAngles.y);
 
-				float rotationDelta = Mathf.Abs(newRotation.eulerAngles.y - transform.rotation.eulerAngles.y);
 
-				// fix if we're going from 360 to 0 or the other way; this is confusing but don't stress it.
+					// fix if we're going from 360 to 0 or the other way; this is confusing but don't stress it.
+				// basically just need to remember that transform.Rotate tatkes a number of degrees to rotate as a param. So going from 359 -> 0  degree rotation should not be -359 degrees, but should be 1 degree. Ya feel me?
 				if (rotationDelta >= 180f)
 				{
-					Debug.Log("Greater");
-					//if (transform.rotation.eulerAngles.y < 90 && newRotation.eulerAngles.y >= 180 && transform.rotation.eulerAngles.y >= 180 && newRotation.eulerAngles.y <= 90)
-					//{
-						Debug.Log("Subtracting");
-						rotationDelta -= 359f;
-					//}
+					rotationDelta -= 359f;
 				}
 
 				float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
 				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimRotaitonSensitivity : controllerRotationSensitivity);
-				float adjustedRotationValue = transform.rotation.eulerAngles.y > newRotation.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
+				float adjustedRotationValue = transform.rotation.eulerAngles.y > newRotationYAngle ? -adjustedRotationDelta : adjustedRotationDelta;
 
 				transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
-
-				//yield return null;
 			}
 		}
 	}
-
-	//private IEnumerator SetRotation()
- //   {
-	//	while (true)
-	//	{
-	//		//float rotationDelta = Mathf.Abs(transform.rotation.eulerAngles.y - savedRot.eulerAngles.y);
-
-	//		//if (rotationDelta > 90f)
-	//		//{
-	//		//	if (transform.rotation.eulerAngles.y >= 180 && savedRot.eulerAngles.y <= 90)
-	//		//	{
-	//		//		rotationDelta -= 359f;
-	//		//	}
-	//		//	else if (transform.rotation.eulerAngles.y <= 90 && savedRot.eulerAngles.y >= 180)
-	//		//	{
-	//		//		rotationDelta += 359f;
-	//		//	}
-	//		//}
-
-	//		//float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
-	//		//float adjustedRotationDelta = stratifiedRotation * controllerRotationSensitivity;
- //  //         float adjustedRotationValue = transform.rotation.eulerAngles.y > savedRot.eulerAngles.y ? -adjustedRotationDelta : adjustedRotationDelta;
-
- //  //         transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
-
-	//		//yield return null;
-	//	}
- //   }
 
 	private void OnDestroy()
 	{
@@ -228,7 +193,11 @@ public class Player : MonoBehaviour
 
 	private void HandleRotationInput(InputAction.CallbackContext cntxt)
 	{
-		rotationInput = cntxt.ReadValue<Vector2>();
+		Vector2 newRotationInput = cntxt.ReadValue<Vector2>();
+
+		//To implement deadzone, maybe need to save the last rotation compared to that cchanged it and then see if the difference between those has become big enough. Then change again. mayabe?
+
+		//rotationInput = 
 	}
 
 	private void HandleAimBeginInput(InputAction.CallbackContext cntxt)
