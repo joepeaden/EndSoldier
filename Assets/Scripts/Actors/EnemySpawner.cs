@@ -62,7 +62,18 @@ public class EnemySpawner : MonoBehaviour
                     shouldSpawn = false;
                     break;
                 }
-            
+
+                bool onScreen = Camera.main.WorldToScreenPoint(transform.position).x < Screen.currentResolution.width &&
+                    Camera.main.WorldToScreenPoint(transform.position).x > 0 &&
+                    Camera.main.WorldToScreenPoint(transform.position).y < Screen.currentResolution.height &&
+                    Camera.main.WorldToScreenPoint(transform.position).y > 0;
+
+                // Don't spawn while on screen
+                while (onScreen)
+                {
+                    yield return null;
+                }
+
                 Instantiate(spawnableEnemyPrefabs[randomEnemyIndex], transform.position, Quaternion.identity, enemiesParent);
 
                 waveEnemiesSpawned++;
@@ -74,7 +85,6 @@ public class EnemySpawner : MonoBehaviour
 
     public static void NextWave()
     {
-        Debug.Log("Starting next wave!");
         waveNumber++;
 
         UpdateWaveVariables();

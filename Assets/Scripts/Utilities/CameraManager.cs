@@ -12,8 +12,6 @@ public class CameraManager : MonoBehaviour
     public static CameraManager Instance { get { return _instance; } }
 
     [SerializeField] private CinemachineVirtualCamera vCam;
-    // is this ref needed?
-    [SerializeField] private Camera mainCam;
 
     private void Awake()
     {
@@ -26,11 +24,6 @@ public class CameraManager : MonoBehaviour
         {
             _instance = this;
         }
-
-        //Player.OnPlayerBeginAim += FollowReticle;
-        //Player.OnPlayerEndAim += FollowPlayer;
-
-        //postProcProfile = vCam.GetComponent<CinemachineVolumeSettings>().m_Profile;
     }
 
     /// <summary>
@@ -40,16 +33,6 @@ public class CameraManager : MonoBehaviour
     public VolumeProfile GetPostProcProf()
     {
         return vCam.GetComponent<CinemachineVolumeSettings>().m_Profile;
-    }
-
-    private void FollowPlayer()
-    {
-        FollowTarget(GameManager.Instance.GetPlayerGO().transform);
-    }
-
-    private void FollowReticle()
-    {
-        FollowTarget(GameManager.Instance.GetReticleGO().transform);
     }
 
     public void FollowTarget(Transform toFollow)

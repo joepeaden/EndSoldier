@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerGO;
     private Player player;
 
-    [SerializeField] private GameObject reticleGO;
-
     private AudioSource genericSoundPlayer;
 
     private void Awake()
@@ -81,11 +79,6 @@ public class GameManager : MonoBehaviour
     public GameObject GetPlayerGO()
     {
         return playerGO;
-    }
-
-    public GameObject GetReticleGO()
-    {
-        return reticleGO;
     }
 
     public void StartSlowMotion(float secondsToWait)
