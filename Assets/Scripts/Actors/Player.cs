@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RootMotion.Demos;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -18,19 +19,16 @@ public class Player : MonoBehaviour
 
 	// these should be in a SO
 	public float controllerAimRotaitonSensitivity;
-	public float regularSensitivity;
 	public float controllerMaxRotationSensitivity;
 	public float controllerRotationSensitivity;
-	public float aimDeadZoneAngle;
 
 	private Actor actor;
-	private Transform reticle;
 
 	// control stuff
 	private PlayerControls controls;
 	private Vector2 movementInput;
 	private Vector2 rotationInput;
-	//Quaternion savedRot;
+	private bool usingMouseForRotation;
 	private bool attemptingToFire;
 	private bool triggerPull;
 
@@ -46,13 +44,14 @@ public class Player : MonoBehaviour
 		controls.Gameplay.Sprint.performed += HandleSprintPerformedInput;
 		controls.Gameplay.Sprint.canceled += HandleSprintStopInput;
 		controls.Gameplay.Rotate.performed += HandleRotationInput;
-		controls.Gameplay.Aim.performed += HandleAimBeginInput;
+        controls.Gameplay.RotateMouse.performed += HandleRotationInputMouse;
+        controls.Gameplay.Aim.performed += HandleAimBeginInput;
 		controls.Gameplay.Aim.canceled += HandleAimEndInput;
 		controls.Gameplay.Fire.started += HandleFireStartInput;
-		//controls.Gameplay.Fire.performed += HandleFirePerformedInput;
 		controls.Gameplay.Fire.canceled += HandleFireStopInput;
-		controls.Gameplay.SwitchWeapons.performed += HandleSwitchWeaponsInput;
-		controls.Gameplay.Reload.performed += HandleReloadInput;
+		controls.Gameplay.SwitchWeapons.performed += HandleSwitchWeaponsInputController;
+        controls.Gameplay.SwitchWeaponsMouse.performed += HandleSwitchWeaponsInputMouse;
+        controls.Gameplay.Reload.performed += HandleReloadInput;
 		controls.Gameplay.UseEquipment.performed += HandleUseEquipmentInput;
 		controls.Gameplay.Interact.performed += HandleInteractInput;
 	}
@@ -63,10 +62,6 @@ public class Player : MonoBehaviour
 		actor.OnGetHit.AddListener(HandleGetHit);
 		actor.OnHeal.AddListener(HandleHeal);
 		actor.GetInventory().SetWeaponFromData();
-
-		reticle = GameManager.Instance.GetReticleGO()?.transform;
-
-		//StartCoroutine(SetRotation());
 	}
 
     private void OnEnable()
@@ -101,7 +96,7 @@ public class Player : MonoBehaviour
 		if (!GameplayUI.Instance || !GameplayUI.Instance.InMenu())
 		{
 			// rotation is based on movement when sprinting and rotation input when otherwise. So need this.
-			Vector3 rotationInputToUse;
+			Vector2 rotationInputToUse;
 			if (!actor.state[Actor.State.Sprinting])
 			{
 				//// Movement ////
@@ -120,11 +115,10 @@ public class Player : MonoBehaviour
 			{
 				// only go forward if sprinting
 				actor.Move(transform.forward, false);
-				rotationInputToUse = movementInput;
+				rotationInputToUse = usingMouseForRotation ? rotationInput : movementInput;
 			}
 
-			//// Rotation ////
-			if (rotationInput != Vector2.zero)
+			if (rotationInputToUse != Vector2.zero)
 			{
 				// Get the angle of rotation based on the controller input (look, math! I did it!)
 				float newRotationYAngle = Mathf.Atan(rotationInputToUse.x / rotationInputToUse.y) * Mathf.Rad2Deg;
@@ -193,14 +187,22 @@ public class Player : MonoBehaviour
 
 	private void HandleRotationInput(InputAction.CallbackContext cntxt)
 	{
-		Vector2 newRotationInput = cntxt.ReadValue<Vector2>();
+		rotationInput = cntxt.ReadValue<Vector2>();
 
-		//To implement deadzone, maybe need to save the last rotation compared to that cchanged it and then see if the difference between those has become big enough. Then change again. mayabe?
+        usingMouseForRotation = false;
+    }
 
-		//rotationInput = 
+	private void HandleRotationInputMouse(InputAction.CallbackContext cntxt)
+	{
+		Vector3 mousePosition = cntxt.ReadValue<Vector2>();
+		Vector3 playerPositionScreen = Camera.main.WorldToScreenPoint(transform.position);
+		Vector3 normalizedMouseInput = (mousePosition - playerPositionScreen).normalized;
+		rotationInput = normalizedMouseInput;
+
+		usingMouseForRotation = true;
 	}
 
-	private void HandleAimBeginInput(InputAction.CallbackContext cntxt)
+    private void HandleAimBeginInput(InputAction.CallbackContext cntxt)
 	{
 		if (!actor.state[Actor.State.Sprinting])
 		{
@@ -231,7 +233,7 @@ public class Player : MonoBehaviour
 		attemptingToFire = false;
     }
 
-	private void HandleSwitchWeaponsInput(InputAction.CallbackContext cntxt)
+	private void HandleSwitchWeaponsInputController(InputAction.CallbackContext cntxt)
 	{
 		if (actor.GetInventory().weaponCount > 1)
 		{
@@ -243,7 +245,20 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	private void HandleReloadInput(InputAction.CallbackContext cntxt)
+	private void HandleSwitchWeaponsInputMouse(InputAction.CallbackContext cntxt)
+	{
+        if (actor.GetInventory().weaponCount > 1)
+        {
+            bool result = actor.AttemptSwitchWeapons();
+            if (result == true)
+            {
+                OnSwitchWeapons.Invoke(actor.GetEquippedWeapon());
+            }
+        }
+    }
+
+
+    private void HandleReloadInput(InputAction.CallbackContext cntxt)
 	{
 		actor.AttemptReload();
 	}

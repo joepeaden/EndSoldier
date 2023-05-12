@@ -85,6 +85,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Switch Weapons Mouse",
+                    "type": "Value",
+                    "id": "175eea93-d98b-4357-87d1-75c51d68af1f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate Mouse",
+                    "type": "Value",
+                    "id": "824002df-f7f4-45ef-b855-e03cc26d68e9",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -181,7 +199,7 @@
                     "id": "e188a3de-f3cf-4fdd-bd58-065a07a04a8e",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "ScaleVector2(x=0.0001,y=0.0001)",
+                    "processors": "",
                     "groups": "",
                     "action": "Rotate",
                     "isComposite": false,
@@ -244,19 +262,19 @@
                 },
                 {
                     "name": "",
-                    "id": "d09528e1-299e-4a71-b712-70db8d373c9b",
-                    "path": "<Gamepad>/buttonNorth",
+                    "id": "7c6670af-beba-47ea-8a02-e56893f8674f",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Switch Weapons",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "72f0297c-c5ba-456a-8d6b-673eda1dbf15",
-                    "path": "<Mouse>/middleButton",
+                    "id": "d09528e1-299e-4a71-b712-70db8d373c9b",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -305,6 +323,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Use Equipment",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "18ed725d-072e-48a5-84bd-b984a43c9f2f",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch Weapons Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff3d478d-f11c-4d99-8a1f-40f754532894",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
