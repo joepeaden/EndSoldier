@@ -180,6 +180,8 @@ public class Actor : MonoBehaviour
     // SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
     // that states are modfified if it isn't
 
+	// perhaps a good way to deal with it would be making this method private. Would at least be a start.
+
     /// <summary>
     /// Set a state of the actor.
     /// </summary>
@@ -189,6 +191,7 @@ public class Actor : MonoBehaviour
 		switch (stateToModify)
 		{
 			case State.Sprinting:
+				OnActorEndAim.Invoke();
 				state[State.Sprinting] = true;
 				state[State.Walking] = false;
 				state[State.Aiming] = false;
@@ -211,6 +214,25 @@ public class Actor : MonoBehaviour
 				break;
 			default:
 				break;
+		}
+	}
+
+	public void BeginAiming()
+	{
+		if (state[State.Aiming] == false && !state[Actor.State.Sprinting])
+		{
+			SetState(Actor.State.Aiming);
+			OnActorBeginAim.Invoke();
+		}
+	}
+
+	public void EndAiming()
+	{
+		if (state[State.Aiming] == true)
+		{
+			// bad bad bad. They may not be walking. Really need to fix this soon.
+			SetState(Actor.State.Walking);
+			OnActorEndAim.Invoke();
 		}
 	}
 

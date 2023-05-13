@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour, ISetActive
 	public bool activateOnStart;
 
 	private Actor actor;
-	private bool pauseFiring;
+	private bool pauseFurtherAttacks;
 	private GameObject target;
 
 	private void Awake()
@@ -64,6 +64,11 @@ public class Enemy : MonoBehaviour, ISetActive
 				}
 				else
 				{
+					if (data.canAim)
+					{
+						actor.EndAiming();
+					}
+
 					actor.Move(target.transform.position);
 				}
 
@@ -76,7 +81,7 @@ public class Enemy : MonoBehaviour, ISetActive
 					{
 						actor.AttemptReload();
 					}
-					else if (!pauseFiring)
+					else if (!pauseFurtherAttacks)
 					{
 						int numToFire = (int)Random.Range(data.minBurstFrames, data.maxBurstFrames);
 
@@ -143,7 +148,7 @@ public class Enemy : MonoBehaviour, ISetActive
 
 		if (actor.IsAlive)
 		{
-			pauseFiring = false;
+			pauseFurtherAttacks = false;
 			StartCoroutine(LookForTarget());
 		}
 	}
@@ -154,7 +159,7 @@ public class Enemy : MonoBehaviour, ISetActive
 
 		if (actor.IsAlive)
 		{
-			pauseFiring = true;
+			pauseFurtherAttacks = true;
 			target = null;
 			StopAllCoroutines();
 
@@ -193,7 +198,14 @@ public class Enemy : MonoBehaviour, ISetActive
 
 	private IEnumerator FireBurst(int numToFire)
     {
-		pauseFiring = true;
+		if (data.canAim)
+		{
+			actor.BeginAiming();
+		}
+
+		pauseFurtherAttacks = true;
+
+		yield return new WaitForSeconds(1f);
 
 		int initialWeaponAmmo = actor.GetEquippedWeaponAmmo();
 		int currentWeaponAmmo = initialWeaponAmmo;
@@ -217,8 +229,11 @@ public class Enemy : MonoBehaviour, ISetActive
 			}
 		}
 
-		yield return new WaitForSeconds(Random.Range(data.shootPauseTimeMin, data.shootPauseTimeMax));
+		actor.EndAiming();
 
-		pauseFiring = false;
+		// the -1 is to account for the 1 second pause at beginning
+		yield return new WaitForSeconds(Random.Range(data.shootPauseTimeMin, data.shootPauseTimeMax) - 1f);
+
+		pauseFurtherAttacks = false;
 	}
 }

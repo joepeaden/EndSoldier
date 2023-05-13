@@ -6,6 +6,7 @@ using UnityEngine;
 public class ControllerData : ScriptableObject
 {
 	public bool canMoveAndShoot;
+	public bool canAim;
 	public int scoreValue;
 	public WeaponData startWeapon;
 

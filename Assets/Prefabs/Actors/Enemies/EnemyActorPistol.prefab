@@ -579,7 +579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1310252469257724915, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Name
-      value: EnemyActor
+      value: EnemyActorPistol
       objectReference: {fileID: 0}
     - target: {fileID: 1310252469257724915, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive
@@ -591,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1862680096901564040, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_ConnectedAnchor.x
@@ -1233,6 +1233,10 @@ PrefabInstance:
       propertyPath: ragdoll
       value: 
       objectReference: {fileID: 2613524022036777449}
+    - target: {fileID: 6621039823173931288, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3042003431b484256ae8c271fb09822f, type: 2}
     - target: {fileID: 6702234233228226363, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: icon
       value: 
@@ -1247,8 +1251,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7994928161989725152, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7994928161989725152, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ef927613b34c24881933f62d30d79e6f, type: 2}
     - target: {fileID: 8006862664705304791, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1301,12 +1309,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 7fe59f827d7584676bacf8564f9a15e1, type: 2}
-  shootPauseTimeMax: 4
-  shootPauseTimeMin: 2
-  maxBurstFrames: 60
-  minBurstFrames: 1
-  maxTimeToFindPlayer: 3
-  minTimeToFindPlayer: 1
   activateOnStart: 1
 --- !u!4 &6441563662314929174 stripped
 Transform:

@@ -174,7 +174,6 @@ public class Player : MonoBehaviour
 	private void HandleSprintPerformedInput(InputAction.CallbackContext cntxt)
 	{
 		actor.SetState(Actor.State.Sprinting);
-		actor.OnActorEndAim.Invoke();
 	}
 
 	private void HandleSprintStopInput(InputAction.CallbackContext cntxt)
@@ -204,17 +203,12 @@ public class Player : MonoBehaviour
 
     private void HandleAimBeginInput(InputAction.CallbackContext cntxt)
 	{
-		if (!actor.state[Actor.State.Sprinting])
-		{
-			actor.SetState(Actor.State.Aiming);
-			actor.OnActorBeginAim.Invoke();
-		}
+		actor.BeginAiming();
 	}
 
 	private void HandleAimEndInput(InputAction.CallbackContext cntxt)
 	{
-		actor.OnActorEndAim.Invoke();
-		actor.SetState(Actor.State.Walking);
+		actor.EndAiming();
 	}
 
 	private void HandleFireStartInput(InputAction.CallbackContext cntxt)

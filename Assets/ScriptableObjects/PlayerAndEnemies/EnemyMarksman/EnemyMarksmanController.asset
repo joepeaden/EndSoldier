@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: EnemyMarksmanController
   m_EditorClassIdentifier: 
   canMoveAndShoot: 0
+  canAim: 1
   scoreValue: 300
   startWeapon: {fileID: 11400000, guid: 416349b48210e4dfc8723808ed6b49f4, type: 2}
   shootPauseTimeMax: 6
