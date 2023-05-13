@@ -133,6 +133,9 @@ public class GameplayUI : MonoBehaviour
     private void HandleRewardConfirm()
     {
         OnRewardsPicked.Invoke(pickedRewardItem);
+
+        // have to reset picked reward and structs are non-nullable
+        pickedRewardItem = new ShopItem();
         ShowBattleUI();
     }
 

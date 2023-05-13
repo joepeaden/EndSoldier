@@ -7,9 +7,11 @@ public class EnemySpawner : MonoBehaviour
 {
     public static int waveEnemiesSpawned;
     public static bool shouldSpawn;
-    public Transform enemiesParent;
-
     public static int waveNumber;
+
+    public Transform enemiesParent;
+    [SerializeField]
+    private bool canSpawnOnScreen;
 
     #region Current Wave Variables
     /// <summary>
@@ -63,16 +65,20 @@ public class EnemySpawner : MonoBehaviour
                     break;
                 }
 
-                bool onScreen = Camera.main.WorldToScreenPoint(transform.position).x < Screen.currentResolution.width &&
-                    Camera.main.WorldToScreenPoint(transform.position).x > 0 &&
-                    Camera.main.WorldToScreenPoint(transform.position).y < Screen.currentResolution.height &&
-                    Camera.main.WorldToScreenPoint(transform.position).y > 0;
-
                 // Don't spawn while on screen
-                while (onScreen)
+                bool onScreen = false;
+                do
                 {
-                    yield return null;
-                }
+                    // the +10f is just so they spawn OFF screen, not at the edge of the screen.
+                    onScreen = Camera.main.WorldToScreenPoint(transform.position).x < Screen.width + 10f &&
+                    Camera.main.WorldToScreenPoint(transform.position).x > 0 &&
+                    Camera.main.WorldToScreenPoint(transform.position).y < Screen.height + 10f &&
+                    Camera.main.WorldToScreenPoint(transform.position).y > 0;
+                    if (onScreen)
+                    {
+                        yield return null;
+                    }
+                } while (onScreen && !canSpawnOnScreen);
 
                 Instantiate(spawnableEnemyPrefabs[randomEnemyIndex], transform.position, Quaternion.identity, enemiesParent);
 

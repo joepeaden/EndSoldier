@@ -63,7 +63,12 @@ public class Rewards : MonoBehaviour
         if (hadEnoughPoints)
         {
             // spawn the loot somewhere
-            int spawnPointIndex = Random.Range(0, spawnPoints.Count);
+            int spawnPointIndex = 0;
+            do
+            {
+                spawnPointIndex = Random.Range(0, spawnPoints.Count);
+            } while (!spawnPoints[spawnPointIndex].gameObject.activeInHierarchy);
+
             Loot loot = Instantiate(lootPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity).GetComponent<Loot>();
             if (loot)
             {

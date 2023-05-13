@@ -19,7 +19,7 @@ public class WaveManager : MonoBehaviour
     private WaveData waveData;
     private bool shouldStartNextWave;
 
-    private void Start()
+    private void Awake()
     {
         if (_instance != null)
         {
@@ -30,7 +30,10 @@ public class WaveManager : MonoBehaviour
         {
             _instance = this;
         }
+    }
 
+    private void Start()
+    {
         totalEnemiesAlive = 0;
         GameplayUI.OnRewardsPicked.AddListener(HandleRewardsPicked);
 
