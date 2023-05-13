@@ -4277,7 +4277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesParent: {fileID: 9518769}
-  canSpawnOnScreen: 1
+  canSpawnOnScreen: 0
 --- !u!4 &328449454 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 431408, guid: 36f3c19a7597eb94987d9f341e3010eb, type: 3}
@@ -18253,7 +18253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesParent: {fileID: 9518769}
-  canSpawnOnScreen: 1
+  canSpawnOnScreen: 0
 --- !u!1001 &1985351009
 PrefabInstance:
   m_ObjectHideFlags: 0
