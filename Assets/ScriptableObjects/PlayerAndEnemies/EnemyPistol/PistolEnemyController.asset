@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PistolEnemyController
   m_EditorClassIdentifier: 
   canMoveAndShoot: 0
+  canAim: 0
   scoreValue: 50
   startWeapon: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
   shootPauseTimeMax: 4

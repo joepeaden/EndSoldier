@@ -126,7 +126,6 @@ public class ActorModel : MonoBehaviour
                 // really not good in the long run. Whatever!
                 if (rb.name.StartsWith("Bip001 Head"))
                 {
-                    Debug.Log("Headshot!");
                     hitRigidbody = rb;
                 }
             }

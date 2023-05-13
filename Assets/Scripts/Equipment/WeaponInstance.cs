@@ -114,7 +114,20 @@ public class WeaponInstance : MonoBehaviour
         if (weaponModelGameObject != null)
         {
             weaponModelGameObject.layer = (int)LayerNames.CollisionLayers.IgnoreActors;
+            StartCoroutine(DetatchFromActor());
         }
+    }
+
+    /// <summary>
+    /// Wait just a moment before detatching the weapon from the actor so that the weapon gets a little unique rotation etc.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DetatchFromActor()
+    {
+        yield return new WaitForSeconds(.2f);
+        weaponModelGameObject.transform.parent = null;
+        weaponModelGameObject.AddComponent<BoxCollider>();
+        weaponModelGameObject.AddComponent<Rigidbody>();
     }
 
     private void BeginAim()

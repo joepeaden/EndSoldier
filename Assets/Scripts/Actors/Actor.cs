@@ -633,6 +633,8 @@ public class Actor : MonoBehaviour
 			PlaySound(deathSounds[index]);
 		}
 
+		EndAiming();
+
 		// have actor handle it's own inevitable destruction. It's ok buddy.
 		OnDeath.Invoke();
 	}

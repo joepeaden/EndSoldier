@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SniperProj
   m_EditorClassIdentifier: 
   causesHeadShots: 1
-  velocity: 60
+  velocity: 80
   force: 15000
   damage: 100
   material: {fileID: 2100000, guid: efde5349fa4af45309403104738ee0ca, type: 2}
