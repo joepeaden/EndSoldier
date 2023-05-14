@@ -109,6 +109,11 @@ public class ActorModel : MonoBehaviour
         ragAnim.SetFloat("HorizontalAxis", horiz);
     }
 
+    public void FireAnimation()
+    {
+        ragAnim.SetTrigger("Fire");
+    }
+
     private void HandleActorDeath()
     {
         Vector3 lastHitDirection = projectileThatKilledJim.movementDirection;

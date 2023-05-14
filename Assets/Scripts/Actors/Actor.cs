@@ -277,6 +277,8 @@ public class Actor : MonoBehaviour
     /// <param name="triggerPull">Is this attack the result of an initial trigger pull, as opposed to holding down the trigger?</param>
 	public bool AttemptAttack(bool triggerPull)
     {
+
+		actorModel.FireAnimation();
 		if (inventory != null)
 		{
 			return inventory.AttemptUseWeapon(triggerPull);

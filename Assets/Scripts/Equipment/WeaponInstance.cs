@@ -89,6 +89,9 @@ public class WeaponInstance : MonoBehaviour
 
     private void LateUpdate()
     {
+        transform.position = gunModelParent.position;
+        transform.rotation = actorOperator.transform.rotation;//gunModelParent.rotation;
+
         // this was here to allow actors to aim at crouching enemies. It caused problems though so just removing it for now.
 
         //Vector3 target = actorOperator.target;//Vector3.right;//transform.worldToLocalMatrix.MultiplyVector(transform.forward);
@@ -183,7 +186,7 @@ public class WeaponInstance : MonoBehaviour
             // not sure if this would result from Destroy, so just in case
             weaponModelGameObject = null;
         }
-        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, gunModelParent);
+        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, transform);
         weaponModelGameObject.tag = WEAPON_MODEL_TAG;
         weaponModelGameObject.layer = ActorOperator.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
 
