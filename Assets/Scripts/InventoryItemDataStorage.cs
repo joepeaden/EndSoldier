@@ -11,4 +11,5 @@ public class InventoryItemDataStorage : MonoBehaviour
     public WeaponData semiAutoRifle;
     public WeaponData shotgun;
     public WeaponData pistol;
+    public WeaponData psaSabre;
 }

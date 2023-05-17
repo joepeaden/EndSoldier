@@ -46,6 +46,7 @@ public class Rewards : MonoBehaviour
         shopItems.Add(new ShopItem(dataStore.subMachineGun));
         shopItems.Add(new ShopItem(dataStore.semiAutoRifle));
         shopItems.Add(new ShopItem(dataStore.shotgun));
+        shopItems.Add(new ShopItem(dataStore.psaSabre));
 
         return shopItems;
     }

@@ -51,3 +51,4 @@ MonoBehaviour:
   semiAutoRifle: {fileID: 11400000, guid: 416349b48210e4dfc8723808ed6b49f4, type: 2}
   shotgun: {fileID: 11400000, guid: abb47702383f949c88dc7ed2f0ef932b, type: 2}
   pistol: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
+  psaSabre: {fileID: 11400000, guid: fb5d901f20a6c48488060578a0dc9d1b, type: 2}

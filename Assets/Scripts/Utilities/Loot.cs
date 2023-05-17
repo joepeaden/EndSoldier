@@ -45,6 +45,9 @@ public class Loot : Interactable, ISetActive
             case "PISTOL":
                 item = new InventoryWeapon(dataStorage.pistol);
                 break;
+            case "PSA":
+                item = new InventoryWeapon(dataStorage.psaSabre);
+                break;
         }
 
         item.rewardKey = rewardKey;

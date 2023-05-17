@@ -10,28 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31caf38739274904f8ea83d1af25c7e4, type: 3}
-  m_Name: AssaultRifleData
+  m_Name: PSASabre
   m_EditorClassIdentifier: 
-  displayName: Assault Rifle
-  rewardKey: RIFLE
+  displayName: Sabre
+  rewardKey: PSA
   cost: 100
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
-  recoil: 1
-  attackInterval: 0.075
+  recoil: 0.88
+  attackInterval: 0.05
   range: 35
   optimalRange: 25
-  ammoCapacity: 30
-  totalAmount: 90
+  ammoCapacity: 60
+  totalAmount: 500
   attackSound: {fileID: 8300000, guid: daf2a7aa4b10def4f92c1ca44ab3552d, type: 3}
   emptyWeaponSound: {fileID: 8300000, guid: 8e47353dd30fd4b87b726b819632eab8, type: 3}
   reloadSound: {fileID: 8300000, guid: cad50383732c54e1ba437bb598a3a08d, type: 3}
-  reloadTime: 2
+  reloadTime: 0.5
   isAutomatic: 1
   isPistol: 0
   projFiredPerShot: 1
-  modelPrefab: {fileID: 100000, guid: 45dedc0f8a0695947a4913f73e2236a3, type: 3}
+  modelPrefab: {fileID: 9143924192006986424, guid: 44927ce78ac77624dbcd4829ccd03108, type: 3}
   muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
-  hasInfiniteBackupAmmo: 0
-  accuracyAngle: 8
-  movementAccuracyPenalty: 3
-  aimingBoon: 4
+  hasInfiniteBackupAmmo: 1
+  accuracyAngle: 12
+  movementAccuracyPenalty: 2
+  aimingBoon: 8
