@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
 
 // Author: Joseph Peaden
@@ -76,21 +76,21 @@ public class WeaponInstance : MonoBehaviour
         {
             float accuracy = GetAccuracy();
 
-            Quaternion projRot = muzzle.rotation;
+            Quaternion projRot = transform.rotation;
             Quaternion ray1Dir = new Quaternion();
             ray1Dir.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y + accuracy, projRot.eulerAngles.z);
             Quaternion ray2Dir = new Quaternion();
             ray2Dir.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y - accuracy, projRot.eulerAngles.z);
 
-            Debug.DrawRay(muzzle.position, ray1Dir * Vector3.forward * 10f, Color.red);
-            Debug.DrawRay(muzzle.position, ray2Dir * Vector3.forward * 10f, Color.red);
+            Debug.DrawRay(transform.position, ray1Dir * Vector3.forward * 10f, Color.red);
+            Debug.DrawRay(transform.position, ray2Dir * Vector3.forward * 10f, Color.red);
         }
     }
 
     private void LateUpdate()
     {
-        transform.position = gunModelParent.position;
-        transform.rotation = actorOperator.transform.rotation;//gunModelParent.rotation;
+        //transform.position = gunModelParent.position;
+        //transform.rotation = actorOperator.transform.rotation;//gunModelParent.rotation;
 
         // this was here to allow actors to aim at crouching enemies. It caused problems though so just removing it for now.
 
@@ -186,11 +186,12 @@ public class WeaponInstance : MonoBehaviour
             // not sure if this would result from Destroy, so just in case
             weaponModelGameObject = null;
         }
-        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, transform);
+        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, gunModelParent);
         weaponModelGameObject.tag = WEAPON_MODEL_TAG;
         weaponModelGameObject.layer = ActorOperator.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
 
-        muzzle.localPosition = weapon.data.muzzlePosition;
+        transform.localPosition = weapon.data.muzzlePosition;
+        //muzzle.transform.position = weapon.data.muzzlePosition;
         inventoryWeapon = weapon;
     }
 
@@ -202,7 +203,7 @@ public class WeaponInstance : MonoBehaviour
         while (aiming)
         {
             RaycastHit hit;
-            Ray ray = new Ray(muzzle.position, muzzle.forward);
+            Ray ray = new Ray(transform.position, transform.forward);
 
             int layerMask = LayerMask.GetMask(LayerNames.CollisionLayers.HouseAndFurniture.ToString(), LayerNames.CollisionLayers.Actors.ToString(), LayerNames.CollisionLayers.IgnoreFurniture.ToString(), "PlayerZoneCollider");
             
@@ -221,7 +222,7 @@ public class WeaponInstance : MonoBehaviour
                 aimGlow.transform.position = hit.point;
          
                 line.enabled = true;
-                line.SetPosition(0, muzzle.position);
+                line.SetPosition(0, transform.position);
                 line.SetPosition(1, hit.point);
             }
 
@@ -262,17 +263,16 @@ public class WeaponInstance : MonoBehaviour
 
             // make the bullet less accurate
             float rotAdjust = Random.Range(-accuracyAngle / 2, accuracyAngle / 2);
-            Quaternion projRot = muzzle.rotation;
+            Quaternion projRot = transform.rotation;
             projRot.eulerAngles = new Vector3(projRot.eulerAngles.x, projRot.eulerAngles.y + rotAdjust, projRot.eulerAngles.z);
 
-            Projectile projectile = Instantiate(inventoryWeapon.data.projectile, muzzle.position, projRot).GetComponent<Projectile>();
+            Projectile projectile = Instantiate(inventoryWeapon.data.projectile, transform.position, projRot).GetComponent<Projectile>();
             projectile.Initialize(actorOperator, inventoryWeapon.data, proj);
         }
 
         StopCoroutine(Flash());
         StartCoroutine(Flash());
 
-        
         if (ammoInWeapon > 0)
             StartCoroutine("PrepareToAttack");
     }

@@ -18,6 +18,7 @@ public class WeaponData : ShopRewardData
 	public AudioClip reloadSound;
 	public float reloadTime;
 	public bool isAutomatic;
+	public bool isPistol;
 	public int projFiredPerShot;
 	public GameObject modelPrefab;
 	public Vector3 muzzlePosition;

@@ -175,18 +175,18 @@ public class Actor : MonoBehaviour
 		}
 	}
 
-    // Either this method needs to be done away with or it needs to be only internal... I don't think
-    // that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
-    // SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
-    // that states are modfified if it isn't
+	// Either this method needs to be done away with or it needs to be only internal... I don't think
+	// that actors should be calling this method. They should just call a method like ToggleCrouch() instead of 
+	// SetState(Crouch). Figure out how to handle states. Don't want the impression that this is the only place 
+	// that states are modfified if it isn't
 
 	// perhaps a good way to deal with it would be making this method private. Would at least be a start.
 
-    /// <summary>
-    /// Set a state of the actor.
-    /// </summary>
-    /// <param name="stateToModify">The state to activate.</param>
-    public void SetState(State stateToModify)
+	/// <summary>
+	/// Set a state of the actor.
+	/// </summary>
+	/// <param name="stateToModify">The state to activate.</param>
+	public void SetState(State stateToModify)
 	{
 		switch (stateToModify)
 		{
@@ -241,6 +241,12 @@ public class Actor : MonoBehaviour
 		return TargetSpot;
     }
 
+	public void SetWeaponFromData(WeaponData startWeapon)
+    {
+		GetInventory().SetWeaponFromData(startWeapon);
+		actorModel.UpdateWeaponAnimation(inventory.GetEquippedWeapon().data.isPistol);
+	}
+
 	/// <summary>
 	/// Rotate the actor to look at lookTarget.
 	/// </summary>
@@ -263,6 +269,7 @@ public class Actor : MonoBehaviour
         {
 			if (inventory.AttemptSwitchWeapons())
             {
+				actorModel.UpdateWeaponAnimation(inventory.GetEquippedWeapon().data.isPistol);
 				return true;
             }
         }
@@ -277,14 +284,19 @@ public class Actor : MonoBehaviour
     /// <param name="triggerPull">Is this attack the result of an initial trigger pull, as opposed to holding down the trigger?</param>
 	public bool AttemptAttack(bool triggerPull)
     {
-
-		actorModel.FireAnimation();
+		bool success = false;
 		if (inventory != null)
 		{
-			return inventory.AttemptUseWeapon(triggerPull);
+			success = inventory.AttemptUseWeapon(triggerPull);
+			if (success)
+            {
+				Debug.Log("Fire anim");
+				// could happen through event? Whatever.
+				actorModel.FireAnimation();
+            }
 		}
 
-		return false;
+		return success;
     }
 
 	/// <summary>

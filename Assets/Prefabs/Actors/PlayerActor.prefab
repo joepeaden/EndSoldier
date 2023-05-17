@@ -211,19 +211,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 355814685251962843, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.6750595
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 355814685251962843, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.00660972
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 355814685251962843, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.73773366
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 355814685251962843, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00041073968
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 582410297507431152, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
@@ -869,6 +869,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 9157430240214517296, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4796819403604366461, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
@@ -931,6 +935,7 @@ MonoBehaviour:
   controllerAimRotaitonSensitivity: 3
   controllerMaxRotationSensitivity: 10
   controllerRotationSensitivity: 8
+  startWeapon: {fileID: 11400000, guid: 2051f262877fb4190b4af1e6c02e6562, type: 2}
 --- !u!1 &7093125220531609019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5753443716597660571, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}

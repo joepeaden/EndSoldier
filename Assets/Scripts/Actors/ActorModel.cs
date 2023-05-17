@@ -109,6 +109,13 @@ public class ActorModel : MonoBehaviour
         ragAnim.SetFloat("HorizontalAxis", horiz);
     }
 
+    public void UpdateWeaponAnimation(bool usingPistol)
+    {
+        Debug.Log(usingPistol);
+        ragAnim.SetTrigger(usingPistol ? "DrawHandgun" : "DrawLongGun");
+        ragAnim.SetBool("UsingHandgun", usingPistol);
+    }
+
     public void FireAnimation()
     {
         ragAnim.SetTrigger("Fire");

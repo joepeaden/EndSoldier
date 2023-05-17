@@ -1213,6 +1213,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 5343905166255433907, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5343905166255433907, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5343905166255433907, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5754784319907122149, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
       value: 16

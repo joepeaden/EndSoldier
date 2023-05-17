@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 	public float controllerAimRotaitonSensitivity;
 	public float controllerMaxRotationSensitivity;
 	public float controllerRotationSensitivity;
+	public WeaponData startWeapon;
 
 	private Actor actor;
 
@@ -61,7 +62,7 @@ public class Player : MonoBehaviour
 		actor.OnDeath.AddListener(HandlePlayerDeath);
 		actor.OnGetHit.AddListener(HandleGetHit);
 		actor.OnHeal.AddListener(HandleHeal);
-		actor.GetInventory().SetWeaponFromData();
+		actor.SetWeaponFromData(startWeapon);
 	}
 
     private void OnEnable()

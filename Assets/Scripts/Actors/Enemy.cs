@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour, ISetActive
 		actor.AddCoverListener(ActorHasPotentialCover);
 		actor.OnDeath.AddListener(HandleEnemyDeath);
 
-		actor.GetInventory().SetWeaponFromData(data.startWeapon);
+		actor.SetWeaponFromData(data.startWeapon);
 
 		if (activateOnStart)
 		{
