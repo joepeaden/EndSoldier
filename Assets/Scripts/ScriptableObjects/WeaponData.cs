@@ -20,8 +20,13 @@ public class WeaponData : ShopRewardData
 	public bool isAutomatic;
 	public bool isPistol;
 	public int projFiredPerShot;
-	public GameObject modelPrefab;
 	public Vector3 muzzlePosition;
+
+	[Header("Model Info")]
+	public GameObject modelPrefab;
+	//public Vector3 modelPosition;
+	//public Vector3 modelRotation;
+
 	public bool hasInfiniteBackupAmmo;
 
 	[Header("Accuracy")]

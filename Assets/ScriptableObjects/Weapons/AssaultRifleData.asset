@@ -29,8 +29,8 @@ MonoBehaviour:
   isAutomatic: 1
   isPistol: 0
   projFiredPerShot: 1
+  muzzlePosition: {x: -0.021, y: 1.374, z: 1.903}
   modelPrefab: {fileID: 100000, guid: 45dedc0f8a0695947a4913f73e2236a3, type: 3}
-  muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
   hasInfiniteBackupAmmo: 0
   accuracyAngle: 8
   movementAccuracyPenalty: 3

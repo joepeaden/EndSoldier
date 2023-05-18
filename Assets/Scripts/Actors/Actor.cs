@@ -244,7 +244,7 @@ public class Actor : MonoBehaviour
 	public void SetWeaponFromData(WeaponData startWeapon)
     {
 		GetInventory().SetWeaponFromData(startWeapon);
-		actorModel.UpdateWeaponAnimation(inventory.GetEquippedWeapon().data.isPistol);
+		actorModel.UpdateWeaponAnimation();
 	}
 
 	/// <summary>
@@ -269,7 +269,7 @@ public class Actor : MonoBehaviour
         {
 			if (inventory.AttemptSwitchWeapons())
             {
-				actorModel.UpdateWeaponAnimation(inventory.GetEquippedWeapon().data.isPistol);
+				actorModel.UpdateWeaponAnimation();
 				return true;
             }
         }
@@ -310,7 +310,10 @@ public class Actor : MonoBehaviour
 
 		if (inventory != null)
 		{
-			inventory.AttemptStartReload();
+			if (inventory.AttemptStartReload())
+			{
+				actorModel.StartReloadAnimation(inventory.GetEquippedWeapon().data.reloadTime);
+			}
 		}
 
 		return true;
@@ -388,6 +391,7 @@ public class Actor : MonoBehaviour
 		if (interactable)
 		{
 			interactable.Interact(this);
+			actorModel.StartInteractAnimation();
         }
 
 		return false;

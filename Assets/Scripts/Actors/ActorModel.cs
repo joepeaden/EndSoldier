@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ActorModel : MonoBehaviour
 {
@@ -44,6 +45,8 @@ public class ActorModel : MonoBehaviour
                 bodyParts.Add(smr.gameObject);
             }
         }
+
+        //reloadClip = ragAnim.runtimeAnimatorController.animationClips.Where(clip => clip.name == "Reload").FirstOrDefault();
 
         actor.EmitVelocityInfo.AddListener(UpdateVelocityBasedAnimations);
     }
@@ -109,15 +112,27 @@ public class ActorModel : MonoBehaviour
         ragAnim.SetFloat("HorizontalAxis", horiz);
     }
 
-    public void UpdateWeaponAnimation(bool usingPistol)
+    public AnimationClip reloadClip;
+    public void StartReloadAnimation(float reloadWeaponDuration)
     {
-        Debug.Log(usingPistol);
-        ragAnim.SetTrigger(usingPistol ? "DrawHandgun" : "DrawLongGun");
-        ragAnim.SetBool("UsingHandgun", usingPistol);
+        ragAnim.SetTrigger("Reload");
+
+        ragAnim.SetFloat("ReloadSpeed", reloadClip.length / reloadWeaponDuration);
+    }
+
+    public void StartInteractAnimation()
+    {
+        ragAnim.SetTrigger("Interact");
+    }
+
+    public void UpdateWeaponAnimation()
+    {
+        ragAnim.SetTrigger("DrawHandgun");
     }
 
     public void FireAnimation()
     {
+        Debug.Log("Firing");
         ragAnim.SetTrigger("Fire");
     }
 

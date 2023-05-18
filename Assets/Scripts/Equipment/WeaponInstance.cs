@@ -186,7 +186,10 @@ public class WeaponInstance : MonoBehaviour
             // not sure if this would result from Destroy, so just in case
             weaponModelGameObject = null;
         }
-        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, gunModelParent);
+        weaponModelGameObject = Instantiate(weapon.data.modelPrefab, gunModelParent);//weapon.data.modelPosition, Quaternion.Euler(weapon.data.modelRotation), gunModelParent);
+        //weaponModelGameObject.transform.localPosition = weapon.data.modelPosition;
+        //weaponModelGameObject.transform.rotation = Quaternion.identity;
+        //weaponModelGameObject.transform.Rotate(weapon.data.modelRotation);
         weaponModelGameObject.tag = WEAPON_MODEL_TAG;
         weaponModelGameObject.layer = ActorOperator.IsPlayer ? (int)LayerNames.CollisionLayers.PlayerOutline : (int)LayerNames.CollisionLayers.EnemyOutline;
 
