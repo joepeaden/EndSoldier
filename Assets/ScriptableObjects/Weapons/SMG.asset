@@ -27,9 +27,10 @@ MonoBehaviour:
   reloadSound: {fileID: 8300000, guid: accabe4039c554cb4915a87523485113, type: 3}
   reloadTime: 1.5
   isAutomatic: 1
+  isPistol: 0
   projFiredPerShot: 1
+  muzzlePosition: {x: 0.082, y: 1.299, z: 1.593}
   modelPrefab: {fileID: 100000, guid: 4fcb1ff557801b444a9eec3637129631, type: 3}
-  muzzlePosition: {x: -0.925, y: -0.0143, z: 0.234}
   hasInfiniteBackupAmmo: 0
   accuracyAngle: 12
   movementAccuracyPenalty: 1

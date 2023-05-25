@@ -13855,6 +13855,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.903
       objectReference: {fileID: 0}
+    - target: {fileID: 8268618929255888857, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
+      propertyPath: controllerAimRotaitonSensitivity
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8430338400641731272, guid: d9f2e617d3bb0d04b8b567cc744f13c1, type: 3}
       propertyPath: reloadClip
       value: 
