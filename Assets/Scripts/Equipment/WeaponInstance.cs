@@ -209,7 +209,7 @@ public class WeaponInstance : MonoBehaviour
             Ray ray = new Ray(transform.position, transform.forward);
 
             int layerMask = LayerMask.GetMask(LayerNames.CollisionLayers.HouseAndFurniture.ToString(), LayerNames.CollisionLayers.Actors.ToString(), LayerNames.CollisionLayers.IgnoreFurniture.ToString(), "PlayerZoneCollider");
-            
+
             if (Physics.Raycast(ray, out hit, int.MaxValue, layerMask))
             {
                 //if (hit.transform.gameObject.tag == "HitBox")
@@ -223,15 +223,22 @@ public class WeaponInstance : MonoBehaviour
                 //}
 
                 aimGlow.transform.position = hit.point;
-         
+
                 line.enabled = true;
                 line.SetPosition(0, transform.position);
                 line.SetPosition(1, hit.point);
+
+                if (actorOperator.IsPlayer)
+                {
+                    aimDir = (hit.point - transform.position).normalized;
+                }
             }
 
             yield return null;
         }
     }
+
+    public static Vector3 aimDir;
 
     public bool InitiateAttack(float actorRecoilControl, bool triggerPull)
     {

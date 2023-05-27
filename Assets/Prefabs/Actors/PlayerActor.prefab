@@ -295,7 +295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
-      value: 15
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 1832843449324189743, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_IsTrigger
@@ -321,6 +321,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 2830064906333338421, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Layer
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 2841993103701603133, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Layer
       value: 15
@@ -332,6 +336,10 @@ PrefabInstance:
     - target: {fileID: 3177180349973180707, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669145821288627964, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3880547155541323028, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_Constraints
@@ -849,6 +857,14 @@ PrefabInstance:
       propertyPath: ragAnim
       value: 
       objectReference: {fileID: 3624149761499141995}
+    - target: {fileID: 7177122754101766222, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7177122754101766222, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8617607009107877251, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -871,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9157430240214517296, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4796819403604366461, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
@@ -901,6 +917,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &3855111821839161167 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1745033373422121327, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}
+  m_PrefabInstance: {fileID: 3294243890456372768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8070517392448143525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3855111821839161167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dfbcb3894e384ce7a4d1dc27f997d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnSnapTargetChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &4582820473528141265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1310252469257724913, guid: 20320dc72a4bb5444a2e11119a2ac8ea, type: 3}

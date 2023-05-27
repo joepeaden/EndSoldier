@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 	public UnityEvent OnPlayerDeath = new UnityEvent();
 
 	// these should be in a SO
-	public float controllerAimRotaitonSensitivity;
+	public float baseControllerAimRotaitonSensitivity;
 	public float controllerMaxRotationSensitivity;
 	public float controllerRotationSensitivity;
 	public WeaponData startWeapon;
@@ -30,8 +30,12 @@ public class Player : MonoBehaviour
 	private Vector2 movementInput;
 	private Vector2 rotationInput;
 	private bool usingMouseForRotation;
+	private bool targetInSights;
 	private bool attemptingToFire;
 	private bool triggerPull;
+
+	///////////////
+	#region Unity Event Methods
 
 	private void Awake()
 	{
@@ -134,20 +138,28 @@ public class Player : MonoBehaviour
 
 				float rotationDelta = Mathf.Abs(newRotationYAngle - transform.rotation.eulerAngles.y);
 
-
-					// fix if we're going from 360 to 0 or the other way; this is confusing but don't stress it.
+				// fix if we're going from 360 to 0 or the other way; this is confusing but don't stress it.
 				// basically just need to remember that transform.Rotate tatkes a number of degrees to rotate as a param. So going from 359 -> 0  degree rotation should not be -359 degrees, but should be 1 degree. Ya feel me?
 				if (rotationDelta >= 180f)
 				{
 					rotationDelta -= 359f;
 				}
 
+				float controllerAimSensitivity = baseControllerAimRotaitonSensitivity;
+				if (!usingMouseForRotation && targetInSights)
+				{
+					controllerAimSensitivity = .01f;
+				}
+
 				float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
-				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimRotaitonSensitivity : controllerRotationSensitivity);
+				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimSensitivity : controllerRotationSensitivity);
 				float adjustedRotationValue = transform.rotation.eulerAngles.y > newRotationYAngle ? -adjustedRotationDelta : adjustedRotationDelta;
 
-				transform.Rotate(new Vector3(0f, adjustedRotationValue, 0f));
-			}
+				Vector3 finalNewEulers = transform.rotation.eulerAngles + new Vector3(0f, adjustedRotationValue, 0f);
+				Quaternion finalNewRotation = new Quaternion();
+				finalNewRotation.eulerAngles = finalNewEulers;
+				transform.rotation = finalNewRotation;
+            }
 		}
 	}
 
@@ -158,11 +170,13 @@ public class Player : MonoBehaviour
 		actor.OnHeal.RemoveListener(HandleHeal);
 	}
 
-	///////////////
-	#region Input
-	///////////////
-	
-	private void HandleMovementInput(InputAction.CallbackContext cntxt)
+    #endregion
+
+    ///////////////
+    #region Input
+    ///////////////
+
+    private void HandleMovementInput(InputAction.CallbackContext cntxt)
 	{
 		movementInput = cntxt.ReadValue<Vector2>();
 	}
@@ -273,6 +287,13 @@ public class Player : MonoBehaviour
 	}
 
 	#endregion
+
+	public void HandleTargetInSights(bool inSights)
+    {
+		this.targetInSights = inSights;
+		//Debug.Log(snapTarget.name);
+
+	}
 
 	public Inventory GetInventory()
 	{
