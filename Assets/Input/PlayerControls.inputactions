@@ -2,6 +2,74 @@
     "name": "PlayerControls",
     "maps": [
         {
+            "name": "UI",
+            "id": "28c6ceab-9b69-4f1b-a3b9-ca5d1ec06102",
+            "actions": [
+                {
+                    "name": "Navigate",
+                    "type": "Value",
+                    "id": "c6b3e04e-74ba-41a3-83e3-44e6019827bf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "5ef08ebb-c7f9-4dad-87df-7ffa90e4c573",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Confirm",
+                    "type": "Button",
+                    "id": "ccfa167f-853e-40ae-823a-57c13a08e97c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6cc6612b-66ae-4453-88c2-8eb99a984b6e",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f588823e-c4f0-4522-8c21-22d883f4ba0e",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43fefb78-f8be-42c0-87c5-db09c3c92e5f",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "Gameplay",
             "id": "cf77e0d4-ce1d-42d5-a1b0-fc9a8248fda2",
             "actions": [
@@ -275,6 +343,17 @@
                     "name": "",
                     "id": "d09528e1-299e-4a71-b712-70db8d373c9b",
                     "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Switch Weapons",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4de84bdd-aa4b-4d57-8666-e4e11d1362c7",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

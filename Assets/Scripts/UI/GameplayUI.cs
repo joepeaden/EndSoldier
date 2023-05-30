@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Class for UI that is specific to in-level gameplay.
@@ -37,10 +38,16 @@ public class GameplayUI : MonoBehaviour
     [SerializeField] private Button shopItemButtonPrefab;
     [SerializeField] private Transform shopItemParent;
     private ShopItem pickedRewardItem;
+    private int hoveredButtonIndex;
+    private List<Button> shopItemButtons = new List<Button>();
     #endregion
 
     private Player player;
     private VolumeProfile postProcProfile;
+
+    // Input should really be centralized in an input handler class. We know this.
+    // And we don't give a fuck. Not today at least.
+    private PlayerControls controls;
 
     private void Awake()
     {
@@ -59,6 +66,13 @@ public class GameplayUI : MonoBehaviour
         Scoreboard.OnScoreUpdated.AddListener(UpdateScore);
 
         confirmRewardButton.onClick.AddListener(HandleRewardConfirm);
+
+        controls = new PlayerControls();
+        controls.UI.Confirm.performed += HandleConfirmInput;
+        controls.UI.Select.performed += HandleSelectInput;
+        controls.UI.Navigate.started += HandleNavigation;
+
+        ShopItemButton.OnNewHoveredButton.AddListener(UpdateHoveredButton);
     }
 
     private void Start()
@@ -100,6 +114,57 @@ public class GameplayUI : MonoBehaviour
         player.OnUpdateEquipment.RemoveListener(UpdateEquipment);
         Scoreboard.OnScoreUpdated.RemoveListener(UpdateScore);
         confirmRewardButton.onClick.RemoveListener(HandleRewardConfirm);
+        controls.UI.Confirm.performed -= HandleConfirmInput;
+        controls.UI.Select.performed -= HandleSelectInput;
+        controls.UI.Navigate.started -= HandleNavigation;
+        ShopItemButton.OnNewHoveredButton.RemoveListener(UpdateHoveredButton);
+    }
+
+    private void HandleConfirmInput(InputAction.CallbackContext cntxt)
+    {
+        HandleRewardConfirm();
+    }
+
+    private void HandleSelectInput(InputAction.CallbackContext cntxt)
+    {
+        if (shopItemButtons[hoveredButtonIndex]!= null)
+        {
+            shopItemButtons[hoveredButtonIndex].onClick.Invoke();
+        }
+    }
+
+    private void HandleNavigation(InputAction.CallbackContext cntxt)
+    {
+        Vector2 input = cntxt.ReadValue<Vector2>();
+
+        // un-hover last button
+        shopItemButtons[hoveredButtonIndex].GetComponent<ShopItemButton>().SetHover(false);
+
+        // just handling horizontal for now
+        if (input.x > 0)
+        {
+            hoveredButtonIndex++;
+            if (hoveredButtonIndex >= shopItemButtons.Count)
+            {
+                hoveredButtonIndex--;
+            }
+        }
+        else
+        {
+            hoveredButtonIndex--;
+            if (hoveredButtonIndex < 0)
+            {
+                hoveredButtonIndex++;
+            }
+        }
+
+        // hover new button
+        shopItemButtons[hoveredButtonIndex].GetComponent<ShopItemButton>().SetHover(true);
+    }
+
+    private void UpdateHoveredButton(Button b)
+    {
+        hoveredButtonIndex = shopItemButtons.IndexOf(b);
     }
 
     public void AddObjectiveMarker(GameObject objectToMark, string label)
@@ -133,9 +198,10 @@ public class GameplayUI : MonoBehaviour
     private void HandleRewardConfirm()
     {
         OnRewardsPicked.Invoke(pickedRewardItem);
-
         // have to reset picked reward and structs are non-nullable
         pickedRewardItem = new ShopItem();
+        controls.UI.Disable();
+        player.EnableControls();
         ShowBattleUI();
     }
 
@@ -144,20 +210,34 @@ public class GameplayUI : MonoBehaviour
     /// </summary>
     private void ShowRewardUI()
     {
+        controls.UI.Enable();
+        player.DisableControls();
+
         rewardUI.SetActive(true);
         battleUI.SetActive(false);
 
         // clear children
-        for (int i = 0; i < shopItemParent.childCount; i++)
+        foreach (Button shopButton in shopItemButtons)
         {
-            Destroy(shopItemParent.GetChild(i).gameObject);
+            Destroy(shopButton.gameObject);
         }
+        shopItemButtons.Clear();
 
+        bool firstOne = true;
         // add reward buttons
         foreach (ShopItem item in Rewards.Instance.GetRewardShopItems())
         {
             ShopItemButton shopButtonScript = Instantiate(shopItemButtonPrefab, shopItemParent).GetComponent<ShopItemButton>();
             shopButtonScript.SetItem(item);
+            shopItemButtons.Add(shopButtonScript.GetComponent<Button>());
+
+            // make the first one appear hovered
+            if (firstOne)
+            {
+                shopButtonScript.SetHover(true);
+                hoveredButtonIndex = 0;
+                firstOne = false;
+            }
         }
     }
 

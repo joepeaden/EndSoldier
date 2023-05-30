@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -10,27 +9,45 @@ public class ShopItemButton : MonoBehaviour
     /// Param is rewardKey to compare. Used for updating button visuals/interactability when another button is selected.
     /// </summary>
     private static UnityEvent<string> OnAShopButtonClicked = new UnityEvent<string>();
+    public static UnityEvent<Button> OnNewHoveredButton = new UnityEvent<Button>();
 
     [SerializeField] private TMP_Text label;
     [SerializeField] private TMP_Text cost;
 
     private ShopItem item;
     private Button button;
-    private Color originalLabelColor;
-    private Color originalCostColor;
+    private Image backgroundImage;
+
+    public Color normalLabelColor;
+    public Color normalCostColor;
+    public Color normalBGColor;
+    public Color hoverBGColor;
+
+    private bool isHovered;
+    private bool isSelected;
     private bool tooExpensive;
 
     private void Awake()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(UpdateReward);
-        OnAShopButtonClicked.AddListener(UpdateVisuals);
+        OnAShopButtonClicked.AddListener(CheckIfSelected);
+        OnNewHoveredButton.AddListener(HandleNewButtonHovered);
+        backgroundImage = GetComponent<Image>();
     }
 
     private void OnDestroy()
     {
         button.onClick.RemoveListener(UpdateReward);
-        OnAShopButtonClicked.RemoveListener(UpdateVisuals);
+        OnAShopButtonClicked.RemoveListener(CheckIfSelected);
+        OnNewHoveredButton.RemoveListener(HandleNewButtonHovered);
+    }
+
+    public void SetHover(bool hover)
+    {
+        // this is repetitive with the HandleNewButtonHovered part. Probably don't need to set isHovered twice bro.
+        isHovered = hover;
+        OnNewHoveredButton.Invoke(button);
     }
 
     /// <summary>
@@ -42,16 +59,9 @@ public class ShopItemButton : MonoBehaviour
         label.text = item.displayName;
         cost.text = $"${item.cost}";
         this.item = item;
-
-        originalLabelColor = label.color;
-        originalCostColor = cost.color;
-
         tooExpensive = Scoreboard.totalScore - item.cost < 0;
-        // disable the button if the item is too expensive
-        if (tooExpensive)
-        {
-            UpdateVisuals();
-        }
+
+        UpdateVisuals();
     }
 
     /// <summary>
@@ -59,31 +69,42 @@ public class ShopItemButton : MonoBehaviour
     /// </summary>
     private void UpdateReward()
     {
-        GameplayUI.Instance.HandleRewardPicked(item);
-        OnAShopButtonClicked.Invoke(item.rewardKey);
+        if (!tooExpensive)
+        {
+            GameplayUI.Instance.HandleRewardPicked(item);
+            OnAShopButtonClicked.Invoke(item.rewardKey);
+        }
+    }
+
+    private void CheckIfSelected(string key)
+    {
+        isSelected = key == item.rewardKey;
+        UpdateVisuals();
+    }
+
+    private void HandleNewButtonHovered(Button b)
+    {
+        isHovered = b == button;
+        UpdateVisuals();
     }
 
     /// <summary>
     /// Updates button interactability.
     /// </summary>
     /// <param name="key">Currently selected rewardKey, for comparison.</param>
-    private void UpdateVisuals(string key = "")
+    private void UpdateVisuals()
     {
+        backgroundImage.color = isHovered ? hoverBGColor : normalBGColor;
+
         if (tooExpensive)
         {
             cost.color = Color.red;
             button.interactable = false;
         }
-        else if (key == item.rewardKey)
+        else
         {
-            //button.interactable = key != item.rewardKey;
-            label.color = label.color != Color.gray ? Color.grey : originalLabelColor;
-            cost.color = cost.color != Color.gray ? Color.grey : originalCostColor;
-        }
-        else if (label.color == Color.gray)
-        {
-            label.color = originalLabelColor;
-            cost.color = originalCostColor;
+            label.color = isSelected ? Color.yellow : normalLabelColor;
+            cost.color = isSelected ? Color.yellow : normalCostColor;
         }
         
     }

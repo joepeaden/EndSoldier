@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
 		actor.team = Actor.ActorTeam.Friendly;
 
 		controls = new PlayerControls();
-		// Add these to on destroy please please please please I beg you
 		controls.Gameplay.Move.performed += HandleMovementInput; 
 		controls.Gameplay.Move.canceled += ZeroMovementInput;
 		controls.Gameplay.Sprint.performed += HandleSprintPerformedInput;
@@ -71,12 +70,12 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-		controls.Gameplay.Enable();
+		EnableControls();
     }
 
 	private void OnDisable()
 	{
-		controls.Gameplay.Disable();
+		DisableControls();
 	}
 
 	private void Update()
@@ -145,14 +144,14 @@ public class Player : MonoBehaviour
 					rotationDelta -= 359f;
 				}
 
-				float controllerAimSensitivity = baseControllerAimRotaitonSensitivity;
+				float controllerAimRotationSensitivity = baseControllerAimRotaitonSensitivity;
 				if (!usingMouseForRotation && targetInSights)
 				{
-					controllerAimSensitivity = .01f;
+					controllerAimRotationSensitivity = .01f;
 				}
 
 				float stratifiedRotation = rotationDelta / controllerMaxRotationSensitivity;
-				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimSensitivity : controllerRotationSensitivity);
+				float adjustedRotationDelta = stratifiedRotation * (actor.state[Actor.State.Aiming] ? controllerAimRotationSensitivity : controllerRotationSensitivity);
 				float adjustedRotationValue = transform.rotation.eulerAngles.y > newRotationYAngle ? -adjustedRotationDelta : adjustedRotationDelta;
 
 				Vector3 finalNewEulers = transform.rotation.eulerAngles + new Vector3(0f, adjustedRotationValue, 0f);
@@ -168,6 +167,22 @@ public class Player : MonoBehaviour
 		actor.OnDeath.RemoveListener(HandlePlayerDeath);
 		actor.OnGetHit.RemoveListener(HandleGetHit);
 		actor.OnHeal.RemoveListener(HandleHeal);
+
+		controls.Gameplay.Move.performed -= HandleMovementInput;
+		controls.Gameplay.Move.canceled -= ZeroMovementInput;
+		controls.Gameplay.Sprint.performed -= HandleSprintPerformedInput;
+		controls.Gameplay.Sprint.canceled -= HandleSprintStopInput;
+		controls.Gameplay.Rotate.performed -= HandleRotationInput;
+		controls.Gameplay.RotateMouse.performed -= HandleRotationInputMouse;
+		controls.Gameplay.Aim.performed -= HandleAimBeginInput;
+		controls.Gameplay.Aim.canceled -= HandleAimEndInput;
+		controls.Gameplay.Fire.started -= HandleFireStartInput;
+		controls.Gameplay.Fire.canceled -= HandleFireStopInput;
+		controls.Gameplay.SwitchWeapons.performed -= HandleSwitchWeaponsInputController;
+		controls.Gameplay.SwitchWeaponsMouse.performed -= HandleSwitchWeaponsInputMouse;
+		controls.Gameplay.Reload.performed -= HandleReloadInput;
+		controls.Gameplay.UseEquipment.performed -= HandleUseEquipmentInput;
+		controls.Gameplay.Interact.performed -= HandleInteractInput;
 	}
 
     #endregion
@@ -287,6 +302,22 @@ public class Player : MonoBehaviour
 	}
 
 	#endregion
+
+	/// <summary>
+    /// Enable gameplay controls.
+    /// </summary>
+	public void EnableControls()
+	{
+		controls.Gameplay.Enable();
+	}
+
+	/// <summary>
+    /// Disable gameplay controls.
+    /// </summary>
+	public void DisableControls()
+	{
+		controls.Gameplay.Disable();
+	}
 
 	public void HandleTargetInSights(bool inSights)
     {

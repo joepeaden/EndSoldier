@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Has references to the player.
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
 
         player = playerGO.GetComponent<Player>();
         player.OnPlayerDeath.AddListener(GameOver);
+
+        InputSystem.settings.SetInternalFeatureFlag("DISABLE_SHORTCUT_SUPPORT", true);
     }
 
     public void OnDestroy()
