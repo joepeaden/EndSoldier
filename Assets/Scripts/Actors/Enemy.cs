@@ -23,6 +23,9 @@ public class Enemy : MonoBehaviour, ISetActive
 	private Actor actor;
 	private bool pauseFurtherAttacks;
 	private GameObject target;
+	// a little lazy here
+	private bool isReloading;
+	private bool recoveringFromHit;
 
 	private void Awake()
     {
@@ -31,6 +34,7 @@ public class Enemy : MonoBehaviour, ISetActive
 		actor = GetComponent<Actor>();
 		actor.team = Actor.ActorTeam.Enemy;
 		actor.SetAgentSpeed(data.navAgentSpeed);
+		actor.OnGetHit.AddListener(RecoverFromHit);
     }
 
 	private void Start()
@@ -51,51 +55,93 @@ public class Enemy : MonoBehaviour, ISetActive
 		}
 	}
 
+    private void OnDestroy()
+    {
+		actor.OnGetHit.RemoveListener(RecoverFromHit);
+	}
+
     private void Update()
     {
+		// kind of a yucky update method. please clean up before messing with it more.
+
 		if (actor.IsAlive && target != null)
 		{
-			(bool targetInRangeAndLOS, bool targetInOptimalRange) = TargetInRangeAndLOS();
-			if (targetInRangeAndLOS)
+			if (actor.GetEquippedWeaponAmmo() <= 0)
 			{
-				if (targetInOptimalRange)
+				if (!isReloading)
 				{
-					actor.StopMoving();
+					isReloading = actor.AttemptReload();
 				}
-				else
-				{
-					if (data.canAim)
-					{
-						actor.EndAiming();
-					}
-
-					actor.Move(target.transform.position);
-				}
-
-				// if we're close enough to stop and shoot, OR if we're dope enough to move and shoot
-				if (targetInOptimalRange || data.canMoveAndShoot)
-				{
-					actor.UpdateActorRotation(target.transform.position);
-
-					if (actor.GetEquippedWeaponAmmo() <= 0)
-					{
-						actor.AttemptReload();
-					}
-					else if (!pauseFurtherAttacks)
-					{
-						int numToFire = (int)Random.Range(data.minBurstFrames, data.maxBurstFrames);
-
-						StartCoroutine(FireBurst(numToFire));
-					}
-				}
-
 			}
 			else
 			{
-				actor.Move(target.transform.position);
+				isReloading = false;
+			}
+
+			if (isReloading || recoveringFromHit)
+			{
+				actor.StopMoving();
+			}
+
+			if (!isReloading && !recoveringFromHit)
+			{
+				(bool targetInRangeAndLOS, bool targetInOptimalRange) = TargetInRangeAndLOS();
+				if (targetInRangeAndLOS)
+				{
+					if (targetInOptimalRange)
+					{
+						actor.StopMoving();
+					}
+					else
+					{
+						if (data.canAim)
+						{
+							actor.EndAiming();
+						}
+
+						actor.Move(target.transform.position);
+					}
+
+					// if we're close enough to stop and shoot, OR if we're dope enough to move and shoot
+					if (targetInOptimalRange || data.canMoveAndShoot)
+					{
+						actor.UpdateActorRotation(target.transform.position);
+
+						if (!pauseFurtherAttacks)
+						{
+							int numToFire = (int)Random.Range(data.minBurstFrames, data.maxBurstFrames);
+
+							StartCoroutine(FireBurst(numToFire));
+						}
+					}
+
+				}
+				else
+				{
+					actor.Move(target.transform.position);
+				}
 			}
 		}
 	}
+
+	private void RecoverFromHit(Projectile p)
+	{
+		StartCoroutine(RecoverFromHitCoroutine());
+	}
+	
+	/// <summary>
+    /// Basically for a stagger effect.
+    /// </summary>
+    /// <returns></returns>
+	private IEnumerator RecoverFromHitCoroutine()
+    {
+		recoveringFromHit = true;
+
+		// don't feel like making this configurable - I'm lazy and trying to actually finish this thing.
+		yield return new WaitForSeconds(.5f);
+
+		recoveringFromHit = false;
+    }
 
 	/// <summary>
 	/// Check if the actor's current target is in range and in LOS
@@ -142,6 +188,9 @@ public class Enemy : MonoBehaviour, ISetActive
 		return (false, false);
 	}
 
+	/// <summary>
+    /// Begin lookng for player and show model.
+    /// </summary>
 	public void Activate()
     {
 		actor.SetVisibility(true);
@@ -153,6 +202,9 @@ public class Enemy : MonoBehaviour, ISetActive
 		}
 	}
 
+	/// <summary>
+    /// Hide model, and stop looking for players or doing anything else.
+    /// </summary>
 	public void DeActivate()
 	{
 		actor.SetVisibility(false);
@@ -191,9 +243,12 @@ public class Enemy : MonoBehaviour, ISetActive
 		OnEnemyKilled.Invoke(data.scoreValue);
 	}
 
+	/// <summary>
+    /// Was used for cover system but didn't implement yet.
+    /// </summary>
 	private void ActorHasPotentialCover()
     {
-		Debug.Log("Enemy sees potential cover");
+		//Debug.Log("Enemy sees potential cover");
     }
 
 	private IEnumerator FireBurst(int numToFire)

@@ -100,6 +100,11 @@ public class ActorModel : MonoBehaviour
     private void HandleActorHit(Projectile projectile)
     {
         projectileThatKilledJim = projectile;
+
+        if (actor.IsAlive)
+        {
+            ragAnim.SetTrigger("Wound");
+        }
     }
 
     public void UpdateVelocityBasedAnimations(Vector3 velocity)

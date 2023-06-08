@@ -243,13 +243,15 @@ public class Player : MonoBehaviour
 
 	private void HandleFireStartInput(InputAction.CallbackContext cntxt)
 	{
+		// removed to fix trigger bug. Add back if necessary.
+
 		// start input callback happens when start and finish input. Kinda wierd if you ask me.
 		if (!attemptingToFire)
-		{
-			triggerPull = true;
+        {
+            triggerPull = true;
 			attemptingToFire = true;
-		}
-	}
+        }
+    }
 
 	private void HandleFireStopInput(InputAction.CallbackContext cntxt)
     {

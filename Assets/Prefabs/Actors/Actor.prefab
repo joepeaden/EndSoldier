@@ -1192,7 +1192,7 @@ MonoBehaviour:
   ragdoll: {fileID: 98250561036065362}
   ragAnim: {fileID: 2304735100738089291}
   bloodPoofEffect: {fileID: 1547757601392324, guid: d5f9bb227d35628428a7413762ab0190, type: 3}
-  reloadClip: {fileID: 0}
+  reloadClip: {fileID: 7400000, guid: 283118177c5fa4c40b050a87937abb2e, type: 3}
 --- !u!1 &6904973392823136998
 GameObject:
   m_ObjectHideFlags: 0

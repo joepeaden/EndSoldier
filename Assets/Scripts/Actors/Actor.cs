@@ -592,14 +592,15 @@ public class Actor : MonoBehaviour
 			return gotHit;
         }
 
-		if (state[State.Crouching])
-		{
-			float dogeRoll = Random.Range(0f, 1f);
+		// this is not actually used, no crouching or anything at the moment.
+		//if (state[State.Crouching])
+		//{
+		//	float dogeRoll = Random.Range(0f, 1f);
 
-			Debug.Log("Chance: " + data.crouchDogeChance + "Rolled: " + dogeRoll);
+		//	Debug.Log("Chance: " + data.crouchDogeChance + "Rolled: " + dogeRoll);
 
-			gotHit = dogeRoll > data.crouchDogeChance;
-		}
+		//	gotHit = dogeRoll > data.crouchDogeChance;
+		//}
 
 		if (gotHit)
 		{
