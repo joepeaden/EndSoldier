@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Submachine Gun
   rewardKey: SMG
-  cost: 100
+  cost: 200
   projectile: {fileID: 6425079759990356200, guid: b5f2e306111ac4e2aab9f9da950c0040, type: 3}
   recoil: 1
   attackInterval: 0.03
   range: 22
   optimalRange: 15
   ammoCapacity: 40
-  totalAmount: 120
+  totalAmount: 160
   attackSound: {fileID: 8300000, guid: 8d19cd7f377aa9e4e834d2627646d695, type: 3}
   emptyWeaponSound: {fileID: 8300000, guid: e5127082088ae44b4b8998b0d577358d, type: 3}
   reloadSound: {fileID: 8300000, guid: accabe4039c554cb4915a87523485113, type: 3}

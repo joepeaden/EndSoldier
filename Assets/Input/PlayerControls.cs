@@ -53,6 +53,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""6d427694-696c-4b75-ab5b-3084e366f6f0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -86,6 +95,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Confirm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cfe23e8e-8194-413e-93cb-f9a0dafc44e8"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -459,6 +479,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Select = m_UI.FindAction("Select", throwIfNotFound: true);
         m_UI_Confirm = m_UI.FindAction("Confirm", throwIfNotFound: true);
+        m_UI_BButton = m_UI.FindAction("BButton", throwIfNotFound: true);
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
@@ -534,6 +555,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Select;
     private readonly InputAction m_UI_Confirm;
+    private readonly InputAction m_UI_BButton;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
@@ -541,6 +563,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Select => m_Wrapper.m_UI_Select;
         public InputAction @Confirm => m_Wrapper.m_UI_Confirm;
+        public InputAction @BButton => m_Wrapper.m_UI_BButton;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -559,6 +582,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Confirm.started -= m_Wrapper.m_UIActionsCallbackInterface.OnConfirm;
                 @Confirm.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnConfirm;
                 @Confirm.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnConfirm;
+                @BButton.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBButton;
+                @BButton.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBButton;
+                @BButton.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBButton;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -572,6 +598,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Confirm.started += instance.OnConfirm;
                 @Confirm.performed += instance.OnConfirm;
                 @Confirm.canceled += instance.OnConfirm;
+                @BButton.started += instance.OnBButton;
+                @BButton.performed += instance.OnBButton;
+                @BButton.canceled += instance.OnBButton;
             }
         }
     }
@@ -694,6 +723,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
+        void OnBButton(InputAction.CallbackContext context);
     }
     public interface IGameplayActions
     {
