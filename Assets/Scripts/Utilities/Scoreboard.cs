@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events; 
 
@@ -12,11 +10,13 @@ public class Scoreboard : MonoBehaviour
     private void Start()
     {
         Enemy.OnEnemyKilled.AddListener(AddPoints);
+        GameManager.OnGameOver.AddListener(ResetPoints);
     }
 
     private void OnDestroy()
     {
         Enemy.OnEnemyKilled.RemoveListener(AddPoints);
+        GameManager.OnGameOver.RemoveListener(ResetPoints);
     }
 
     private static void AddPoints(int points)
@@ -40,5 +40,10 @@ public class Scoreboard : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void ResetPoints()
+    {
+        totalScore = 0;
     }
 }

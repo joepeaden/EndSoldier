@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Actor))]
 public class Inventory : MonoBehaviour
 {
-    //public UnityEvent
+    public static UnityEvent OnNewItemAddedPlayer = new UnityEvent();
 
     [SerializeField] InventoryItemDataStorage dataStorage;
     [SerializeField] WeaponInstance weaponInstance;
@@ -163,6 +164,11 @@ public class Inventory : MonoBehaviour
             //    AttemptSwitchWeapons();
             //    break;
             //}
+
+            if (actor.IsPlayer)
+            {
+                OnNewItemAddedPlayer.Invoke();
+            }
         }
         catch
         {

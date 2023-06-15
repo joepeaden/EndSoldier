@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Medkit
   rewardKey: MEDKIT
-  cost: 100
-  amountHealed: 100
+  cost: 300
+  amountHealed: 400
   totalAmount: 1
   soundEffect: {fileID: 8300000, guid: d0d32bb87681ff94fb1acff4fa88bfab, type: 3}

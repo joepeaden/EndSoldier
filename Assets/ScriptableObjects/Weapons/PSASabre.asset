@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Combat Rifle
   rewardKey: PSA
-  cost: 500
+  cost: 7500
   projectile: {fileID: 6425079759990356200, guid: 10e53212ae4dd434ba9eea4767de7b90, type: 3}
   recoil: 0.88
-  attackInterval: 0.68
+  attackInterval: 0.068
   range: 35
   optimalRange: 25
   ammoCapacity: 30
@@ -28,10 +28,10 @@ MonoBehaviour:
   reloadTime: 1.7
   isAutomatic: 1
   isPistol: 0
-  projFiredPerShot: 2
+  projFiredPerShot: 1
   muzzlePosition: {x: -0.021, y: 1.374, z: 1.903}
   modelPrefab: {fileID: 9143924192006986424, guid: 44927ce78ac77624dbcd4829ccd03108, type: 3}
   hasInfiniteBackupAmmo: 0
-  accuracyAngle: 7
+  accuracyAngle: 8
   movementAccuracyPenalty: 2.5
-  aimingBoon: 4
+  aimingBoon: 2

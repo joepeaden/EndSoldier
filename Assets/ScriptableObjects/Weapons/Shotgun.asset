@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Shotgun
   rewardKey: SHOTGUN
-  cost: 300
+  cost: 5000
   projectile: {fileID: 6425079759990356200, guid: e4591a73cc793440ab848b64bdf0554f, type: 3}
   recoil: 1
   attackInterval: 0.5

@@ -87,6 +87,7 @@ public class GameplayUI : MonoBehaviour
         player = GameManager.Instance.GetPlayerScript();
         player.OnSwitchWeapons.AddListener(UpdateCurrentWeapon);
         player.OnUpdateEquipment.AddListener(UpdateEquipment);
+        Inventory.OnNewItemAddedPlayer.AddListener(UpdateCurrentWeapon);
 
         // missed the UpdateCurrentWeapon initial event, so just update it.
         UpdateCurrentWeapon(player.GetInventory().GetEquippedWeapon());
@@ -119,6 +120,8 @@ public class GameplayUI : MonoBehaviour
         controls.UI.Navigate.started -= HandleNavigation;
         ShopItemButton.OnNewHoveredButton.RemoveListener(UpdateHoveredButton);
     }
+
+    
 
     private void HandleConfirmInput(InputAction.CallbackContext cntxt)
     {
@@ -250,6 +253,11 @@ public class GameplayUI : MonoBehaviour
     private void UpdateScore(int totalPoints)
     {
         pointsTxt.text = "Points: $" + totalPoints + ".00";
+    }
+
+    private void UpdateCurrentWeapon()
+    {
+        curntWpnTxt.text = player.GetInventory().GetEquippedWeapon().data.displayName;
     }
 
     private void UpdateCurrentWeapon(InventoryWeapon weapon)

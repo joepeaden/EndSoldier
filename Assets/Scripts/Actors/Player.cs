@@ -323,9 +323,7 @@ public class Player : MonoBehaviour
 
 	public void HandleTargetInSights(bool inSights)
     {
-		this.targetInSights = inSights;
-		//Debug.Log(snapTarget.name);
-
+		targetInSights = inSights;
 	}
 
 	public Inventory GetInventory()
